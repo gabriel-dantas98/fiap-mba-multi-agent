@@ -1,15 +1,16 @@
 """Pydantic schema for project.yaml manifests."""
+
 from __future__ import annotations
 
 import re
-from enum import Enum
+from enum import StrEnum
 
 from pydantic import BaseModel, Field, model_validator
 
 SLUG_RE = re.compile(r"^[a-z][a-z0-9-]*$")
 
 
-class ProjectKind(str, Enum):
+class ProjectKind(StrEnum):
     BACKEND = "backend"
     FRONTEND = "frontend"
     FULLSTACK = "fullstack"

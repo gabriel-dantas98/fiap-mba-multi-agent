@@ -15,14 +15,17 @@ def app_with_apps(apps_root: Path, monkeypatch: pytest.MonkeyPatch):
     (apps_root / "__init__.py").write_text("")
     (apps_root / "exemplo" / "__init__.py").write_text("")
     (pkg_root / "__init__.py").write_text("")
-    (pkg_root / "main.py").write_text(textwrap.dedent("""
+    (pkg_root / "main.py").write_text(
+        textwrap.dedent("""
         from fastapi import FastAPI
         app = FastAPI()
         @app.get("/ping")
         def ping():
             return {"ok": True}
-    """))
-    (pkg_root / "project.yaml").write_text(textwrap.dedent("""
+    """)
+    )
+    (pkg_root / "project.yaml").write_text(
+        textwrap.dedent("""
         name: Hello
         slug: hello
         description: demo
@@ -32,12 +35,14 @@ def app_with_apps(apps_root: Path, monkeypatch: pytest.MonkeyPatch):
         kind: backend
         mount_path: /exemplo/hello
         entry: apps.exemplo.hello.main:app
-    """))
+    """)
+    )
     monkeypatch.syspath_prepend(str(apps_root.parent))
     monkeypatch.setenv("MBA_APPS_ROOT", str(apps_root))
     for mod in [m for m in sys.modules if m.startswith("apps") or m == "homepage.main"]:
         sys.modules.pop(mod, None)
     from homepage.main import build_app
+
     return build_app(apps_root)
 
 

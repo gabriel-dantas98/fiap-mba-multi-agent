@@ -1,4 +1,5 @@
 """FastAPI homepage that discovers and mounts apps under apps/."""
+
 from __future__ import annotations
 
 import importlib
@@ -44,7 +45,9 @@ def build_app(apps_root: Path | None = None) -> FastAPI:
                 module_path, attr = cfg.entry.split(":")
                 module = importlib.import_module(module_path)
                 sub_app = getattr(module, attr)
-                mount_at = cfg.mount_path + "/api" if cfg.kind is ProjectKind.FULLSTACK else cfg.mount_path
+                mount_at = (
+                    cfg.mount_path + "/api" if cfg.kind is ProjectKind.FULLSTACK else cfg.mount_path
+                )
                 app.mount(mount_at, sub_app)
                 log.info("mounted backend %s", mount_at)
             if cfg.kind in (ProjectKind.FRONTEND, ProjectKind.FULLSTACK):
@@ -65,16 +68,16 @@ def build_app(apps_root: Path | None = None) -> FastAPI:
     def index(request: Request):
         groups: dict[str, list[dict]] = defaultdict(list)
         for cfg in configs:
-            groups[cfg.group].append({
-                "name": cfg.name,
-                "description": cfg.description,
-                "members": cfg.members,
-                "mount_path": cfg.mount_path,
-                "status": _project_status(cfg, broken),
-            })
-        return TEMPLATES.TemplateResponse(
-            request, "index.html", {"groups": dict(groups)}
-        )
+            groups[cfg.group].append(
+                {
+                    "name": cfg.name,
+                    "description": cfg.description,
+                    "members": cfg.members,
+                    "mount_path": cfg.mount_path,
+                    "status": _project_status(cfg, broken),
+                }
+            )
+        return TEMPLATES.TemplateResponse(request, "index.html", {"groups": dict(groups)})
 
     return app
 

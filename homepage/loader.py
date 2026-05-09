@@ -1,4 +1,5 @@
 """Discover and validate project.yaml manifests under apps/."""
+
 from __future__ import annotations
 
 import logging

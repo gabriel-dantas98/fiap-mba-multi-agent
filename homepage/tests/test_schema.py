@@ -41,8 +41,11 @@ def test_mount_path_must_match_group_and_slug():
 
 
 def test_slug_hyphen_to_underscore_module_path():
-    cfg = ProjectConfig(**_base(slug="chat-bot", mount_path="/exemplo/chat-bot",
-                                entry="apps.exemplo.chat_bot.main:app"))
+    cfg = ProjectConfig(
+        **_base(
+            slug="chat-bot", mount_path="/exemplo/chat-bot", entry="apps.exemplo.chat_bot.main:app"
+        )
+    )
     assert cfg.slug == "chat-bot"
     assert cfg.module_dir == "chat_bot"
 

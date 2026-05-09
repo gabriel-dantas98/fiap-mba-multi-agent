@@ -1,4 +1,5 @@
 """Scaffold a new project under apps/<group>/<slug>/."""
+
 from __future__ import annotations
 
 import argparse
@@ -40,7 +41,11 @@ def create_project(
     (base / "__init__.py").touch()
 
     members_yaml = "\n".join(f"  - {m}" for m in members)
-    entry_line = f"entry: apps.{_module(group)}.{_module(slug)}.main:app" if kind in {"backend", "fullstack"} else ""
+    entry_line = (
+        f"entry: apps.{_module(group)}.{_module(slug)}.main:app"
+        if kind in {"backend", "fullstack"}
+        else ""
+    )
     static_line = "static_dir: dist" if kind in {"frontend", "fullstack"} else ""
     yaml_lines = [
         f'name: "{slug}"',
@@ -59,12 +64,13 @@ def create_project(
     yaml_lines += ["enabled: true", "checks:", "  pytest: false", "  mypy: false"]
     (base / "project.yaml").write_text("\n".join(yaml_lines) + "\n")
 
-    (base / "pyproject.toml").write_text(dedent(f"""\
+    (base / "pyproject.toml").write_text(
+        dedent(f"""\
         [project]
         name = "{slug}"
         version = "0.1.0"
         requires-python = ">=3.13"
-        dependencies = {'["fastapi>=0.115"]' if kind != 'frontend' else '[]'}
+        dependencies = {'["fastapi>=0.115"]' if kind != "frontend" else "[]"}
 
         [build-system]
         requires = ["hatchling"]
@@ -72,10 +78,12 @@ def create_project(
 
         [tool.hatch.build.targets.wheel]
         packages = ["."]
-        """))
+        """)
+    )
 
     if kind in {"backend", "fullstack"}:
-        (base / "main.py").write_text(dedent(f'''\
+        (base / "main.py").write_text(
+            dedent(f'''\
             from fastapi import FastAPI
 
             app = FastAPI(title="{slug}")
@@ -84,14 +92,13 @@ def create_project(
             @app.get("/")
             def root() -> dict[str, str]:
                 return {{"message": "hello from {slug}"}}
-            '''))
+            ''')
+        )
 
     if kind in {"frontend", "fullstack"}:
         dist = base / "dist"
         dist.mkdir(exist_ok=True)
-        (dist / "index.html").write_text(
-            f"<!doctype html><title>{slug}</title><h1>{slug}</h1>\n"
-        )
+        (dist / "index.html").write_text(f"<!doctype html><title>{slug}</title><h1>{slug}</h1>\n")
 
     return base
 
@@ -108,8 +115,11 @@ def main(argv: list[str] | None = None) -> int:
 
     base = create_project(
         Path(args.apps_root),
-        group=args.group, slug=args.slug, kind=args.kind,
-        description=args.description, members=args.members,
+        group=args.group,
+        slug=args.slug,
+        kind=args.kind,
+        description=args.description,
+        members=args.members,
     )
     print(f"Created {base}")
     return 0

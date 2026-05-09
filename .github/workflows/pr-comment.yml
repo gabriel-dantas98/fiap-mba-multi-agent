@@ -41,17 +41,20 @@ jobs:
           {
             echo "## CI Summary"
             echo
-            if [ -z "$changed" ]; then echo "_No app paths changed in this PR._"; exit 0; fi
-            echo "| App | project.yaml | Notes |"
-            echo "|---|---|---|"
-            for path in $changed; do
-              yaml="apps/$path/project.yaml"
-              if [ -f "$yaml" ]; then
-                echo "| \`$path\` | ✅ present | see job logs |"
-              else
-                echo "| \`$path\` | ❌ missing | add a project.yaml |"
-              fi
-            done
+            if [ -z "$changed" ]; then
+              echo "_No app paths changed in this PR._"
+            else
+              echo "| App | project.yaml | Notes |"
+              echo "|---|---|---|"
+              for path in $changed; do
+                yaml="apps/$path/project.yaml"
+                if [ -f "$yaml" ]; then
+                  echo "| \`$path\` | ✅ present | see job logs |"
+                else
+                  echo "| \`$path\` | ❌ missing | add a project.yaml |"
+                fi
+              done
+            fi
           } > summary.md
           echo "body<<EOF" >> "$GITHUB_OUTPUT"
           cat summary.md >> "$GITHUB_OUTPUT"

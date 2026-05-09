@@ -27,7 +27,7 @@ members = ["apps/*/*"]
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
-testpaths = ["homepage/tests"]
+testpaths = ["homepage/tests", "scripts/tests"]
 
 [build-system]
 requires = ["hatchling"]

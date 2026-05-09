@@ -15,9 +15,21 @@ Cada grupo/pessoa contribui com apps Python (e/ou frontends estáticos) em `apps
 ```bash
 uv sync
 uv run uvicorn homepage.main:app --reload
+# http://localhost:8000
 ```
 
-Veja `CONTRIBUTING.md` pra adicionar um projeto novo.
+## Como contribuir
+
+Veja [CONTRIBUTING.md](./CONTRIBUTING.md) — em uma linha:
+
+```bash
+uv run scripts/new_project.py --group <grupo> --slug <slug> --kind backend \
+  --description "..." --members "Seu Nome"
+```
+
+## Deploy
+
+Rodando ao vivo no Railway. Cada push na `main` redeploya automaticamente.
 
 ## License
 

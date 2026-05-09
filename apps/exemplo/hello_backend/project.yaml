@@ -1,0 +1,13 @@
+name: "Hello Backend"
+slug: hello-backend
+description: "Exemplo mínimo de backend FastAPI montado pela homepage."
+group: exemplo
+members:
+  - FIAP MBA Team
+kind: backend
+mount_path: /exemplo/hello-backend
+entry: "apps.exemplo.hello_backend.main:app"
+enabled: true
+checks:
+  pytest: false
+  mypy: false

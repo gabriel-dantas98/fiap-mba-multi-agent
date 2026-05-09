@@ -6,6 +6,7 @@ requires-python = ">=3.13"
 members = [
     "fiap-mba-multi-agent",
     "hello-backend",
+    "hello-frontend",
 ]
 
 [[package]]
@@ -140,6 +141,11 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [{ name = "fastapi", specifier = ">=0.115" }]
+
+[[package]]
+name = "hello-frontend"
+version = "0.1.0"
+source = { editable = "apps/exemplo/hello_frontend" }
 
 [[package]]
 name = "httpcore"

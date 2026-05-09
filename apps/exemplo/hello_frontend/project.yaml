@@ -1,0 +1,10 @@
+name: "Hello Frontend"
+slug: hello-frontend
+description: "Exemplo de frontend estático servido por StaticFiles."
+group: exemplo
+members:
+  - FIAP MBA Team
+kind: frontend
+mount_path: /exemplo/hello-frontend
+static_dir: dist
+enabled: true

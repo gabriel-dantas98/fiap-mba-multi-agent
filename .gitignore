@@ -1,0 +1,16 @@
+__pycache__/
+*.pyc
+.venv/
+.uv/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+*.egg-info/
+# Only ignore Python build output at the repo root.
+# Hand-authored frontend examples under apps/**/dist/ must be committed.
+/dist/
+build/
+.DS_Store
+.env
+.env.local
+node_modules/

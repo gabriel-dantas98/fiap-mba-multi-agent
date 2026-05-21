@@ -1,0 +1,85 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v4
+        with:
+          enable-cache: true
+      - run: uv sync --frozen
+      - name: ruff check
+        run: uv run ruff check --output-format=github .
+      - name: ruff format
+        run: uv run ruff format --check .
+
+  schema:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v4
+        with:
+          enable-cache: true
+      - run: uv sync --frozen
+      - name: validate manifests
+        run: uv run python -c "from pathlib import Path; from homepage.loader import discover; discover(Path('apps'))"
+
+  homepage-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v4
+        with:
+          enable-cache: true
+      - run: uv sync --frozen
+      - run: uv run pytest homepage/tests/ -v
+
+  affected-apps:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+      - id: set
+        shell: bash
+        run: |
+          base="${{ github.event.pull_request.base.sha || 'HEAD~1' }}"
+          changed=$(git diff --name-only "$base"...HEAD | awk -F/ '/^apps\// {print $2"/"$3}' | sort -u)
+          matrix='{"include":[]}'
+          for path in $changed; do
+            yaml="apps/$path/project.yaml"
+            [ -f "$yaml" ] || continue
+            pytest=$(grep -E '^[[:space:]]+pytest:[[:space:]]+true' "$yaml" || true)
+            mypy=$(grep -E '^[[:space:]]+mypy:[[:space:]]+true' "$yaml" || true)
+            entry="{\"path\":\"$path\",\"pytest\":\"${pytest:+true}\",\"mypy\":\"${mypy:+true}\"}"
+            matrix=$(echo "$matrix" | python3 -c "import json,sys,os; m=json.load(sys.stdin); m['include'].append(json.loads(os.environ['E'])); print(json.dumps(m))" E="$entry")
+          done
+          echo "matrix=$matrix" >> "$GITHUB_OUTPUT"
+
+  app-checks:
+    needs: affected-apps
+    if: ${{ needs.affected-apps.outputs.matrix != '{"include":[]}' }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJson(needs.affected-apps.outputs.matrix) }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v4
+        with: { enable-cache: true }
+      - run: uv sync --frozen
+      - if: matrix.pytest == 'true'
+        run: uv run pytest "apps/${{ matrix.path }}/tests" -v
+      - if: matrix.mypy == 'true'
+        run: uv run mypy "apps/${{ matrix.path }}"

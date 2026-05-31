@@ -1,0 +1,6 @@
+<svg viewBox="0 0 120 130" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Group One — G1" fill="currentColor">
+  <!-- G / C — hexagonal bracket, open on the right -->
+  <path class="g1l-g" d="M60 10 L12.4 37.5 L12.4 92.5 L60 120 L60 95 L34 80 L34 50 L60 35 Z"/>
+  <!-- 1 — flagged numeral nested in the opening -->
+  <path class="g1l-one" d="M100 26 L100 120 L78 120 L78 52 L60 52 Z"/>
+</svg>

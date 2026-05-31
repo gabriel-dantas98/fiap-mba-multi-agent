@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mapa Estratégico — Quantum Commerce · Group One</title>
+<meta name="description" content="O framework estratégico de IA da Quantum Commerce como uma árvore: 15 blocos, 4 camadas. Group One · AI Business Strategy, MBA FIAP.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="icon" href="brand/logo/group-one-mark-blue.png">
+<link rel="stylesheet" href="brand/loader.css">
+<style>
+  :root{
+    --blue:#0066FF; --cyan:#33CCFF; --navy:#0A0F1E; --gray:#F2F4F7; --white:#FFFFFF;
+    --panel-2:#0c1426; --line:rgba(51,204,255,.16); --line-strong:rgba(51,204,255,.32);
+    --txt-dim:#9fb2d6; --txt-dim-2:#6c83ad;
+    --ctx:#0EA5C0; --dir:#2E7BFF; --sus:#8B7CFF; --exe:#16B074;
+    --maxw:1180px;
+  }
+  *{box-sizing:border-box; margin:0; padding:0}
+  body{
+    background:var(--navy); color:var(--white);
+    font-family:'Sora',system-ui,sans-serif; line-height:1.5;
+    -webkit-font-smoothing:antialiased; min-height:100vh;
+    background-image:
+      radial-gradient(900px 520px at 80% -10%, rgba(0,102,255,.22), transparent 60%),
+      radial-gradient(700px 480px at 4% 110%, rgba(51,204,255,.08), transparent 60%);
+  }
+  a{color:inherit; text-decoration:none}
+
+  .bar{position:sticky; top:0; z-index:50; background:rgba(10,15,30,.74); backdrop-filter:blur(14px);
+    border-bottom:1px solid var(--line)}
+  .bar-in{max-width:var(--maxw); margin:0 auto; padding:0 26px; height:60px; display:flex; align-items:center; gap:22px}
+  .bar a.brand{display:flex; align-items:center; gap:10px; font-weight:700}
+  .bar a.brand img{height:24px}
+  .bar .back{font-size:13px; color:var(--txt-dim); font-weight:500}
+  .bar .back:hover{color:#fff}
+  .bar .tag{margin-left:auto; font-size:11px; font-weight:600; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--cyan); border:1px solid var(--line-strong); border-radius:100px; padding:6px 13px}
+
+  .poster{max-width:var(--maxw); margin:0 auto; padding:40px 26px 70px; position:relative}
+
+  .phead{display:grid; grid-template-columns:1fr auto; gap:24px; align-items:center; margin-bottom:22px}
+  .eyebrow{font-size:12px; font-weight:600; letter-spacing:.28em; text-transform:uppercase; color:var(--cyan);
+    display:inline-flex; align-items:center; gap:12px; margin-bottom:14px}
+  .eyebrow::before{content:""; width:30px; height:1px; background:var(--cyan); opacity:.6}
+  .phead h1{font-size:clamp(30px,4.4vw,52px); font-weight:800; letter-spacing:-.025em; line-height:1.0}
+  .phead h1 .accent{color:var(--cyan)}
+  .phead p{margin-top:12px; color:var(--txt-dim); font-size:15px; max-width:58ch}
+  .phead .bot{width:128px; height:128px; flex:none; display:grid; place-items:center; overflow:visible;
+    border:1px solid var(--line); border-radius:22px; background:radial-gradient(circle at 50% 36%,#15203c,#0a0f1e)}
+  .phead .bot .g1r{display:block; width:auto; height:116px; overflow:visible}
+  .g1r{display:block; overflow:visible}
+  @media(max-width:720px){.phead{grid-template-columns:1fr}.phead .bot{display:none}}
+
+  .legend{display:flex; flex-wrap:wrap; gap:8px 16px; margin-bottom:30px}
+  .lg{display:inline-flex; align-items:center; gap:8px; font-size:12.5px; font-weight:600; color:var(--txt-dim)}
+  .lg i{width:11px; height:11px; border-radius:3px}
+
+  /* ===== tree ===== */
+  .tree{position:relative; display:flex; flex-direction:column; align-items:center; gap:20px; padding-top:6px}
+  /* central trunk */
+  .tree::before{content:""; position:absolute; top:0; bottom:40px; left:50%; width:2px; transform:translateX(-50%);
+    background:linear-gradient(180deg,transparent,var(--line-strong) 6%,var(--line) 94%,transparent); z-index:0}
+  .trow{position:relative; z-index:1; width:100%; display:flex; justify-content:center; gap:16px; flex-wrap:wrap}
+  /* branch tick connecting each row up to the trunk */
+  .trow::before{content:""; position:absolute; top:-21px; left:50%; transform:translateX(-50%);
+    width:9px; height:9px; border-radius:50%; background:var(--navy); border:2px solid var(--line-strong);
+    box-shadow:0 0 12px rgba(51,204,255,.35)}
+  .trow:first-child::before{display:none}
+
+  .tcard{position:relative; background:var(--panel-2); border:1px solid var(--line); border-radius:14px;
+    padding:16px 20px 17px 22px; overflow:hidden; flex:1 1 200px; min-width:0;
+    transition:transform .3s, border-color .3s, box-shadow .3s}
+  .tcard::before{content:""; position:absolute; left:0; top:14px; bottom:14px; width:3px; border-radius:3px;
+    background:var(--ac); box-shadow:0 0 12px var(--ac)}
+  .tcard:hover{transform:translateY(-3px); border-color:color-mix(in srgb,var(--ac) 45%,transparent);
+    box-shadow:0 16px 34px -20px rgba(0,0,0,.85)}
+  .tcard .top{display:flex; align-items:baseline; gap:9px; margin-bottom:5px}
+  .tcard .n{font-size:12px; font-weight:800; color:var(--ac); flex:none}
+  .tcard .t{font-size:14.5px; font-weight:700; line-height:1.22; color:#fff}
+  .tcard .d{font-size:12.5px; line-height:1.5; color:var(--txt-dim)}
+
+  /* band rows = trunk segments (wide, centered single card) */
+  .trow.band{max-width:none}
+  .trow.band .tcard{flex:0 1 auto; text-align:center; padding:18px 30px}
+  .trow.band .tcard::before{display:none}
+  .trow.band .tcard .top{justify-content:center}
+  .trow.band .tcard .d{margin:0 auto}
+  .tcard.w-sm{width:min(420px,92vw)} .tcard.w-md{width:min(620px,94vw)}
+  .tcard.w-lg{width:min(780px,96vw)} .tcard.w-xl{width:min(860px,96vw)}
+  /* band keeps a top accent instead of side bar */
+  .trow.band .tcard{border-top:3px solid var(--ac)}
+
+  @media(max-width:640px){
+    .tree::before,.trow::before{display:none}
+    .trow{flex-direction:column; align-items:stretch}
+    .tcard{flex:1 1 auto}
+  }
+
+  /* reveal */
+  .tcard{opacity:0; transform:translateY(26px)}
+  .reveal-on .tcard{opacity:1; transform:none}            /* no-gsap / reduced-motion fallback */
+
+  .pfoot{margin-top:40px; display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;
+    color:var(--txt-dim-2); font-size:12px}
+  .pfoot a{color:var(--cyan)}
+
+  @media(prefers-reduced-motion:reduce){.tcard{opacity:1; transform:none}}
+  @media print{
+    body{background:#fff; color:#000}
+    .bar,.g1-loader{display:none}
+    .tcard{opacity:1!important; transform:none!important; break-inside:avoid; background:#fff; color:#000}
+  }
+</style>
+</head>
+<body>
+
+<div class="bar">
+  <div class="bar-in">
+    <a class="brand" href="index.html"><img src="brand/logo/group-one-mark-white.png" alt="Group One"><span>Group One</span></a>
+    <a class="back" href="index.html">← Versão narrada</a>
+    <span class="tag">Mapa Estratégico · G1</span>
+  </div>
+</div>
+
+<div class="poster">
+  <div class="phead">
+    <div>
+      <p class="eyebrow">Quantum Commerce · Framework G1</p>
+      <h1>A árvore <span class="accent">estratégica</span></h1>
+      <p>Os 15 blocos do nosso framework de adoção de IA, dispostos como uma árvore — do tronco
+        (empresa e estratégia) aos galhos de sustentação e execução. A estratégia inteira em um quadro.</p>
+    </div>
+    <div class="bot" data-g1-robot></div>
+  </div>
+
+  <div class="legend">
+    <span class="lg"><i style="background:var(--ctx)"></i>Contexto</span>
+    <span class="lg"><i style="background:var(--dir)"></i>Direção</span>
+    <span class="lg"><i style="background:var(--sus)"></i>Sustentação</span>
+    <span class="lg"><i style="background:var(--exe)"></i>Execução</span>
+  </div>
+
+  <div class="tree" id="tree"></div>
+
+  <div class="pfoot">
+    <div>Group One · Thunderbolts — AI Business Strategy · FIAP</div>
+    <div><a href="brand/index.html">Identidade da marca ↗</a></div>
+  </div>
+</div>
+
+<script src="brand/vendor/gsap.min.js"></script>
+<script>
+const LAYERS = {ctx:'Contexto', dir:'Direção', sus:'Sustentação', exe:'Execução'};
+const B = {
+  1:{l:'ctx', t:'Empresa',                         d:'Varejo omnicanal · 12 países · +5M SKUs, travado no muro da escalabilidade.'},
+  2:{l:'dir', t:'Estratégia / Valor',              d:'Eficiência + personalização + velocidade de decisão, em escala.'},
+  3:{l:'sus', t:'IA — Letramento / Contexto / Uso',d:'IA como competência distribuída entre todas as áreas.'},
+  4:{l:'dir', t:'Ambição para IA',                 d:'Virar plataforma agêntica: a IA executa ponta a ponta.'},
+  5:{l:'sus', t:'Organização / Cultura',           d:'Hub + guildas; cascata de liderança e AI Champions.'},
+  6:{l:'ctx', t:'Mercado',                         d:'A concorrência migrou de preço para experiência cognitiva.'},
+  7:{l:'sus', t:'Soft Plan',                       d:'Change management: capacitação, comunicação e carreiras.'},
+  8:{l:'ctx', t:'Diagnóstico',                     d:'Tem dados e escala; falta ação autônoma e arquitetura de decisão.'},
+  9:{l:'dir', t:'Visão',                           d:'18 meses: 80% das interações por agentes autônomos auditáveis.'},
+  10:{l:'sus', t:'Governança / Manifesto / Regulação', d:'3 zonas de decisão, comitê de risco e conformidade nos 12 países.'},
+  11:{l:'exe', t:'Hard Plan',                      d:'3 ondas: conectar o cérebro → ensinar a agir → antecipar.'},
+  12:{l:'dir', t:'Objetivos Estratégicos',        d:'Crescimento, eficiência e valor — metas mensuráveis.'},
+  13:{l:'exe', t:'Benchmark',                      d:'Klarna, Amazon Rufus, Shopify Sidekick, Mercado Livre.'},
+  14:{l:'exe', t:'Temporalidade / Adaptação / Lições / Comunicação de Valor', d:'18 meses em 3 ondas; janela de mercado de ~24 meses.'},
+  15:{l:'exe', t:'Ação / Inovação',               d:'Motor de inovação: hackathons, guildas e AI Engineers.'},
+};
+// tree rows — band rows carry a width class; group rows hold several blocks
+const ROWS = [
+  {band:true, w:'w-sm', blocks:[1]},
+  {band:true, w:'w-md', blocks:[2]},
+  {blocks:[3,4,5,6]},
+  {blocks:[7,8,9]},
+  {band:true, w:'w-lg', blocks:[10]},
+  {blocks:[11,12,13]},
+  {band:true, w:'w-xl', blocks:[14]},
+  {band:true, w:'w-sm', blocks:[15]},
+];
+
+const tree = document.getElementById('tree');
+ROWS.forEach(row=>{
+  const r = document.createElement('div');
+  r.className = 'trow' + (row.band ? ' band' : '');
+  r.innerHTML = row.blocks.map(n=>{
+    const b = B[n];
+    return `<article class="tcard ${row.w||''}" style="--ac:var(--${b.l})">
+      <div class="top"><span class="n">${String(n).padStart(2,'0')}</span><span class="t">${b.t}</span></div>
+      <div class="d">${b.d}</div>
+    </article>`;
+  }).join('');
+  tree.appendChild(r);
+});
+
+/* fluid, organic reveal — GSAP if present, else CSS fallback */
+(function(){
+  const gsap = window.gsap;
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(!gsap || reduce){ tree.classList.add('reveal-on'); document.querySelectorAll('.tcard').forEach(c=>{c.style.opacity=1;c.style.transform='none';}); return; }
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        const cards = e.target.querySelectorAll('.tcard');
+        gsap.to(cards, {opacity:1, y:0, duration:.75, ease:'power3.out', stagger:0.09, overwrite:'auto'});
+        io.unobserve(e.target);
+      }
+    });
+  },{threshold:.25, rootMargin:'0px 0px -6% 0px'});
+  document.querySelectorAll('.trow').forEach(r=>io.observe(r));
+})();
+</script>
+<script src="brand/loader.js"></script>
+<script src="brand/robot.js"></script>
+</body>
+</html>

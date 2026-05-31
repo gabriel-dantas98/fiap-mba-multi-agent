@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quantum Commerce — Estratégia de Adoção de IA · Group One</title>
+<meta name="description" content="Mapa estratégico de adoção de IA da Quantum Commerce — entrega da disciplina AI Business Strategy, MBA FIAP. Group One.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="icon" href="brand/logo/group-one-mark-blue.png">
+<link rel="stylesheet" href="brand/loader.css">
+<style>
+  :root{
+    /* Group One brand tokens */
+    --blue:#0066FF; --cyan:#33CCFF; --navy:#0A0F1E; --gray:#F2F4F7; --white:#FFFFFF;
+    --panel:#0f1830; --panel-2:#0c1426;
+    --line:rgba(51,204,255,.16); --line-strong:rgba(51,204,255,.32);
+    --txt-dim:#9fb2d6; --txt-dim-2:#6c83ad;
+    /* layer accents — chosen to read on both navy and light backgrounds */
+    --ctx:#0EA5C0; --dir:#2E7BFF; --sus:#8B7CFF; --exe:#16B074; --amber:#D6982E;
+    --maxw:1180px; --r:18px;
+    --ease:cubic-bezier(.22,.61,.36,1);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--navy); color:var(--white);
+    font-family:'Sora',system-ui,sans-serif; line-height:1.55;
+    -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility; overflow-x:hidden;
+  }
+  ::selection{background:var(--blue); color:#fff}
+  img{display:block; max-width:100%}
+  a{color:inherit; text-decoration:none}
+  .wrap{max-width:var(--maxw); margin:0 auto; padding:0 32px}
+
+  /* ---------- reading progress ---------- */
+  .progress{position:fixed; top:0; left:0; height:3px; width:0; z-index:60;
+    background:linear-gradient(90deg,var(--blue),var(--cyan)); box-shadow:0 0 12px rgba(51,204,255,.45)}
+
+  /* ---------- nav ---------- */
+  .nav{position:sticky; top:0; z-index:50;
+    background:rgba(10,15,30,.72); backdrop-filter:blur(14px); border-bottom:1px solid var(--line)}
+  .nav .wrap{display:flex; align-items:center; gap:28px; height:68px}
+  .nav-brand{display:flex; align-items:center; gap:12px; font-weight:700; letter-spacing:.02em}
+  .nav-brand img{height:28px}
+  .nav-links{display:flex; gap:28px; margin-left:auto; font-size:14px; font-weight:500}
+  .nav-links a{color:var(--txt-dim); transition:color .2s}
+  .nav-links a:hover,.nav-links a.active{color:var(--white)}
+  .nav-links a.ext{color:var(--cyan)}
+  .nav-tag{font-size:11px; font-weight:600; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--cyan); border:1px solid var(--line-strong); border-radius:100px; padding:7px 14px; white-space:nowrap}
+  @media(max-width:980px){.nav-links{display:none}}
+
+  /* ---------- side act dots ---------- */
+  .dots{position:fixed; right:24px; top:50%; transform:translateY(-50%); z-index:40;
+    display:flex; flex-direction:column; gap:18px}
+  .dots a{display:flex; align-items:center; gap:10px; flex-direction:row-reverse;
+    font-size:11px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--txt-dim-2)}
+  .dots a i{width:9px; height:9px; border-radius:50%; border:1.5px solid var(--txt-dim-2);
+    background:transparent; transition:.3s; flex:none}
+  .dots a span{opacity:0; transform:translateX(6px); transition:.3s; white-space:nowrap}
+  .dots a:hover span,.dots a.active span{opacity:1; transform:none}
+  .dots a.active{color:var(--white)}
+  .dots a.active i{background:var(--ac,var(--cyan)); border-color:var(--ac,var(--cyan)); box-shadow:0 0 0 4px rgba(51,204,255,.14)}
+  @media(max-width:1100px){.dots{display:none}}
+
+  /* ---------- hero ---------- */
+  .hero{padding:90px 0 104px; position:relative; overflow:hidden;
+    background:
+      radial-gradient(900px 520px at 80% -10%, rgba(0,102,255,.32), transparent 60%),
+      radial-gradient(700px 480px at 6% 110%, rgba(51,204,255,.10), transparent 60%),
+      var(--navy)}
+  .hero-grid{position:absolute; inset:0; opacity:.5; pointer-events:none;
+    background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);
+    background-size:64px 64px; mask-image:radial-gradient(720px 540px at 72% 34%,#000,transparent 75%)}
+  .hero .wrap{position:relative; display:grid; grid-template-columns:1.18fr .82fr; gap:48px; align-items:center}
+  .eyebrow{font-size:12.5px; font-weight:600; letter-spacing:.28em; text-transform:uppercase;
+    color:var(--cyan); display:inline-flex; align-items:center; gap:14px; margin-bottom:20px}
+  .eyebrow::before{content:""; width:34px; height:1px; background:var(--cyan); opacity:.6}
+  .hero h1{font-size:clamp(42px,6.4vw,78px); line-height:1.0; letter-spacing:-.025em; font-weight:800; margin:8px 0 0}
+  .hero h1 .accent{color:var(--cyan)}
+  .lede{font-size:18px; color:var(--txt-dim); max-width:500px; margin:24px 0 0; line-height:1.62}
+  .lede b{color:#fff; font-weight:600}
+  .hero-tag{margin-top:30px; display:inline-flex; align-items:center; gap:12px; font-size:14px; font-weight:600}
+  .hero-tag b{color:var(--cyan)}
+  .meta{margin-top:26px; display:flex; flex-wrap:wrap; gap:10px}
+  .chip{font-size:12px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:var(--txt-dim);
+    background:rgba(255,255,255,.03); border:1px solid var(--line); border-radius:100px; padding:9px 15px}
+  .chip b{color:var(--cyan)}
+  .hero-stage{display:flex; align-items:center; justify-content:center;
+    border:1px solid var(--line); border-radius:28px; padding:44px;
+    background:radial-gradient(circle at 50% 36%,#15203c,#0a0f1e); position:relative}
+  .hero-stage svg{width:min(280px,82%); height:auto}
+  .hero-bot{width:78%; max-width:300px}
+  .hero-bot .g1r,.g1r{display:block; width:100%; height:auto; overflow:visible}
+  .hero-stage::after{content:"G-One"; position:absolute; top:16px; right:18px; font-size:10px;
+    letter-spacing:.2em; color:var(--txt-dim-2); font-weight:600; text-transform:uppercase}
+  @media(max-width:880px){.hero .wrap{grid-template-columns:1fr}.hero-stage{order:-1; padding:32px}}
+
+  /* legend / layer filter */
+  .legend{margin-top:32px}
+  .legend-label{font-size:10px; font-weight:600; letter-spacing:.2em; text-transform:uppercase;
+    color:var(--txt-dim-2); margin-bottom:12px}
+  .legend-row{display:flex; flex-wrap:wrap; gap:10px}
+  .lg{display:inline-flex; align-items:center; gap:9px; cursor:pointer; user-select:none;
+    font-size:13px; font-weight:600; color:var(--txt-dim);
+    background:rgba(255,255,255,.03); border:1px solid var(--line); border-radius:100px; padding:9px 16px; transition:.25s}
+  .lg i{width:11px; height:11px; border-radius:3px; transition:.25s}
+  .lg:hover{color:#fff; border-color:var(--line-strong)}
+  .lg.off{opacity:.38}
+
+  /* ---------- act sections ---------- */
+  .act{padding:96px 0; position:relative}
+  .act.light{background:var(--gray); color:var(--navy)}
+  .act-grid{display:grid; grid-template-columns:minmax(240px,330px) 1fr; gap:48px; align-items:start}
+  .act-head{position:sticky; top:96px}
+  .act-num{font-size:clamp(64px,8vw,112px); font-weight:800; line-height:.82; letter-spacing:-.03em;
+    color:var(--ac); opacity:.16}
+  .act-kicker{font-size:12px; font-weight:600; letter-spacing:.22em; text-transform:uppercase;
+    color:var(--ac); margin:16px 0 10px}
+  .act-title{font-size:clamp(28px,4vw,44px); line-height:1.04; letter-spacing:-.02em; font-weight:800}
+  .act-sub{margin-top:16px; font-size:15.5px; max-width:34ch; color:var(--txt-dim)}
+  .act.light .act-sub{color:#5d6b86}
+  .act-layer{margin-top:18px; display:inline-flex; align-items:center; gap:8px;
+    font-size:10px; font-weight:600; letter-spacing:.16em; text-transform:uppercase;
+    color:var(--ac); background:var(--acbg); border:1px solid var(--acdim); border-radius:100px; padding:6px 12px}
+
+  .cards{display:flex; flex-direction:column; gap:18px}
+
+  /* ---------- card ---------- */
+  .card{position:relative; border-radius:var(--r); padding:24px 26px 24px 28px;
+    background:var(--panel-2); border:1px solid var(--line); overflow:hidden;
+    transition:transform .4s var(--ease),box-shadow .4s,border-color .4s,opacity .5s;
+    opacity:0; transform:translateY(22px)}
+  .act.light .card{background:#fff; border-color:rgba(10,15,30,.10)}
+  .card.in{opacity:1; transform:none}
+  .card::before{content:""; position:absolute; left:0; top:22px; bottom:22px; width:3px;
+    border-radius:3px; background:var(--ac); box-shadow:0 0 14px var(--ac)}
+  .act.light .card::before{box-shadow:none}
+  .card:hover{transform:translateY(-4px); border-color:var(--acdim);
+    box-shadow:0 22px 46px -26px rgba(0,0,0,.7)}
+  .act.light .card:hover{box-shadow:0 22px 44px -26px rgba(10,15,30,.35)}
+  .chead{display:flex; align-items:baseline; gap:14px; margin-bottom:11px}
+  .num{font-size:15px; font-weight:800; color:var(--ac); flex:none; letter-spacing:.02em}
+  .ctitle{font-size:20px; line-height:1.18; letter-spacing:-.01em; font-weight:700; color:#fff}
+  .act.light .ctitle{color:var(--navy)}
+  .ctag{margin-left:auto; align-self:center; flex:none; font-size:9.5px; font-weight:600;
+    letter-spacing:.14em; text-transform:uppercase; color:var(--ac)}
+  .cbody{font-size:15px; line-height:1.62; color:var(--txt-dim)}
+  .act.light .cbody{color:#5d6b86}
+  .cbody strong{color:#fff; font-weight:600}
+  .act.light .cbody strong{color:var(--navy)}
+
+  /* layer dimming on filter */
+  .card.dim{opacity:.2; filter:saturate(.4)}
+  .card.dim:hover{opacity:.5}
+
+  /* ---------- footer ---------- */
+  footer{border-top:1px solid var(--line); padding:64px 0 80px; background:var(--navy); color:#fff}
+  .foot-grid{display:grid; grid-template-columns:1fr auto; gap:40px; align-items:end}
+  .foot-brand{display:flex; align-items:center; gap:16px; margin-bottom:22px}
+  .foot-brand img{height:36px}
+  .foot-team .k{font-size:10px; font-weight:600; letter-spacing:.22em; text-transform:uppercase; color:var(--cyan); margin-bottom:10px}
+  .foot-team h3{font-size:26px; font-weight:800; letter-spacing:-.01em}
+  .foot-team .disc{color:var(--txt-dim); font-size:14px; margin:4px 0 18px}
+  .members{display:flex; flex-wrap:wrap; gap:8px}
+  .member{font-size:13px; font-weight:500; color:#fff;
+    background:rgba(255,255,255,.04); border:1px solid var(--line); border-radius:100px; padding:8px 14px}
+  .member small{color:var(--txt-dim-2)}
+  .foot-note{font-size:12.5px; line-height:1.7; color:var(--txt-dim-2); max-width:34ch; text-align:right}
+  .foot-note b{color:var(--amber)}
+  .foot-note a{color:var(--cyan)}
+
+  /* ---------- recursos ---------- */
+  .res-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:18px; margin:34px 0 40px}
+  .res-card{display:flex; flex-direction:column; gap:8px; padding:24px; border-radius:16px;
+    background:#fff; border:1px solid rgba(10,15,30,.10); transition:transform .3s var(--ease),box-shadow .3s,border-color .3s}
+  .res-card:hover{transform:translateY(-4px); border-color:rgba(0,102,255,.35);
+    box-shadow:0 22px 44px -26px rgba(10,15,30,.35)}
+  .res-ic{font-size:26px}
+  .res-t{font-size:18px; font-weight:700; color:var(--navy)}
+  .res-d{font-size:14px; line-height:1.5; color:#5d6b86; flex:1}
+  .res-go{font-size:13px; font-weight:600; color:var(--blue)}
+  .ds-prompt{border:1px solid rgba(10,15,30,.12); border-radius:18px; overflow:hidden; background:var(--navy)}
+  .ds-head{display:flex; align-items:center; justify-content:space-between; gap:16px;
+    padding:18px 22px; border-bottom:1px solid var(--line); background:var(--panel-2)}
+  .ds-kick{font-size:10px; font-weight:600; letter-spacing:.2em; text-transform:uppercase; color:var(--cyan)}
+  .ds-title{font-size:15.5px; font-weight:700; color:#fff; margin-top:4px}
+  .ds-copy{font-family:inherit; font-size:13px; font-weight:600; cursor:pointer; white-space:nowrap;
+    color:#fff; background:var(--blue); border:0; border-radius:100px; padding:10px 18px; transition:.2s}
+  .ds-copy:hover{background:#0a4fcc}
+  .ds-copy.done{background:var(--exe)}
+  .ds-body{margin:0; max-height:360px; overflow:auto; padding:22px;
+    font-family:ui-monospace,'SF Mono',Menlo,monospace; font-size:12.5px; line-height:1.6;
+    color:var(--txt-dim); white-space:pre-wrap; word-break:break-word}
+  .ds-foot{padding:14px 22px; border-top:1px solid var(--line); background:var(--panel-2);
+    font-size:12px; color:var(--txt-dim-2)}
+  .ds-foot a{color:var(--cyan)}
+  @media(max-width:760px){ .res-grid{grid-template-columns:1fr} }
+
+  @media(max-width:760px){
+    .wrap{padding:0 18px}
+    .hero{padding:64px 0 60px}
+    .act{padding:60px 0}
+    .act-grid{grid-template-columns:1fr; gap:26px}
+    .act-head{position:static}
+    .foot-grid{grid-template-columns:1fr}
+    .foot-note{text-align:left; max-width:none}
+  }
+  @media(prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto}
+    .card{opacity:1; transform:none; transition:border-color .3s,box-shadow .3s}
+  }
+  @media print{
+    body{background:#fff; color:#000}
+    .hero-grid,.dots,.progress,.nav{display:none}
+    .card{opacity:1!important; transform:none!important; break-inside:avoid; box-shadow:none}
+    .act-head{position:static}
+  }
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+
+<!-- ===================== NAV ===================== -->
+<nav class="nav">
+  <div class="wrap">
+    <a class="nav-brand" href="#topo"><img src="brand/logo/group-one-mark-white.png" alt="Group One"><span>Group One</span></a>
+    <div class="nav-links" id="navlinks">
+      <a href="mapa.html" class="ext">Mapa ↗</a>
+      <a href="brand/index.html" class="ext">Marca ↗</a>
+    </div>
+    <span class="nav-tag">AI Business Strategy · FIAP</span>
+  </div>
+</nav>
+
+<nav class="dots" id="dots" aria-label="Navegação por atos"></nav>
+
+<!-- ===================== HERO ===================== -->
+<header class="hero" id="topo">
+  <div class="hero-grid"></div>
+  <div class="wrap">
+    <div>
+      <p class="eyebrow">Disciplina · AI Business Strategy</p>
+      <h1>Quantum <span class="accent">Commerce</span></h1>
+      <p class="lede">Mapa estratégico de adoção de IA — da <b>fragmentação de dados</b> à
+        <b>plataforma agêntica</b>. A trajetória de um varejo omnicanal que precisa transformar
+        escala em vantagem cognitiva.</p>
+      <div class="hero-tag">Por <b>Group One</b> · MBA em AI Engineering &amp; Multi-Agents — FIAP</div>
+      <div class="meta">
+        <span class="chip">FRAMEWORK <b>G1</b></span>
+        <span class="chip">15 BLOCOS · 4 CAMADAS</span>
+        <span class="chip">HORIZONTE <b>18 MESES</b></span>
+      </div>
+      <div class="legend">
+        <div class="legend-label">Clique para destacar uma camada</div>
+        <div class="legend-row" id="legend"></div>
+      </div>
+    </div>
+    <div class="hero-stage">
+      <div class="hero-bot" data-g1-robot></div>
+    </div>
+  </div>
+</header>
+
+<!-- acts injected here -->
+<div id="acts"></div>
+
+<!-- ===================== FOOTER ===================== -->
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-team">
+        <div class="foot-brand"><img src="brand/logo/group-one-full-white.png" alt="Group One"></div>
+        <div class="k">Group One · AI Engineering</div>
+        <h3>Thunderbolts</h3>
+        <div class="disc">Entrega da disciplina AI Business Strategy</div>
+        <div class="members" id="members"></div>
+      </div>
+      <div class="foot-note">
+        Framework estratégico de adoção de IA · 15 blocos · 4 camadas · horizonte de 18 meses.<br><br>
+        <a href="mapa.html">Ver o mapa completo ↗</a> · <a href="brand/index.html">Identidade da marca ↗</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+const LAYERS = {
+  ctx:{name:'Contexto',     v:'--ctx'},
+  dir:{name:'Direção',      v:'--dir'},
+  sus:{name:'Sustentação',  v:'--sus'},
+  exe:{name:'Execução',     v:'--exe'},
+};
+
+const BLOCKS = {
+  1:{layer:'ctx', t:'Empresa', b:'Varejo omnicanal nativo digital · <strong>12 países</strong> · <strong>+5M SKUs</strong>. Crescimento exponencial barrado pelo “muro da escalabilidade operacional”: suporte, logística e personalização via scripts/RPA ficaram insustentáveis. A competição migrou de preço para <strong>fricção zero</strong>.'},
+  2:{layer:'dir', t:'Estratégia / Valor', b:'Combinar <strong>eficiência operacional + personalização + velocidade de decisão</strong> para crescer em escala. IA como habilitadora da operação — não só produtividade pontual: fricção zero, resolução instantânea e personalização hipercontextualizada.'},
+  3:{layer:'sus', t:'IA — Letramento / Contexto / Uso', b:'Base organizacional para uso responsável e escalável: capacitação contínua, experimentação controlada e adoção guiada por evidências. Meta: <strong>IA como competência distribuída</strong> entre as áreas — não privilégio de times especializados.'},
+  4:{layer:'dir', t:'Ambição para IA', b:'Tornar-se <strong>plataforma agêntica</strong>: a IA não só responde, executa ponta a ponta. (1) Camada operacional primária; (2) agentes resolvem devoluções, recomendam, ajustam rotas e renegociam prazos; (3) humanos viram curadores de política, supervisores de exceção e arquitetos de agentes.'},
+  5:{layer:'sus', t:'Organização / Cultura', b:'Hub habilitador + guildas nas áreas. <strong>Cascata de liderança</strong>: C-level usa IA primeiro → seleciona AI Champions → Champions formam guildas (atendimento, logística, marketing, comercial). Hackathon trimestral nos 12 países com Champions como mentores. Embaixadores técnicos formalizados (10–15% da carga em didática).'},
+  6:{layer:'ctx', t:'Mercado', b:'A fronteira competitiva saiu de preço para <strong>experiência cognitiva</strong>. Amazon Rufus, Klarna, Shopify Sidekick e Mercado Livre já rodam interfaces agênticas em produção. FAQ, chatbot de árvore e filtros viraram piso de mercado. Sem migrar em <strong>~24 meses</strong> = legacy por obsolescência de experiência.'},
+  7:{layer:'sus', t:'Soft Plan', b:'<strong>Change management estruturado</strong>: capacitação, comunicação executiva e redesenho formal de carreiras para reduzir ansiedade e deixar claro o que muda. Ciclos ágeis de revisão de estratégia + comunicação forte das “vitórias” de IA, retroalimentando o letramento e mantendo a cultura engajada.'},
+  8:{layer:'ctx', t:'Diagnóstico', b:'Tem dados, escala e marca — falta <strong>capacidade de ação autônoma</strong> e investimento intencional na experiência. Não é problema de tecnologia, é de <strong>arquitetura de decisão</strong>. Ordem de criticidade: (1) desconexão de dados — sem isso a IA não escala; (2) atendimento como centro de custo insustentável; (3) gargalos de receita no carrinho e na última milha.'},
+  9:{layer:'dir', t:'Visão', b:'Em <strong>18 meses</strong>: 80% das interações cliente-empresa resolvidas por <strong>agentes autônomos auditáveis</strong>; dados unificados em tempo real entre as áreas críticas; recomendação e logística decididas por sistemas agênticos com humanos supervisionando exceções. Resultado: <strong>NPS em alta e ganho de margem operacional</strong>.'},
+  10:{layer:'sus', t:'Governança / Manifesto / Regulação', b:'Manifesto com <strong>3 zonas de decisão</strong>: autônoma do agente · assistida (humano no loop) · nunca automatizável. Comitê de risco multidisciplinar (jurídico, segurança, negócio, tech) com poder de veto. Conformidade nos 12 países (LGPD, GDPR, AI Act, regulações locais), logs auditáveis por decisão e política de fallback. <strong>Áreas-suporte reestruturadas antes dos agentes em produção</strong>. Combate ativo à Shadow AI.'},
+  11:{layer:'exe', t:'Hard Plan', b:'Roadmap em <strong>3 ondas</strong>, na ordem de prioridade. <strong>O1 — Conectar o cérebro</strong>: dados unificados, CDP, catálogo vetorizado, orquestração de agentes, observabilidade. <strong>O2 — Ensinar a agir</strong>: devoluções end-to-end, suporte cognitivo, FAQ profundo. <strong>O3 — Ensinar a antecipar</strong>: recomendação contextual, última milha, anti-abandono. Princípio: <strong>ecossistema &gt; best-of-breed</strong>.'},
+  12:{layer:'dir', t:'Objetivos Estratégicos', b:'<strong>Crescimento</strong>: ↑conversão, recuperação de carrinho, ↑ticket médio, cross/up-sell inteligente. <strong>Eficiência</strong>: ↓custo de atendimento e retrabalho, otimização logística, ↑margem. <strong>Valor</strong>: 80% das interações via agentes auditáveis, ↑NPS, ↑LTV e diferenciação por experiência cognitiva.'},
+  13:{layer:'exe', t:'Benchmark', b:'<strong>Klarna</strong> — agente substituiu ~700 FTEs sem perder CSAT (espelho do nosso desafio de suporte). <strong>Amazon Rufus</strong> — recomendação agêntica em escala comparável ao volume da Quantum. <strong>Shopify Sidekick</strong> — IA como produto para o lojista. <strong>Mercado Livre</strong> — LLMs em busca, moderação e fraude, contexto LatAm próximo.'},
+  14:{layer:'exe', t:'Temporalidade / Adaptação / Lições / Comunicação de Valor', b:'Horizonte de <strong>18 meses em 3 ondas sequenciais</strong>; janela de mercado de ~24 meses antes do risco de virar legacy. Adaptação por ciclos ágeis — cada onda só avança sustentando valor. Lições capturadas em retros por onda e nos hackathons trimestrais. Comunicação contínua das “vitórias” de IA para retroalimentar letramento e engajamento. <strong>Onda 3 entra parcial → exige plano formal de continuidade.</strong>'},
+  15:{layer:'exe', t:'Ação / Inovação', b:'<strong>Motor de inovação</strong>: rituais de experimentação controlada, hackathons nos 12 países e guildas temáticas gerando casos de uso a partir do chão das áreas. AI Engineers como <strong>arquitetos e mestres de obra</strong> da transformação agêntica. Presença em open-source, meetups e palestras para atrair talento sênior. <strong>Primeiras ações</strong>: time de dados dedicado + reestruturação das áreas-suporte (pré-requisitos da Onda 1).'},
+};
+
+const ACTS = [
+  {id:'contexto',    n:'01', layer:'ctx', light:true,  kicker:'Ato 01 · O Contexto',    title:'Onde estamos, e por que dói', sub:'O ponto de partida: escala conquistada, mas operação no limite.', blocks:[1,6,8]},
+  {id:'direcao',     n:'02', layer:'dir', light:false, kicker:'Ato 02 · A Direção',      title:'Para onde vamos',             sub:'A aposta estratégica e o destino: virar plataforma agêntica.', blocks:[2,4,9,12]},
+  {id:'sustentacao', n:'03', layer:'sus', light:true,  kicker:'Ato 03 · A Sustentação',  title:'O que sustenta a virada',     sub:'Pessoas, cultura e governança que tornam a transformação possível.', blocks:[3,5,7,10]},
+  {id:'execucao',    n:'04', layer:'exe', light:false, kicker:'Ato 04 · A Execução',     title:'Como fazemos acontecer',      sub:'O plano concreto, em ondas, com referências e motor de inovação.', blocks:[11,13,14,15]},
+];
+
+const MEMBERS = [
+  {n:'Yelena Belova',    r:'Líder'},
+  {n:'Bucky Barnes',     r:'Estratégia'},
+  {n:'Alexei Shostakov', r:'Operações'},
+  {n:'Ava Starr',        r:'Dados'},
+  {n:'John Walker',      r:'Governança'},
+  {n:'Bob Reynolds',     r:'Inovação'},
+];
+
+const cssVar = v => `var(${v})`;
+function accentVars(el, layer){
+  const v = cssVar(LAYERS[layer].v);
+  el.style.setProperty('--ac', v);
+  el.style.setProperty('--acdim', `color-mix(in srgb, ${v} 45%, transparent)`);
+  el.style.setProperty('--acbg',  `color-mix(in srgb, ${v} 12%, transparent)`);
+}
+
+/* ---- render acts + cards ---- */
+const actsEl = document.getElementById('acts');
+ACTS.forEach(act => {
+  const section = document.createElement('section');
+  section.className = 'act' + (act.light ? ' light' : '');
+  section.id = act.id;
+  accentVars(section, act.layer);
+
+  const cards = act.blocks.map(n => {
+    const d = BLOCKS[n];
+    return `<article class="card" data-layer="${d.layer}">
+      <div class="chead">
+        <span class="num">${String(n).padStart(2,'0')}</span>
+        <h3 class="ctitle">${d.t}</h3>
+        <span class="ctag">${LAYERS[d.layer].name}</span>
+      </div>
+      <p class="cbody">${d.b}</p>
+    </article>`;
+  }).join('');
+
+  section.innerHTML = `
+    <div class="wrap"><div class="act-grid">
+      <div class="act-head">
+        <div class="act-num">${act.n}</div>
+        <div class="act-kicker">${act.kicker}</div>
+        <h2 class="act-title">${act.title}</h2>
+        <p class="act-sub">${act.sub}</p>
+        <span class="act-layer">${LAYERS[act.layer].name}</span>
+      </div>
+      <div class="cards">${cards}</div>
+    </div></div>`;
+  actsEl.appendChild(section);
+});
+
+/* ---- nav links to acts ---- */
+const navlinks = document.getElementById('navlinks');
+const extLink = navlinks.querySelector('.ext');
+ACTS.forEach(act => {
+  const a = document.createElement('a');
+  a.href = '#' + act.id; a.dataset.id = act.id;
+  a.textContent = act.kicker.replace(/·.*/, '').trim();
+  navlinks.insertBefore(a, extLink);
+});
+
+/* ---- legend / layer highlight filter ---- */
+const legendEl = document.getElementById('legend');
+const active = new Set(Object.keys(LAYERS));
+Object.entries(LAYERS).forEach(([key, l]) => {
+  const c = cssVar(l.v);
+  const el = document.createElement('button');
+  el.className = 'lg'; el.type = 'button';
+  el.innerHTML = `<i style="background:${c}"></i>${l.name}`;
+  el.addEventListener('click', () => {
+    if(active.size === Object.keys(LAYERS).length){ active.clear(); active.add(key); }
+    else if(active.has(key)){ active.delete(key); if(active.size === 0) Object.keys(LAYERS).forEach(k=>active.add(k)); }
+    else { active.add(key); }
+    applyFilter();
+  });
+  legendEl.appendChild(el);
+});
+function applyFilter(){
+  const all = active.size === Object.keys(LAYERS).length;
+  const keys = Object.keys(LAYERS);
+  document.querySelectorAll('.lg').forEach((b,i)=> b.classList.toggle('off', !all && !active.has(keys[i])));
+  document.querySelectorAll('.card').forEach(c=> c.classList.toggle('dim', !all && !active.has(c.dataset.layer)));
+}
+
+/* ---- members ---- */
+const membersEl = document.getElementById('members');
+MEMBERS.forEach(m=>{
+  const el = document.createElement('span');
+  el.className = 'member';
+  el.innerHTML = `${m.n} <small>· ${m.r}</small>`;
+  membersEl.appendChild(el);
+});
+
+/* ---- scroll reveal ---- */
+const cards = [...document.querySelectorAll('.card')];
+const io = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      const idx = cards.indexOf(e.target);
+      e.target.style.transitionDelay = (Math.min(idx,4)*60)+'ms';
+      e.target.classList.add('in');
+      io.unobserve(e.target);
+    }
+  });
+},{threshold:.12, rootMargin:'0px 0px -8% 0px'});
+cards.forEach(c=>io.observe(c));
+
+/* ---- reading progress ---- */
+const progress = document.getElementById('progress');
+const onScroll = ()=>{
+  const h = document.documentElement;
+  const max = h.scrollHeight - h.clientHeight;
+  progress.style.width = (max>0 ? (h.scrollTop/max*100) : 0) + '%';
+};
+addEventListener('scroll', onScroll, {passive:true}); onScroll();
+
+/* ---- side dots + scrollspy ---- */
+const dotsEl = document.getElementById('dots');
+ACTS.forEach(act=>{
+  const a = document.createElement('a');
+  a.href = '#'+act.id; a.dataset.id = act.id;
+  accentVars(a, act.layer);
+  a.innerHTML = `<i></i><span>${act.kicker.replace(/·.*/,'').trim()}</span>`;
+  dotsEl.appendChild(a);
+});
+const spy = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      document.querySelectorAll('.dots a, .nav-links a[data-id]').forEach(a=>
+        a.classList.toggle('active', a.dataset.id === e.target.id));
+    }
+  });
+},{rootMargin:'-45% 0px -45% 0px'});
+document.querySelectorAll('.act').forEach(s=>spy.observe(s));
+
+/* ---- design system prompt: load DESIGN.md + copy ---- */
+(function(){
+  const body = document.getElementById('ds-body');
+  const btn  = document.getElementById('ds-copy');
+  if(!body || !btn) return;
+  let text = '';
+  fetch('brand/DESIGN.md')
+    .then(r => r.ok ? r.text() : Promise.reject(r.status))
+    .then(t => { text = t; body.textContent = t; })
+    .catch(() => { body.textContent = 'Não foi possível carregar brand/DESIGN.md. Abra o arquivo diretamente.'; });
+  btn.addEventListener('click', async () => {
+    const payload = text || body.textContent;
+    try { await navigator.clipboard.writeText(payload); }
+    catch(_) {
+      const r = document.createRange(); r.selectNodeContents(body);
+      const sel = getSelection(); sel.removeAllRanges(); sel.addRange(r);
+      try { document.execCommand('copy'); } catch(e){}
+      sel.removeAllRanges();
+    }
+    const old = btn.textContent;
+    btn.textContent = '✓ Copiado'; btn.classList.add('done');
+    setTimeout(() => { btn.textContent = old; btn.classList.remove('done'); }, 1800);
+  });
+})();
+</script>
+<script src="brand/vendor/gsap.min.js"></script>
+<script src="brand/loader.js"></script>
+<script src="brand/robot.js"></script>
+</body>
+</html>

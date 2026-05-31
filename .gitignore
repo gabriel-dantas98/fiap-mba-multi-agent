@@ -5,7 +5,6 @@ __pycache__/
 .pytest_cache/
 .ruff_cache/
 .mypy_cache/
-*.egg-info/
 # Only ignore Python build output at the repo root.
 # Hand-authored frontend examples under apps/**/dist/ must be committed.
 /dist/
@@ -14,3 +13,6 @@ build/
 .env
 .env.local
 node_modules/
+
+# GitHub Pages staging output (built by scripts/build_pages.sh)
+_site/

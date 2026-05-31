@@ -1,0 +1,40 @@
+/* ===== Group One — G-One mascot idle animation =====
+   Inline the mascot SVG with class="g1-bot" and group its parts:
+     <g class="g1-bot-antenna">…</g>  <g class="g1-bot-eyes">…</g>
+   Then link this file. Animations are no-ops under prefers-reduced-motion. */
+
+.g1-bot{
+  transform-box:fill-box; transform-origin:center;
+  animation:g1-float 4.5s ease-in-out infinite;
+  will-change:transform;
+}
+@keyframes g1-float{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-9px)}
+}
+
+/* antenna gently sways, tip blinks */
+.g1-bot-antenna{
+  transform-box:fill-box; transform-origin:bottom;
+  animation:g1-antenna 3.6s ease-in-out infinite;
+}
+@keyframes g1-antenna{
+  0%,100%{transform:rotate(-5deg)}
+  50%{transform:rotate(5deg)}
+}
+.g1-bot-antenna circle{animation:g1-pulse 1.5s ease-in-out infinite}
+@keyframes g1-pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+/* eyes blink */
+.g1-bot-eyes{
+  transform-box:fill-box; transform-origin:center;
+  animation:g1-blink 5s ease-in-out infinite;
+}
+@keyframes g1-blink{
+  0%,90%,100%{transform:scaleY(1)}
+  95%{transform:scaleY(.1)}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .g1-bot,.g1-bot-antenna,.g1-bot-antenna circle,.g1-bot-eyes{animation:none}
+}

@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Group One — Componentes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="components.css">
+<link rel="icon" href="logo/group-one-mark-blue.png">
+</head>
+<body>
+<div class="app">
+
+  <!-- SIDEBAR -->
+  <aside class="side">
+    <div class="side-head">
+      <img src="logo/group-one-mark-white.png" alt="Group One">
+      <div><div class="t">Group One</div><div class="s">UI Kit</div></div>
+    </div>
+    <nav class="side-nav">
+      <div class="grp">Ações</div>
+      <a href="#buttons">Botões</a>
+      <a href="#badges">Badges &amp; Tags</a>
+      <div class="grp">Formulários</div>
+      <a href="#inputs">Inputs</a>
+      <a href="#selection">Seleção &amp; Switch</a>
+      <div class="grp">Conteúdo</div>
+      <a href="#cards">Cards</a>
+      <a href="#avatars">Avatares</a>
+      <a href="#table">Tabela</a>
+      <div class="grp">Feedback</div>
+      <a href="#alerts">Alerts</a>
+      <a href="#feedback">Progresso &amp; Loader</a>
+      <a href="#modal">Modal</a>
+      <div class="grp">Navegação</div>
+      <a href="#tabs">Tabs</a>
+      <a href="#navbar">Navbar</a>
+    </nav>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+    <div class="topbar">
+      <h1>Componentes</h1>
+      <span class="crumb">· Storybook básico</span>
+      <div class="right">
+        <a class="btn btn-secondary sm" href="index.html">Brandbook</a>
+        <a class="btn btn-primary sm" href="slides.html">Slides</a>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="intro">
+        <h2>Biblioteca de componentes</h2>
+        <p>Componentes base para qualquer front-end do Group One — botões, formulários, feedback e navegação, todos na paleta e tipografia da marca (Sora · azul <code style="font-family:ui-monospace;color:var(--blue)">#0066FF</code>).</p>
+      </div>
+
+      <!-- BOTÕES -->
+      <section class="story" id="buttons">
+        <div class="story-head"><h3>Botões</h3><span class="nm">Button</span></div>
+        <p class="story-desc">Hierarquia de ação: primário para a ação principal, secundário e ghost para apoio. Suportam ícone, tamanhos e estados.</p>
+        <div class="canvas">
+          <span class="lbl">Variantes</span>
+          <button class="btn btn-primary" data-demo="Primário clicado">Primário</button>
+          <button class="btn btn-secondary" data-demo="Secundário clicado">Secundário</button>
+          <button class="btn btn-cyan" data-demo="Ciano clicado">Ciano</button>
+          <button class="btn btn-ghost" data-demo="Ghost clicado">Ghost</button>
+          <button class="btn btn-danger" data-demo="Ação destrutiva">Excluir</button>
+          <span class="lbl">Tamanhos</span>
+          <button class="btn btn-primary sm">Pequeno</button>
+          <button class="btn btn-primary">Médio</button>
+          <button class="btn btn-primary lg">Grande</button>
+          <span class="lbl">Com ícone &amp; estados</span>
+          <button class="btn btn-primary"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14" stroke-linecap="round"/></svg>Novo agente</button>
+          <button class="btn btn-secondary"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 12a9 9 0 1 1-6.2-8.6" stroke-linecap="round"/></svg>Sincronizar</button>
+          <button class="btn btn-primary"><span class="spin"></span>Processando</button>
+          <button class="btn btn-primary" disabled>Desabilitado</button>
+        </div>
+        <div class="canvas dark" style="margin-top:18px">
+          <span class="lbl">Sobre fundo escuro</span>
+          <button class="btn btn-ondark">Branco</button>
+          <button class="btn btn-oncyan">Ciano</button>
+          <button class="btn btn-primary">Primário</button>
+          <button class="btn btn-ghost" style="color:#aebbd6">Ghost</button>
+        </div>
+      </section>
+
+      <!-- BADGES -->
+      <section class="story" id="badges">
+        <div class="story-head"><h3>Badges &amp; Tags</h3><span class="nm">Badge</span></div>
+        <p class="story-desc">Rótulos de status e categorização. Versão arredondada (padrão) e quadrada.</p>
+        <div class="canvas">
+          <span class="lbl">Status</span>
+          <span class="badge badge-brand"><span class="d"></span>Marca</span>
+          <span class="badge badge-info"><span class="d"></span>Info</span>
+          <span class="badge badge-ok"><span class="d"></span>Ativo</span>
+          <span class="badge badge-warn"><span class="d"></span>Pendente</span>
+          <span class="badge badge-danger"><span class="d"></span>Erro</span>
+          <span class="badge badge-neutral"><span class="d"></span>Neutro</span>
+          <span class="lbl">Quadrada / tags</span>
+          <span class="badge badge-brand sq">v1.0</span>
+          <span class="badge badge-info sq">multi-agent</span>
+          <span class="badge badge-neutral sq">beta</span>
+        </div>
+      </section>
+
+      <!-- INPUTS -->
+      <section class="story" id="inputs">
+        <div class="story-head"><h3>Inputs</h3><span class="nm">Input</span></div>
+        <p class="story-desc">Campos de formulário com label, dica, foco em azul e estado de erro.</p>
+        <div class="canvas col">
+          <div class="row" style="gap:28px;align-items:flex-start">
+            <div class="field" style="width:260px">
+              <label>Nome do projeto</label>
+              <input class="input" placeholder="ex.: Orquestrador">
+              <span class="hint">Visível para o time.</span>
+            </div>
+            <div class="field" style="width:260px">
+              <label>E-mail</label>
+              <input class="input err" value="email-invalido">
+              <span class="err">Informe um e-mail válido.</span>
+            </div>
+            <div class="field" style="width:260px">
+              <label>Busca</label>
+              <div class="input-icon">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4" stroke-linecap="round"/></svg>
+                <input class="input" placeholder="Buscar agentes…">
+              </div>
+            </div>
+          </div>
+          <div class="row" style="gap:28px;align-items:flex-start;margin-top:6px">
+            <div class="field" style="width:260px">
+              <label>Modelo</label>
+              <select class="input"><option>Selecione…</option><option>Planner</option><option>Router</option><option>Executor</option></select>
+            </div>
+            <div class="field" style="width:260px">
+              <label>Bloqueado</label>
+              <input class="input" value="somente leitura" disabled>
+            </div>
+            <div class="field" style="width:300px">
+              <label>Instruções</label>
+              <textarea class="input" placeholder="Descreva o comportamento do agente…"></textarea>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SELEÇÃO -->
+      <section class="story" id="selection">
+        <div class="story-head"><h3>Seleção &amp; Switch</h3><span class="nm">Checkbox · Radio · Switch</span></div>
+        <p class="story-desc">Controles de seleção com a cor de marca.</p>
+        <div class="canvas">
+          <label class="check"><input type="checkbox" checked> Habilitar logs</label>
+          <label class="check"><input type="checkbox"> Modo verboso</label>
+          <label class="check"><input type="radio" name="r"checked> Automático</label>
+          <label class="check"><input type="radio" name="r"> Manual</label>
+          <label class="switch"><input type="checkbox" checked><span class="track"></span></label>
+          <label class="switch"><input type="checkbox"><span class="track"></span></label>
+        </div>
+      </section>
+
+      <!-- CARDS -->
+      <section class="story" id="cards">
+        <div class="story-head"><h3>Cards</h3><span class="nm">Card</span></div>
+        <p class="story-desc">Contêineres de conteúdo: card padrão com mídia, card de métrica e card de perfil.</p>
+        <div class="canvas" style="align-items:stretch">
+          <div class="card">
+            <div class="cimg">[ imagem ]</div>
+            <div class="cbody"><h4>Agente de Dados</h4><p>Coleta, normaliza e disponibiliza contexto para os demais agentes.</p><button class="btn btn-secondary sm">Ver detalhes</button></div>
+          </div>
+          <div class="stat-card">
+            <div class="v">8.4×</div><div class="k">Throughput vs. baseline</div><div class="delta">▲ 22% no último ciclo</div>
+          </div>
+          <div class="card profile">
+            <div class="av md" style="background:radial-gradient(circle at 50% 30%,#2a7bff,#0066FF)">
+              <svg viewBox="0 0 240 240" width="44" height="44" xmlns="http://www.w3.org/2000/svg"><rect x="44" y="58" width="152" height="128" rx="46" fill="#fff"/><rect x="62" y="82" width="116" height="84" rx="38" fill="#0A0F1E"/><line x1="120" y1="60" x2="120" y2="40" stroke="#fff" stroke-width="7" stroke-linecap="round"/><circle cx="120" cy="30" r="9" fill="#fff"/><path d="M90 128 q12 -17 24 0" stroke="#33CCFF" stroke-width="9" fill="none" stroke-linecap="round"/><path d="M126 128 q12 -17 24 0" stroke="#33CCFF" stroke-width="9" fill="none" stroke-linecap="round"/></svg>
+            </div>
+            <div><div class="nm">G-One</div><div class="rl">Agente orquestrador</div></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- AVATARES -->
+      <section class="story" id="avatars">
+        <div class="story-head"><h3>Avatares</h3><span class="nm">Avatar</span></div>
+        <p class="story-desc">Avatar do mascote em três tamanhos e empilhamento em grupo.</p>
+        <div class="canvas">
+          <div class="av lg" style="background:radial-gradient(circle at 50% 30%,#2a7bff,#0066FF)"><svg viewBox="0 0 240 240" width="60" height="60" xmlns="http://www.w3.org/2000/svg"><rect x="44" y="58" width="152" height="128" rx="46" fill="#fff"/><rect x="62" y="82" width="116" height="84" rx="38" fill="#0A0F1E"/><line x1="120" y1="60" x2="120" y2="40" stroke="#fff" stroke-width="7" stroke-linecap="round"/><circle cx="120" cy="30" r="9" fill="#fff"/><path d="M90 128 q12 -17 24 0" stroke="#33CCFF" stroke-width="9" fill="none" stroke-linecap="round"/><path d="M126 128 q12 -17 24 0" stroke="#33CCFF" stroke-width="9" fill="none" stroke-linecap="round"/></svg></div>
+          <div class="av md" style="background:#0A0F1E"><svg viewBox="0 0 240 240" width="42" height="42" xmlns="http://www.w3.org/2000/svg"><rect x="44" y="58" width="152" height="128" rx="46" fill="#fff"/><rect x="62" y="82" width="116" height="84" rx="38" fill="#0A0F1E"/><line x1="120" y1="60" x2="120" y2="40" stroke="#33CCFF" stroke-width="7" stroke-linecap="round"/><circle cx="120" cy="30" r="9" fill="#0066FF"/><path d="M90 128 q12 -17 24 0" stroke="#33CCFF" stroke-width="9" fill="none" stroke-linecap="round"/><path d="M126 128 q12 -17 24 0" stroke="#33CCFF" stroke-width="9" fill="none" stroke-linecap="round"/></svg></div>
+          <div class="av sm" style="background:radial-gradient(circle at 50% 30%,#5fd8ff,#33CCFF)"><svg viewBox="0 0 240 240" width="30" height="30" xmlns="http://www.w3.org/2000/svg"><rect x="44" y="58" width="152" height="128" rx="46" fill="#fff"/><rect x="62" y="82" width="116" height="84" rx="38" fill="#0A0F1E"/><path d="M90 128 q12 -17 24 0" stroke="#33CCFF" stroke-width="10" fill="none" stroke-linecap="round"/><path d="M126 128 q12 -17 24 0" stroke="#33CCFF" stroke-width="10" fill="none" stroke-linecap="round"/></svg></div>
+          <span class="lbl">Grupo</span>
+          <div class="av-group">
+            <div class="av md" style="background:radial-gradient(circle at 50% 30%,#2a7bff,#0066FF)"><svg viewBox="0 0 240 240" width="40" height="40" xmlns="http://www.w3.org/2000/svg"><rect x="44" y="58" width="152" height="128" rx="46" fill="#fff"/><rect x="62" y="82" width="116" height="84" rx="38" fill="#0A0F1E"/><path d="M90 128 q12 -17 24 0" stroke="#33CCFF" stroke-width="9" fill="none" stroke-linecap="round"/><path d="M126 128 q12 -17 24 0" stroke="#33CCFF" stroke-width="9" fill="none" stroke-linecap="round"/></svg></div>
+            <div class="av md" style="background:#0A0F1E"><svg viewBox="0 0 240 240" width="40" height="40" xmlns="http://www.w3.org/2000/svg"><rect x="44" y="58" width="152" height="128" rx="46" fill="#fff"/><rect x="62" y="82" width="116" height="84" rx="38" fill="#0A0F1E"/><path d="M90 128 q12 -17 24 0" stroke="#33CCFF" stroke-width="9" fill="none" stroke-linecap="round"/><path d="M126 128 q12 -17 24 0" stroke="#33CCFF" stroke-width="9" fill="none" stroke-linecap="round"/></svg></div>
+            <div class="av md" style="background:radial-gradient(circle at 50% 30%,#5fd8ff,#33CCFF)"><svg viewBox="0 0 240 240" width="40" height="40" xmlns="http://www.w3.org/2000/svg"><rect x="44" y="58" width="152" height="128" rx="46" fill="#fff"/><rect x="62" y="82" width="116" height="84" rx="38" fill="#0A0F1E"/><path d="M90 128 q12 -17 24 0" stroke="#33CCFF" stroke-width="9" fill="none" stroke-linecap="round"/><path d="M126 128 q12 -17 24 0" stroke="#33CCFF" stroke-width="9" fill="none" stroke-linecap="round"/></svg></div>
+            <div class="more">+5</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TABELA -->
+      <section class="story" id="table">
+        <div class="story-head"><h3>Tabela</h3><span class="nm">Table</span></div>
+        <p class="story-desc">Dados tabulares com cabeçalho em caixa-alta, hover de linha e status via badge.</p>
+        <div class="canvas col" style="padding:0;overflow:hidden">
+          <table class="tbl">
+            <thead><tr><th>Agente</th><th>Função</th><th>Execuções</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td>Orquestrador</td><td>Roteamento</td><td>12.840</td><td><span class="badge badge-ok"><span class="d"></span>Ativo</span></td></tr>
+              <tr><td>Planner</td><td>Planejamento</td><td>9.512</td><td><span class="badge badge-ok"><span class="d"></span>Ativo</span></td></tr>
+              <tr><td>Agente · Dados</td><td>Coleta</td><td>4.207</td><td><span class="badge badge-warn"><span class="d"></span>Pendente</span></td></tr>
+              <tr><td>Agente · Ação</td><td>Execução</td><td>0</td><td><span class="badge badge-neutral"><span class="d"></span>Inativo</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ALERTS -->
+      <section class="story" id="alerts">
+        <div class="story-head"><h3>Alerts</h3><span class="nm">Alert</span></div>
+        <p class="story-desc">Mensagens contextuais dispensáveis em quatro tons.</p>
+        <div class="canvas col">
+          <div class="alert alert-info"><span class="ai">i</span><div><div class="at">Info</div><div class="am">Um novo modelo está disponível para os agentes.</div></div><button class="x">×</button></div>
+          <div class="alert alert-ok"><span class="ai">✓</span><div><div class="at">Sucesso</div><div class="am">Pipeline executado e validado com sucesso.</div></div><button class="x">×</button></div>
+          <div class="alert alert-warn"><span class="ai">!</span><div><div class="at">Atenção</div><div class="am">A fila de execução está acima de 80% da capacidade.</div></div><button class="x">×</button></div>
+          <div class="alert alert-danger"><span class="ai">×</span><div><div class="at">Erro</div><div class="am">Falha de autenticação na chamada do agente externo.</div></div><button class="x">×</button></div>
+        </div>
+      </section>
+
+      <!-- FEEDBACK -->
+      <section class="story" id="feedback">
+        <div class="story-head"><h3>Progresso &amp; Loader</h3><span class="nm">Progress · Spinner</span></div>
+        <p class="story-desc">Indicadores de carregamento com o gradiente da marca.</p>
+        <div class="canvas col">
+          <div class="prog"><div class="bar" style="width:38%"></div></div>
+          <div class="prog"><div class="bar" style="width:72%"></div></div>
+          <div class="row" style="gap:24px;align-items:center"><div class="spin-lg"></div><span style="color:var(--ink-3);font-size:14px">Carregando agentes…</span></div>
+        </div>
+      </section>
+
+      <!-- MODAL -->
+      <section class="story" id="modal">
+        <div class="story-head"><h3>Modal</h3><span class="nm">Dialog</span></div>
+        <p class="story-desc">Janela de diálogo para confirmações e ações focadas.</p>
+        <div class="canvas">
+          <button class="btn btn-primary" onclick="openModal()">Abrir modal</button>
+        </div>
+      </section>
+
+      <!-- TABS -->
+      <section class="story" id="tabs">
+        <div class="story-head"><h3>Tabs</h3><span class="nm">Tabs</span></div>
+        <p class="story-desc">Navegação entre painéis de conteúdo relacionados.</p>
+        <div class="canvas col">
+          <div class="tabs">
+            <div class="tablist">
+              <button class="tab active">Visão geral</button>
+              <button class="tab">Configuração</button>
+              <button class="tab">Logs</button>
+            </div>
+            <div class="tabpane active">Resumo do agente: status, métricas e últimas execuções aparecem aqui.</div>
+            <div class="tabpane">Parâmetros do modelo, prompts de sistema e limites de execução.</div>
+            <div class="tabpane">Histórico cronológico de chamadas, entradas e saídas do agente.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- NAVBAR -->
+      <section class="story" id="navbar">
+        <div class="story-head"><h3>Navbar</h3><span class="nm">Navbar</span></div>
+        <p class="story-desc">Barra de navegação superior da marca, fundo navy.</p>
+        <div class="canvas">
+          <div class="navdemo">
+            <img src="logo/group-one-mark-white.png" alt="">
+            <div class="nl"><a class="on">Dashboard</a><a>Agentes</a><a>Execuções</a><a>Logs</a></div>
+            <div class="nr">
+              <button class="btn btn-oncyan sm">Novo agente</button>
+              <div class="av sm" style="background:#0066FF"><svg viewBox="0 0 240 240" width="26" height="26" xmlns="http://www.w3.org/2000/svg"><rect x="44" y="58" width="152" height="128" rx="46" fill="#fff"/><rect x="62" y="82" width="116" height="84" rx="38" fill="#0A0F1E"/><path d="M90 128 q12 -17 24 0" stroke="#33CCFF" stroke-width="10" fill="none" stroke-linecap="round"/><path d="M126 128 q12 -17 24 0" stroke="#33CCFF" stroke-width="10" fill="none" stroke-linecap="round"/></svg></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+</div>
+
+<!-- modal -->
+<div class="modal-bk" id="demoModal">
+  <div class="modal">
+    <h3>Excluir agente?</h3>
+    <p>Esta ação remove o agente e seu histórico de execuções. Não pode ser desfeita.</p>
+    <div class="acts"><button class="btn btn-ghost" onclick="closeModal()">Cancelar</button><button class="btn btn-danger" onclick="closeModal();gToast('Agente excluído')">Excluir</button></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+<script src="components.js"></script>
+</body>
+</html>

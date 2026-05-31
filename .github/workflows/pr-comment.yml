@@ -1,0 +1,65 @@
+name: PR Feedback
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+  pull-requests: write
+  checks: write
+
+jobs:
+  reviewdog-ruff:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v4
+        with: { enable-cache: true }
+      - run: uv sync --frozen
+      - uses: reviewdog/action-setup@v1
+      - name: ruff -> reviewdog
+        env:
+          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          uv run ruff check --output-format=concise . \
+            | reviewdog -efm="%f:%l:%c: %m" \
+                -name="ruff" -reporter=github-pr-review -level=warning -fail-on-error=false
+
+  pr-summary:
+    needs: reviewdog-ruff
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+      - name: Build summary table
+        id: build
+        shell: bash
+        run: |
+          base="${{ github.event.pull_request.base.sha }}"
+          changed=$(git diff --name-only "$base"...HEAD | awk -F/ '/^apps\// {print $2"/"$3}' | sort -u)
+          {
+            echo "## CI Summary"
+            echo
+            if [ -z "$changed" ]; then
+              echo "_No app paths changed in this PR._"
+            else
+              echo "| App | project.yaml | Notes |"
+              echo "|---|---|---|"
+              for path in $changed; do
+                yaml="apps/$path/project.yaml"
+                if [ -f "$yaml" ]; then
+                  echo "| \`$path\` | ✅ present | see job logs |"
+                else
+                  echo "| \`$path\` | ❌ missing | add a project.yaml |"
+                fi
+              done
+            fi
+          } > summary.md
+          echo "body<<EOF" >> "$GITHUB_OUTPUT"
+          cat summary.md >> "$GITHUB_OUTPUT"
+          echo "EOF" >> "$GITHUB_OUTPUT"
+      - uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: ci-summary
+          message: ${{ steps.build.outputs.body }}

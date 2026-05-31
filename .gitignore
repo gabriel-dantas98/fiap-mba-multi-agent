@@ -1,18 +1,18 @@
-# Python
-.venv/
-.ruff_cache/
-.pytest_cache/
 __pycache__/
-*.egg-info/
 *.pyc
-
-# Node
-node_modules/
-dist/
-
-# Build output
-_site/
-
-# OS / editor
+.venv/
+.uv/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+# Only ignore Python build output at the repo root.
+# Hand-authored frontend examples under apps/**/dist/ must be committed.
+/dist/
+build/
 .DS_Store
-*~
+.env
+.env.local
+node_modules/
+
+# GitHub Pages staging output (built by scripts/build_pages.sh)
+_site/

@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Group One — Style Guide de Slides</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  deck-stage:not(:defined){visibility:hidden}
+  :root{
+    --blue:#0066FF;--cyan:#33CCFF;--navy:#0A0F1E;--gray:#F2F4F7;--white:#fff;
+    --txt-dim:#9fb2d6;--txt-dim-2:#67799f;--line:rgba(51,204,255,.18);
+  }
+  *{box-sizing:border-box}
+  deck-stage{background:#05080f}
+  section{
+    font-family:'Sora',sans-serif;background:var(--navy);color:var(--white);
+    overflow:hidden;
+  }
+  /* layout helpers */
+  .pad{position:absolute;inset:0;padding:110px 130px;display:flex;flex-direction:column}
+  .kicker{font-size:22px;font-weight:600;letter-spacing:.26em;text-transform:uppercase;color:var(--cyan);display:flex;align-items:center;gap:18px;margin:0 0 30px}
+  .kicker::before{content:"";width:46px;height:2px;background:var(--cyan)}
+  .stitle{font-size:88px;line-height:1.03;letter-spacing:-.02em;font-weight:800;margin:0}
+  .lead{font-size:32px;line-height:1.5;color:var(--txt-dim);max-width:1100px;margin:34px 0 0;font-weight:400}
+  .accent{color:var(--cyan)}
+  /* chrome */
+  .chrome{position:absolute;left:130px;right:130px;bottom:54px;display:flex;align-items:center;justify-content:space-between;font-size:19px;color:var(--txt-dim-2);font-weight:500}
+  .chrome img{height:26px;opacity:.85}
+  .chrome .ltag{letter-spacing:.18em;text-transform:uppercase;font-size:15px}
+  .grid-bg{position:absolute;inset:0;background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:80px 80px;opacity:.5}
+  .glow-tr{position:absolute;inset:0;background:radial-gradient(900px 640px at 82% -8%,rgba(0,102,255,.42),transparent 60%)}
+  .glow-bl{position:absolute;inset:0;background:radial-gradient(760px 520px at 6% 108%,rgba(51,204,255,.12),transparent 60%)}
+  .light{background:var(--gray);color:var(--navy)}
+  .light .kicker{color:var(--blue)}.light .kicker::before{background:var(--blue)}
+  .light .lead{color:#5d6b86}
+  .light .chrome{color:#9aa6bd}
+  .blue{background:var(--blue);color:#fff}
+  .blue .kicker{color:#bfe0ff}.blue .kicker::before{background:#bfe0ff}
+  /* bullets */
+  .bullets{list-style:none;padding:0;margin:46px 0 0;display:flex;flex-direction:column;gap:30px;max-width:1180px}
+  .bullets li{font-size:34px;line-height:1.4;display:flex;gap:26px;align-items:flex-start}
+  .bullets li::before{content:"";flex:none;width:18px;height:18px;border-radius:5px;background:var(--cyan);margin-top:12px}
+  /* agenda */
+  .agenda{list-style:none;padding:0;margin:50px 0 0;display:grid;grid-template-columns:1fr 1fr;gap:34px 80px;max-width:1400px}
+  .agenda li{display:flex;align-items:center;gap:30px;font-size:36px;font-weight:600;padding-bottom:26px;border-bottom:1px solid var(--line)}
+  .agenda .n{font-size:30px;font-weight:700;color:var(--cyan);width:62px;height:62px;border:2px solid var(--line);border-radius:14px;display:grid;place-items:center;flex:none}
+  /* two col */
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:90px;align-items:center;flex:1;margin-top:30px}
+  .ph{position:relative;border-radius:22px;overflow:hidden;width:100%;height:100%;min-height:560px;background:
+      repeating-linear-gradient(135deg,rgba(0,102,255,.10) 0 22px,transparent 22px 44px),#fff;
+      border:1px solid rgba(10,15,30,.12);display:grid;place-items:center}
+  .light .ph{background:repeating-linear-gradient(135deg,rgba(0,102,255,.10) 0 22px,transparent 22px 44px),#fff}
+  .ph .ph-tag{font-family:ui-monospace,monospace;font-size:22px;color:#7d8aa6;letter-spacing:.06em}
+  /* big stat */
+  .stat{flex:1;display:flex;flex-direction:column;justify-content:center}
+  .stat .big{font-size:300px;line-height:.86;font-weight:800;letter-spacing:-.03em;color:var(--cyan)}
+  .stat .cap{font-size:38px;color:var(--txt-dim);max-width:1100px;margin-top:10px}
+  /* quote */
+  .quote{flex:1;display:flex;flex-direction:column;justify-content:center;max-width:1500px}
+  .quote .mark{font-size:200px;line-height:.4;color:var(--blue);font-weight:800;height:90px}
+  .quote .q{font-size:58px;line-height:1.28;font-weight:700;letter-spacing:-.01em}
+  .quote .by{font-size:28px;color:var(--txt-dim);margin-top:40px;font-weight:600}
+  .quote .by b{color:var(--cyan)}
+  /* pillars */
+  .pillars{display:grid;grid-template-columns:repeat(3,1fr);gap:36px;flex:1;margin-top:30px}
+  .pcard{border:1px solid var(--line);border-radius:22px;padding:54px 46px;background:linear-gradient(165deg,rgba(0,102,255,.10),transparent);display:flex;flex-direction:column}
+  .pcard .pic{width:84px;height:84px;border-radius:20px;background:rgba(51,204,255,.12);display:grid;place-items:center;margin-bottom:34px}
+  .pcard h3{font-size:38px;margin:0 0 16px;font-weight:700}
+  .pcard p{font-size:26px;line-height:1.45;color:var(--txt-dim);margin:0}
+  /* team */
+  .team{display:grid;grid-template-columns:repeat(4,1fr);gap:46px;flex:1;margin-top:30px;align-content:center}
+  .member{display:flex;flex-direction:column;align-items:center;text-align:center;gap:22px}
+  .member .av{width:200px;height:200px;border-radius:28px;display:grid;place-items:center;box-shadow:0 20px 50px -20px rgba(0,102,255,.5)}
+  .member .nm{font-size:30px;font-weight:700}
+  .member .rl{font-size:22px;color:#5d6b86;margin-top:-14px}
+  .light .member .rl{color:#5d6b86}
+  /* diagram */
+  .diagram{flex:1;display:flex;align-items:center;justify-content:center;margin-top:10px}
+  .node{position:absolute;border:1px solid var(--line-strong,rgba(51,204,255,.34));background:rgba(15,24,48,.9);border-radius:18px;padding:26px 34px;font-size:28px;font-weight:600;display:flex;align-items:center;gap:18px}
+  /* cover */
+  .cover-logo{height:150px}
+  .badge-pill{display:inline-flex;align-items:center;gap:14px;font-size:22px;font-weight:600;letter-spacing:.04em;border:1px solid var(--line);border-radius:100px;padding:14px 26px;color:#fff;width:max-content}
+  .badge-pill b{color:var(--cyan)}
+  .mascot-sm{width:300px;height:300px}
+</style>
+</head>
+<body>
+<deck-stage width="1920" height="1080">
+
+  <!-- 01 CAPA -->
+  <section data-label="Capa">
+    <div class="grid-bg"></div><div class="glow-tr"></div><div class="glow-bl"></div>
+    <div class="pad" style="justify-content:center">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:60px">
+        <div>
+          <img class="cover-logo" src="logo/group-one-full-white.png" alt="Group One">
+          <h1 class="stitle" style="margin-top:56px;font-size:96px">Liderando a era da<br><span class="accent">Inteligência Agêntica.</span></h1>
+          <div class="badge-pill" style="margin-top:48px">Grupo <b>Group One</b> · MBA AI Engineering &amp; Multi-Agents — FIAP</div>
+        </div>
+        <svg class="mascot-sm" viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg">
+          <line x1="120" y1="52" x2="120" y2="32" stroke="#33CCFF" stroke-width="7" stroke-linecap="round"/><circle cx="120" cy="22" r="9" fill="#0066FF"/>
+          <rect x="26" y="108" width="22" height="48" rx="11" fill="#0066FF"/><rect x="192" y="108" width="22" height="48" rx="11" fill="#0066FF"/>
+          <rect x="46" y="50" width="148" height="134" rx="50" fill="#fff"/><rect x="64" y="76" width="112" height="86" rx="40" fill="#0A0F1E"/>
+          <path d="M90 124 q12 -17 24 0" stroke="#33CCFF" stroke-width="8" fill="none" stroke-linecap="round"/><path d="M126 124 q12 -17 24 0" stroke="#33CCFF" stroke-width="8" fill="none" stroke-linecap="round"/>
+          <path d="M108 142 q12 9 24 0" stroke="#33CCFF" stroke-width="6" fill="none" stroke-linecap="round" opacity=".9"/>
+        </svg>
+      </div>
+    </div>
+    <div class="chrome"><span class="ltag">Layout · Capa</span><span>01</span></div>
+  </section>
+
+  <!-- 02 AGENDA -->
+  <section data-label="Agenda">
+    <div class="glow-tr"></div>
+    <div class="pad">
+      <p class="kicker">Sumário</p>
+      <h2 class="stitle">Agenda</h2>
+      <ul class="agenda">
+        <li><span class="n">01</span> Contexto &amp; problema</li>
+        <li><span class="n">02</span> Arquitetura multiagente</li>
+        <li><span class="n">03</span> Demonstração</li>
+        <li><span class="n">04</span> Resultados &amp; métricas</li>
+        <li><span class="n">05</span> Roadmap</li>
+        <li><span class="n">06</span> Próximos passos</li>
+      </ul>
+    </div>
+    <div class="chrome"><img src="logo/group-one-mark-white.png" alt=""><span>02</span></div>
+  </section>
+
+  <!-- 03 DIVISOR DE SEÇÃO -->
+  <section data-label="Divisor" class="blue">
+    <div class="grid-bg" style="opacity:.25"></div>
+    <div class="pad" style="justify-content:center">
+      <div style="font-size:260px;font-weight:800;line-height:.8;letter-spacing:-.03em;color:rgba(255,255,255,.22)">01</div>
+      <p class="kicker" style="margin-top:30px">Seção</p>
+      <h2 class="stitle" style="font-size:110px">Contexto<br>&amp; problema</h2>
+    </div>
+    <div class="chrome" style="color:rgba(255,255,255,.7)"><span class="ltag">Layout · Divisor de seção</span><span>03</span></div>
+  </section>
+
+  <!-- 04 CONTEÚDO + BULLETS -->
+  <section data-label="Conteúdo">
+    <div class="glow-tr"></div>
+    <div class="pad">
+      <p class="kicker">Contexto</p>
+      <h2 class="stitle">O desafio dos fluxos manuais</h2>
+      <ul class="bullets">
+        <li>Processos repetitivos consomem horas de trabalho qualificado.</li>
+        <li>Decisões dependem de dados espalhados em sistemas isolados.</li>
+        <li>Escalar a operação significa, hoje, escalar pessoas — linearmente.</li>
+        <li>Falta orquestração entre as ferramentas já existentes.</li>
+      </ul>
+    </div>
+    <div class="chrome"><img src="logo/group-one-mark-white.png" alt=""><span class="ltag">Layout · Conteúdo + tópicos</span><span>04</span></div>
+  </section>
+
+  <!-- 05 DUAS COLUNAS (claro) -->
+  <section data-label="Duas colunas" class="light">
+    <div class="pad">
+      <p class="kicker">Solução</p>
+      <h2 class="stitle" style="font-size:76px">Texto &amp; visual lado a lado</h2>
+      <div class="two">
+        <div>
+          <p class="lead" style="margin-top:0">Use esta divisão para explicar um conceito enquanto mostra um produto, captura de tela ou diagrama.</p>
+          <ul class="bullets" style="margin-top:34px">
+            <li style="color:#1c2433">Coluna de texto com 3–4 pontos.</li>
+            <li style="color:#1c2433">Imagem ou mockup à direita.</li>
+            <li style="color:#1c2433">Mantém respiro e hierarquia.</li>
+          </ul>
+        </div>
+        <div class="ph"><span class="ph-tag">[ imagem / screenshot ]</span></div>
+      </div>
+    </div>
+    <div class="chrome"><img src="logo/group-one-mark-navy.png" alt=""><span class="ltag">Layout · Duas colunas (claro)</span><span>05</span></div>
+  </section>
+
+  <!-- 06 NÚMERO DESTAQUE -->
+  <section data-label="Número">
+    <div class="glow-bl"></div>
+    <div class="pad stat">
+      <p class="kicker">Resultado</p>
+      <div class="big">8.4×</div>
+      <div class="cap">aumento de throughput após a orquestração de agentes autônomos no fluxo de atendimento.</div>
+    </div>
+    <div class="chrome"><img src="logo/group-one-mark-white.png" alt=""><span class="ltag">Layout · Número-destaque</span><span>06</span></div>
+  </section>
+
+  <!-- 07 CITAÇÃO -->
+  <section data-label="Citação">
+    <div class="glow-tr"></div>
+    <div class="pad quote">
+      <div class="mark">&ldquo;</div>
+      <div class="q">Não automatizamos tarefas. Construímos agentes que decidem, executam e aprendem com o resultado.</div>
+      <div class="by">Group One · <b>Manifesto de produto</b></div>
+    </div>
+    <div class="chrome"><img src="logo/group-one-mark-white.png" alt=""><span class="ltag">Layout · Citação</span><span>07</span></div>
+  </section>
+
+  <!-- 08 IMAGEM FULL-BLEED -->
+  <section data-label="Imagem full">
+    <div class="ph" style="position:absolute;inset:0;border-radius:0;border:0;background:repeating-linear-gradient(135deg,rgba(0,102,255,.16) 0 26px,#0c1426 26px 52px)">
+      <span class="ph-tag" style="color:#8aa0c6;font-size:26px">[ imagem em tela cheia · 1920 × 1080 ]</span>
+    </div>
+    <div style="position:absolute;inset:0;background:linear-gradient(0deg,rgba(5,8,15,.92) 0%,transparent 46%)"></div>
+    <div style="position:absolute;left:130px;bottom:130px;max-width:1200px">
+      <p class="kicker">Demonstração</p>
+      <h2 class="stitle" style="font-size:72px">Imagem em destaque<br>com legenda sobreposta</h2>
+    </div>
+    <div class="chrome"><span class="ltag">Layout · Imagem full-bleed</span><span>08</span></div>
+  </section>
+
+  <!-- 09 TRÊS PILARES -->
+  <section data-label="Pilares">
+    <div class="glow-tr"></div>
+    <div class="pad">
+      <p class="kicker">Nossa essência</p>
+      <h2 class="stitle">Três pilares</h2>
+      <div class="pillars">
+        <div class="pcard">
+          <div class="pic"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#33CCFF" stroke-width="1.7"><circle cx="6" cy="6" r="2.4"/><circle cx="18" cy="6" r="2.4"/><circle cx="12" cy="17" r="2.4"/><path d="M7.6 7.6 10.6 15M16.4 7.6 13.4 15M8 6h8"/></svg></div>
+          <h3>Inteligência Avançada</h3><p>Modelos e raciocínio de ponta aplicados a problemas reais.</p>
+        </div>
+        <div class="pcard">
+          <div class="pic"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#33CCFF" stroke-width="1.7"><rect x="5" y="8" width="14" height="11" rx="3.5"/><circle cx="12" cy="3.5" r="1.3" fill="#33CCFF" stroke="none"/><path d="M12 5v3" stroke-linecap="round"/><path d="M9.5 13q1.2 1.4 2.5 0M12 13q1.2 1.4 2.5 0" stroke-linecap="round"/></svg></div>
+          <h3>Agentes Autônomos</h3><p>Sistemas multiagente que decidem e executam com autonomia.</p>
+        </div>
+        <div class="pcard">
+          <div class="pic"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#33CCFF" stroke-width="1.7"><path d="M4 20h16" stroke-linecap="round"/><path d="M7 17v-4M12 17v-7M17 17v-10" stroke-linecap="round"/><path d="M15 5h2.5V7.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <h3>Resultados Exponenciais</h3><p>Impacto que cresce em escala — não apenas em incrementos.</p>
+        </div>
+      </div>
+    </div>
+    <div class="chrome"><img src="logo/group-one-mark-white.png" alt=""><span class="ltag">Layout · Três cards</span><span>09</span></div>
+  </section>
+
+  <!-- 10 TIME (claro) -->
+  <section data-label="Time" class="light">
+    <div class="pad">
+      <p class="kicker">Quem somos</p>
+      <h2 class="stitle" style="font-size:76px">O time Group One</h2>
+      <div class="team">
+        <div class="member"><div class="av" style="background:radial-gradient(circle at 50% 30%,#2a7bff,#0066FF)">
+          <svg viewBox="0 0 240 240" width="150" height="150" xmlns="http://www.w3.org/2000/svg"><rect x="44" y="58" width="152" height="128" rx="46" fill="#fff"/><rect x="62" y="82" width="116" height="84" rx="38" fill="#0A0F1E"/><line x1="120" y1="60" x2="120" y2="40" stroke="#fff" stroke-width="7" stroke-linecap="round"/><circle cx="120" cy="30" r="9" fill="#fff"/><path d="M90 128 q12 -17 24 0" stroke="#33CCFF" stroke-width="8" fill="none" stroke-linecap="round"/><path d="M126 128 q12 -17 24 0" stroke="#33CCFF" stroke-width="8" fill="none" stroke-linecap="round"/></svg>
+        </div><div class="nm">Integrante 1</div><div class="rl">Papel / função</div></div>
+        <div class="member"><div class="av" style="background:#0A0F1E">
+          <svg viewBox="0 0 240 240" width="150" height="150" xmlns="http://www.w3.org/2000/svg"><rect x="44" y="58" width="152" height="128" rx="46" fill="#fff"/><rect x="62" y="82" width="116" height="84" rx="38" fill="#0A0F1E"/><line x1="120" y1="60" x2="120" y2="40" stroke="#33CCFF" stroke-width="7" stroke-linecap="round"/><circle cx="120" cy="30" r="9" fill="#0066FF"/><path d="M90 128 q12 -17 24 0" stroke="#33CCFF" stroke-width="8" fill="none" stroke-linecap="round"/><path d="M126 128 q12 -17 24 0" stroke="#33CCFF" stroke-width="8" fill="none" stroke-linecap="round"/></svg>
+        </div><div class="nm">Integrante 2</div><div class="rl">Papel / função</div></div>
+        <div class="member"><div class="av" style="background:radial-gradient(circle at 50% 30%,#5fd8ff,#33CCFF)">
+          <svg viewBox="0 0 240 240" width="150" height="150" xmlns="http://www.w3.org/2000/svg"><rect x="44" y="58" width="152" height="128" rx="46" fill="#fff"/><rect x="62" y="82" width="116" height="84" rx="38" fill="#0A0F1E"/><line x1="120" y1="60" x2="120" y2="40" stroke="#fff" stroke-width="7" stroke-linecap="round"/><circle cx="120" cy="30" r="9" fill="#fff"/><path d="M90 128 q12 -17 24 0" stroke="#33CCFF" stroke-width="8" fill="none" stroke-linecap="round"/><path d="M126 128 q12 -17 24 0" stroke="#33CCFF" stroke-width="8" fill="none" stroke-linecap="round"/></svg>
+        </div><div class="nm">Integrante 3</div><div class="rl">Papel / função</div></div>
+        <div class="member"><div class="av" style="background:radial-gradient(circle at 50% 30%,#2a7bff,#0066FF)">
+          <svg viewBox="0 0 240 240" width="150" height="150" xmlns="http://www.w3.org/2000/svg"><rect x="44" y="58" width="152" height="128" rx="46" fill="#fff"/><rect x="62" y="82" width="116" height="84" rx="38" fill="#0A0F1E"/><line x1="120" y1="60" x2="120" y2="40" stroke="#fff" stroke-width="7" stroke-linecap="round"/><circle cx="120" cy="30" r="9" fill="#fff"/><path d="M90 128 q12 -17 24 0" stroke="#33CCFF" stroke-width="8" fill="none" stroke-linecap="round"/><path d="M126 128 q12 -17 24 0" stroke="#33CCFF" stroke-width="8" fill="none" stroke-linecap="round"/></svg>
+        </div><div class="nm">Integrante 4</div><div class="rl">Papel / função</div></div>
+      </div>
+    </div>
+    <div class="chrome"><img src="logo/group-one-mark-navy.png" alt=""><span class="ltag">Layout · Grade de time</span><span>10</span></div>
+  </section>
+
+  <!-- 11 DIAGRAMA MULTIAGENTE -->
+  <section data-label="Diagrama">
+    <div class="glow-bl"></div>
+    <div class="pad">
+      <p class="kicker">Arquitetura</p>
+      <h2 class="stitle">Orquestração multiagente</h2>
+      <div class="diagram">
+        <svg viewBox="0 0 1500 560" width="100%" style="max-height:560px" xmlns="http://www.w3.org/2000/svg" font-family="Sora">
+          <defs><marker id="ar" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto"><path d="M0 0 L7 3 L0 6 Z" fill="#33CCFF"/></marker></defs>
+          <g stroke="#33CCFF" stroke-width="2.5" fill="none" opacity=".7" marker-end="url(#ar)">
+            <path d="M380 280 H560"/><path d="M940 200 H1120"/><path d="M940 360 H1120"/>
+            <path d="M760 230 L760 200 H940"/><path d="M760 330 L760 360 H940"/>
+          </g>
+          <!-- orchestrator -->
+          <rect x="180" y="225" width="200" height="110" rx="20" fill="#0066FF"/>
+          <text x="280" y="275" fill="#fff" font-size="30" font-weight="700" text-anchor="middle">Orquestrador</text>
+          <text x="280" y="308" fill="#bfe0ff" font-size="22" text-anchor="middle">router</text>
+          <!-- planner -->
+          <rect x="560" y="225" width="200" height="110" rx="20" fill="#0f1830" stroke="#33CCFF" stroke-width="1.5"/>
+          <text x="660" y="288" fill="#fff" font-size="28" font-weight="600" text-anchor="middle">Planner</text>
+          <!-- agents -->
+          <rect x="1120" y="148" width="240" height="104" rx="20" fill="#0f1830" stroke="#33CCFF" stroke-width="1.5"/>
+          <text x="1240" y="208" fill="#fff" font-size="28" font-weight="600" text-anchor="middle">Agente · Dados</text>
+          <rect x="1120" y="308" width="240" height="104" rx="20" fill="#0f1830" stroke="#33CCFF" stroke-width="1.5"/>
+          <text x="1240" y="368" fill="#fff" font-size="28" font-weight="600" text-anchor="middle">Agente · Ação</text>
+        </svg>
+      </div>
+    </div>
+    <div class="chrome"><img src="logo/group-one-mark-white.png" alt=""><span class="ltag">Layout · Diagrama</span><span>11</span></div>
+  </section>
+
+  <!-- 12 ENCERRAMENTO -->
+  <section data-label="Encerramento">
+    <div class="grid-bg"></div><div class="glow-tr"></div><div class="glow-bl"></div>
+    <div class="pad" style="justify-content:center;align-items:center;text-align:center">
+      <svg class="mascot-sm" style="width:220px;height:220px" viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg">
+        <line x1="120" y1="52" x2="120" y2="32" stroke="#33CCFF" stroke-width="7" stroke-linecap="round"/><circle cx="120" cy="22" r="9" fill="#0066FF"/>
+        <rect x="26" y="108" width="22" height="48" rx="11" fill="#0066FF"/><rect x="192" y="108" width="22" height="48" rx="11" fill="#0066FF"/>
+        <rect x="46" y="50" width="148" height="134" rx="50" fill="#fff"/><rect x="64" y="76" width="112" height="86" rx="40" fill="#0A0F1E"/>
+        <path d="M90 124 q12 -17 24 0" stroke="#33CCFF" stroke-width="8" fill="none" stroke-linecap="round"/><path d="M126 124 q12 -17 24 0" stroke="#33CCFF" stroke-width="8" fill="none" stroke-linecap="round"/>
+        <path d="M108 142 q12 9 24 0" stroke="#33CCFF" stroke-width="6" fill="none" stroke-linecap="round" opacity=".9"/>
+      </svg>
+      <h2 class="stitle" style="margin-top:40px">Obrigado.</h2>
+      <p class="lead" style="text-align:center;margin-top:24px">Vamos liderar a era da <span class="accent">Inteligência Agêntica</span>.</p>
+      <img src="logo/group-one-full-white.png" style="height:78px;margin-top:60px" alt="Group One">
+    </div>
+    <div class="chrome" style="justify-content:center"><span class="ltag">Group One · FIAP MBA AI Engineering</span></div>
+  </section>
+
+</deck-stage>
+<script src="vendor/gsap.min.js"></script>
+<script src="deck-anim.js"></script>
+<script src="deck-stage.js"></script>
+</body>
+</html>

@@ -172,6 +172,33 @@
   .foot-note b{color:var(--amber)}
   .foot-note a{color:var(--cyan)}
 
+  /* ---------- recursos ---------- */
+  .res-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:18px; margin:34px 0 40px}
+  .res-card{display:flex; flex-direction:column; gap:8px; padding:24px; border-radius:16px;
+    background:#fff; border:1px solid rgba(10,15,30,.10); transition:transform .3s var(--ease),box-shadow .3s,border-color .3s}
+  .res-card:hover{transform:translateY(-4px); border-color:rgba(0,102,255,.35);
+    box-shadow:0 22px 44px -26px rgba(10,15,30,.35)}
+  .res-ic{font-size:26px}
+  .res-t{font-size:18px; font-weight:700; color:var(--navy)}
+  .res-d{font-size:14px; line-height:1.5; color:#5d6b86; flex:1}
+  .res-go{font-size:13px; font-weight:600; color:var(--blue)}
+  .ds-prompt{border:1px solid rgba(10,15,30,.12); border-radius:18px; overflow:hidden; background:var(--navy)}
+  .ds-head{display:flex; align-items:center; justify-content:space-between; gap:16px;
+    padding:18px 22px; border-bottom:1px solid var(--line); background:var(--panel-2)}
+  .ds-kick{font-size:10px; font-weight:600; letter-spacing:.2em; text-transform:uppercase; color:var(--cyan)}
+  .ds-title{font-size:15.5px; font-weight:700; color:#fff; margin-top:4px}
+  .ds-copy{font-family:inherit; font-size:13px; font-weight:600; cursor:pointer; white-space:nowrap;
+    color:#fff; background:var(--blue); border:0; border-radius:100px; padding:10px 18px; transition:.2s}
+  .ds-copy:hover{background:#0a4fcc}
+  .ds-copy.done{background:var(--exe)}
+  .ds-body{margin:0; max-height:360px; overflow:auto; padding:22px;
+    font-family:ui-monospace,'SF Mono',Menlo,monospace; font-size:12.5px; line-height:1.6;
+    color:var(--txt-dim); white-space:pre-wrap; word-break:break-word}
+  .ds-foot{padding:14px 22px; border-top:1px solid var(--line); background:var(--panel-2);
+    font-size:12px; color:var(--txt-dim-2)}
+  .ds-foot a{color:var(--cyan)}
+  @media(max-width:760px){ .res-grid{grid-template-columns:1fr} }
+
   @media(max-width:760px){
     .wrap{padding:0 18px}
     .hero{padding:64px 0 60px}
@@ -426,6 +453,31 @@ const spy = new IntersectionObserver((entries)=>{
   });
 },{rootMargin:'-45% 0px -45% 0px'});
 document.querySelectorAll('.act').forEach(s=>spy.observe(s));
+
+/* ---- design system prompt: load DESIGN.md + copy ---- */
+(function(){
+  const body = document.getElementById('ds-body');
+  const btn  = document.getElementById('ds-copy');
+  if(!body || !btn) return;
+  let text = '';
+  fetch('brand/DESIGN.md')
+    .then(r => r.ok ? r.text() : Promise.reject(r.status))
+    .then(t => { text = t; body.textContent = t; })
+    .catch(() => { body.textContent = 'Não foi possível carregar brand/DESIGN.md. Abra o arquivo diretamente.'; });
+  btn.addEventListener('click', async () => {
+    const payload = text || body.textContent;
+    try { await navigator.clipboard.writeText(payload); }
+    catch(_) {
+      const r = document.createRange(); r.selectNodeContents(body);
+      const sel = getSelection(); sel.removeAllRanges(); sel.addRange(r);
+      try { document.execCommand('copy'); } catch(e){}
+      sel.removeAllRanges();
+    }
+    const old = btn.textContent;
+    btn.textContent = '✓ Copiado'; btn.classList.add('done');
+    setTimeout(() => { btn.textContent = old; btn.classList.remove('done'); }, 1800);
+  });
+})();
 </script>
 <script src="brand/vendor/gsap.min.js"></script>
 <script src="brand/loader.js"></script>

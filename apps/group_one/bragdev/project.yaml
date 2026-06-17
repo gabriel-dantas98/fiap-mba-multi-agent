@@ -1,0 +1,13 @@
+name: "bragdev"
+slug: bragdev
+description: "BragDev — pitch VC do Career OS: o sistema operacional da sua carreira"
+group: group-one
+members:
+  - Gabriel Dantas
+kind: frontend
+mount_path: /group-one/bragdev
+static_dir: dist
+enabled: true
+checks:
+  pytest: false
+  mypy: false

@@ -3,7 +3,8 @@
 #
 # The published site is the AI Business Strategy deliverable at the root, plus the global
 # brand/ design system copied alongside it (so the page can load brand assets at runtime
-# without committing duplicates). Used by both local preview and the Pages workflow.
+# without committing duplicates), plus self-contained app decks mounted at their own
+# subpaths (e.g. /group-one/bragdev). Used by both local preview and the Pages workflow.
 #
 #   ./scripts/build_pages.sh && (cd _site && python3 -m http.server 8137)
 set -euo pipefail
@@ -21,5 +22,13 @@ cp -R "$SITE/." "$OUT/"
 # 2) the global brand assets, available at /brand
 mkdir -p "$OUT/brand"
 cp -R "$ROOT/brand/." "$OUT/brand/"
+
+# 3) self-contained app decks at their mount subpaths (dist/ is already standalone:
+#    each carries its own assets + deck-stage.js, so no brand/ dependency at runtime)
+BRAGDEV="$ROOT/apps/group_one/bragdev/dist"
+if [ -d "$BRAGDEV" ]; then
+  mkdir -p "$OUT/group-one/bragdev"
+  cp -R "$BRAGDEV/." "$OUT/group-one/bragdev/"
+fi
 
 echo "Staged site -> $OUT"

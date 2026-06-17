@@ -63,7 +63,7 @@ jobs:
             pytest=$(grep -E '^[[:space:]]+pytest:[[:space:]]+true' "$yaml" || true)
             mypy=$(grep -E '^[[:space:]]+mypy:[[:space:]]+true' "$yaml" || true)
             entry="{\"path\":\"$path\",\"pytest\":\"${pytest:+true}\",\"mypy\":\"${mypy:+true}\"}"
-            matrix=$(echo "$matrix" | python3 -c "import json,sys,os; m=json.load(sys.stdin); m['include'].append(json.loads(os.environ['E'])); print(json.dumps(m))" E="$entry")
+            matrix=$(echo "$matrix" | E="$entry" python3 -c "import json,sys,os; m=json.load(sys.stdin); m['include'].append(json.loads(os.environ['E'])); print(json.dumps(m))")
           done
           echo "matrix=$matrix" >> "$GITHUB_OUTPUT"
 

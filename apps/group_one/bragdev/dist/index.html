@@ -1,0 +1,500 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BragDev — O sistema operacional da sua carreira · Group One</title>
+<meta name="description" content="Pitch VC do BragDev: um currículo vivo de impacto. Career OS para quem trabalha (ou quer trabalhar) em tech. MBA AI Engineering & Multi-Agents — FIAP, Group One.">
+<link rel="icon" href="assets/group-one-mark-blue.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  deck-stage:not(:defined){visibility:hidden}
+  :root{
+    --blue:#0066FF;--cyan:#33CCFF;--navy:#0A0F1E;--gray:#F2F4F7;--white:#fff;
+    --panel:#0f1830;--panel-2:#0c1426;
+    --txt-dim:#9fb2d6;--txt-dim-2:#67799f;
+    --line:rgba(51,204,255,.16);--line-strong:rgba(51,204,255,.32);
+    --mag:#FF2D78; /* acento quente p/ destaques pontuais (energia FIAP) */
+    --green:#16B074;--amber:#D6982E;
+    --ease:cubic-bezier(.22,.61,.36,1);
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  deck-stage{background:#05080f}
+  section{font-family:'Sora',sans-serif;background:var(--navy);color:var(--white);overflow:hidden}
+
+  /* ---------- layout base ---------- */
+  .pad{position:absolute;inset:0;padding:108px 130px;display:flex;flex-direction:column}
+  .center{justify-content:center}
+  .kicker{font-size:21px;font-weight:600;letter-spacing:.26em;text-transform:uppercase;color:var(--cyan);display:flex;align-items:center;gap:18px;margin:0 0 30px}
+  .kicker::before{content:"";width:46px;height:2px;background:var(--cyan)}
+  .stitle{font-size:84px;line-height:1.03;letter-spacing:-.02em;font-weight:800;margin:0}
+  .lead{font-size:31px;line-height:1.5;color:var(--txt-dim);max-width:1180px;margin:32px 0 0;font-weight:400}
+  .accent{color:var(--cyan)}
+  .mag{color:var(--mag)}
+  .grid-bg{position:absolute;inset:0;background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:80px 80px;opacity:.5}
+  .glow-tr{position:absolute;inset:0;background:radial-gradient(960px 660px at 84% -10%,rgba(0,102,255,.40),transparent 60%)}
+  .glow-bl{position:absolute;inset:0;background:radial-gradient(800px 560px at 4% 110%,rgba(51,204,255,.12),transparent 60%)}
+  .glow-mag{position:absolute;inset:0;background:radial-gradient(620px 480px at 92% 96%,rgba(255,45,120,.16),transparent 60%)}
+  .light{background:var(--gray);color:var(--navy)}
+  .light .kicker{color:var(--blue)}.light .kicker::before{background:var(--blue)}
+  .light .lead{color:#5d6b86}
+  .blue{background:linear-gradient(135deg,#0066FF, #0a47b8);color:#fff}
+  .blue .kicker{color:#bfe0ff}.blue .kicker::before{background:#bfe0ff}
+
+  /* chrome (rodapé) */
+  .chrome{position:absolute;left:130px;right:130px;bottom:50px;display:flex;align-items:center;justify-content:space-between;font-size:18px;color:var(--txt-dim-2);font-weight:500}
+  .chrome img{height:24px;opacity:.82}
+  .chrome .ltag{letter-spacing:.16em;text-transform:uppercase;font-size:14px;font-family:var(--mono)}
+  .light .chrome{color:#9aa6bd}
+  .blue .chrome{color:rgba(255,255,255,.7)}
+
+  /* ---------- entrance animation ---------- */
+  .anim{opacity:0;transform:translateY(26px);transition:opacity .66s var(--ease),transform .66s var(--ease);transition-delay:calc(var(--i,0)*90ms)}
+  .anim.fade{transform:none}
+  .anim.left{transform:translateX(-34px)}
+  .anim.scale{transform:scale(.92)}
+  section[data-deck-active] .anim{opacity:1;transform:none}
+  @media (prefers-reduced-motion:reduce){.anim{transition:none;opacity:1;transform:none}}
+
+  /* ---------- bullets ---------- */
+  .bullets{list-style:none;padding:0;margin:44px 0 0;display:flex;flex-direction:column;gap:28px;max-width:1280px}
+  .bullets li{font-size:33px;line-height:1.4;display:flex;gap:26px;align-items:flex-start}
+  .bullets li::before{content:"";flex:none;width:16px;height:16px;border-radius:5px;background:var(--cyan);margin-top:13px;box-shadow:0 0 16px rgba(51,204,255,.6)}
+
+  /* ---------- big stat ---------- */
+  .statwrap{display:flex;flex-direction:column;justify-content:center;flex:1}
+  .bigstat{font-size:240px;line-height:.84;font-weight:800;letter-spacing:-.03em;color:var(--cyan);font-variant-numeric:tabular-nums}
+  .bigstat .u{font-size:120px}
+  .statcap{font-size:34px;color:var(--txt-dim);max-width:1180px;margin-top:18px;line-height:1.35}
+  .src{font-family:var(--mono);font-size:16px;color:var(--txt-dim-2);margin-top:auto;letter-spacing:.01em}
+  .src::before{content:"⌖ ";color:var(--cyan)}
+
+  /* ---------- cards / grids ---------- */
+  .cards3{display:grid;grid-template-columns:repeat(3,1fr);gap:34px;flex:1;margin-top:28px;align-content:center}
+  .cards4{display:grid;grid-template-columns:repeat(2,1fr);gap:26px 34px;flex:1;margin-top:28px;align-content:center}
+  .card{border:1px solid var(--line);border-radius:18px;padding:44px 40px;background:linear-gradient(165deg,rgba(0,102,255,.12),rgba(12,20,38,.4));display:flex;flex-direction:column;position:relative;overflow:hidden}
+  .card .ic{width:74px;height:74px;border-radius:16px;background:rgba(51,204,255,.12);display:grid;place-items:center;margin-bottom:26px;font-size:34px}
+  .card h3{font-size:33px;margin:0 0 14px;font-weight:700;line-height:1.1}
+  .card p{font-size:24px;line-height:1.45;color:var(--txt-dim);margin:0}
+  .card .num{position:absolute;top:24px;right:30px;font-family:var(--mono);font-size:22px;color:var(--line-strong);font-weight:600}
+  .light .card{background:linear-gradient(165deg,rgba(0,102,255,.08),#fff);border-color:rgba(10,15,30,.1)}
+  .light .card p{color:#5d6b86}
+
+  /* ---------- stat row (mini stat cards) ---------- */
+  .statrow{display:grid;grid-template-columns:repeat(3,1fr);gap:30px;margin-top:44px}
+  .ministat{border-left:3px solid var(--cyan);padding:8px 0 8px 28px}
+  .ministat .v{font-size:78px;font-weight:800;letter-spacing:-.02em;line-height:1;color:#fff;font-variant-numeric:tabular-nums}
+  .light .ministat .v{color:var(--navy)}
+  .ministat .l{font-size:22px;color:var(--txt-dim);margin-top:14px;line-height:1.35;max-width:440px}
+  .light .ministat .l{color:#5d6b86}
+  .ministat .s{font-family:var(--mono);font-size:14px;color:var(--txt-dim-2);margin-top:12px}
+
+  /* ---------- terminal / IDE flavor ---------- */
+  .term{border-radius:16px;overflow:hidden;border:1px solid var(--line-strong);background:#070b15;box-shadow:0 40px 100px -30px rgba(0,0,0,.7);font-family:var(--mono)}
+  .term-bar{display:flex;align-items:center;gap:9px;padding:16px 20px;background:#0c1426;border-bottom:1px solid var(--line)}
+  .term-bar i{width:13px;height:13px;border-radius:50%;display:block}
+  .term-bar .t{margin-left:14px;font-size:17px;color:var(--txt-dim-2)}
+  .term-body{padding:34px 40px;font-size:25px;line-height:1.75}
+  .term-body .c{color:#7ee787}
+  .term-body .k{color:var(--cyan)}
+  .term-body .v{color:#fff}
+  .term-body .p{color:var(--mag)}
+  .term-body .dim{color:var(--txt-dim-2)}
+  .cursor{display:inline-block;width:13px;height:26px;background:var(--cyan);vertical-align:-4px;margin-left:4px;animation:blink 1.1s steps(2) infinite}
+  @keyframes blink{0%,50%{opacity:1}50.01%,100%{opacity:0}}
+
+  /* ---------- pipeline (loop core) ---------- */
+  .pipe{display:flex;gap:0;flex:1;margin-top:40px;align-items:center}
+  .step{flex:1;border:1px solid var(--line);border-radius:16px;background:rgba(12,20,38,.55);padding:34px 22px;text-align:center;position:relative}
+  .step .si{font-size:42px;margin-bottom:18px}
+  .step h4{font-size:25px;margin:0 0 10px;font-weight:700}
+  .step p{font-size:18px;color:var(--txt-dim);margin:0;line-height:1.4}
+  .arrow{flex:none;width:60px;display:grid;place-items:center;color:var(--cyan);font-size:38px;font-weight:700}
+
+  /* ---------- market / chart ---------- */
+  .two{display:grid;grid-template-columns:1.05fr .95fr;gap:80px;align-items:center;flex:1;margin-top:18px}
+  .tam{display:flex;flex-direction:column;gap:22px}
+  .tam .ring{display:flex;align-items:center;gap:26px;padding:26px 30px;border-radius:16px;border:1px solid var(--line)}
+  .tam .ring .big{font-size:58px;font-weight:800;letter-spacing:-.02em;font-variant-numeric:tabular-nums;line-height:1;flex:none;min-width:240px}
+  .tam .ring .lab{font-size:23px;color:var(--txt-dim);line-height:1.3}
+  .tam .ring .lab b{color:#fff;font-weight:700;display:block;font-size:26px;margin-bottom:4px}
+  .tam .t1{background:linear-gradient(120deg,rgba(0,102,255,.22),transparent)}
+  .tam .t2{background:linear-gradient(120deg,rgba(51,204,255,.16),transparent);margin-left:54px}
+  .tam .t3{background:linear-gradient(120deg,rgba(255,45,120,.16),transparent);margin-left:108px}
+
+  .chart{width:100%}
+  .bar-track{display:flex;align-items:flex-end;gap:40px;height:420px;padding:0 10px;border-bottom:2px solid var(--line-strong);position:relative}
+  .bar{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%}
+  .bar .col{width:100%;max-width:118px;border-radius:8px 8px 0 0;background:linear-gradient(180deg,var(--cyan),var(--blue));height:0;transition:height 1.1s var(--ease);box-shadow:0 0 30px rgba(51,204,255,.3)}
+  .bar .bv{font-size:30px;font-weight:800;margin-bottom:14px;font-variant-numeric:tabular-nums;opacity:0;transition:opacity .5s ease .5s}
+  .bar .bl{font-size:22px;color:var(--txt-dim);margin-top:18px;font-weight:600}
+  section[data-deck-active] .bar .bv{opacity:1}
+
+  /* ---------- business model funnel ---------- */
+  .bm{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;flex:1;margin-top:24px;align-items:center}
+  .phase{padding:42px 40px;position:relative}
+  .phase .tag{font-family:var(--mono);font-size:18px;color:var(--cyan);letter-spacing:.1em}
+  .phase h3{font-size:40px;font-weight:800;margin:16px 0 18px;letter-spacing:-.01em}
+  .phase p{font-size:22px;color:var(--txt-dim);line-height:1.45;margin:0 0 16px}
+  .phase .price{font-size:25px;font-weight:700;color:#fff}
+  .phase:not(:last-child)::after{content:"→";position:absolute;right:-16px;top:50%;transform:translateY(-50%);color:var(--cyan);font-size:40px;z-index:2}
+
+  /* ---------- compare table ---------- */
+  .cmp{width:100%;border-collapse:collapse;margin-top:34px;font-size:26px}
+  .cmp th,.cmp td{padding:24px 22px;text-align:left;border-bottom:1px solid rgba(10,15,30,.12)}
+  .cmp th{font-size:20px;letter-spacing:.08em;text-transform:uppercase;color:#9aa6bd;font-weight:600}
+  .cmp td:first-child{color:#5d6b86;font-size:23px}
+  .cmp .us{background:linear-gradient(90deg,rgba(0,102,255,.12),transparent);font-weight:700}
+  .cmp .yes{color:var(--green);font-weight:700}
+  .cmp .no{color:#aab4c6}
+  .cmp .col-head{font-weight:700;color:var(--navy)}
+  .cmp .col-us{color:var(--blue)}
+
+  /* ---------- timeline ---------- */
+  .tl{display:flex;gap:0;margin-top:42px;flex:1;align-items:stretch}
+  .tphase{flex:1;padding:0 30px;border-left:2px solid var(--line);position:relative}
+  .tphase::before{content:"";position:absolute;left:-9px;top:0;width:16px;height:16px;border-radius:50%;background:var(--cyan);box-shadow:0 0 16px var(--cyan)}
+  .tphase.done::before{background:var(--green);box-shadow:0 0 16px var(--green)}
+  .tphase .when{font-family:var(--mono);font-size:19px;color:var(--cyan);letter-spacing:.05em}
+  .tphase.done .when{color:var(--green)}
+  .tphase h4{font-size:29px;margin:14px 0 16px;font-weight:700}
+  .tphase ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:12px}
+  .tphase li{font-size:20px;color:var(--txt-dim);line-height:1.35;padding-left:20px;position:relative}
+  .tphase li::before{content:"–";position:absolute;left:0;color:var(--txt-dim-2)}
+
+  /* ---------- quote ---------- */
+  .quote{flex:1;display:flex;flex-direction:column;justify-content:center;max-width:1560px}
+  .quote .mark{font-size:200px;line-height:.4;color:#fff;font-weight:800;height:96px;opacity:.5}
+  .quote .q{font-size:64px;line-height:1.26;font-weight:700;letter-spacing:-.01em}
+  .quote .by{font-size:27px;margin-top:44px;font-weight:600}
+
+  /* ---------- cover ---------- */
+  .cover-eyebrow{display:inline-flex;align-items:center;gap:10px;font-family:var(--mono);font-size:21px;color:var(--cyan);letter-spacing:.04em;border:1px solid var(--line-strong);border-radius:100px;padding:12px 24px;width:max-content}
+  .cover-eyebrow b{color:#fff;font-weight:600}
+  .cover-title{font-size:108px;line-height:1.0;letter-spacing:-.03em;font-weight:800;margin:46px 0 0}
+  .cover-sub{font-size:32px;color:var(--txt-dim);margin-top:34px;max-width:1000px;line-height:1.45}
+  .wordmark{display:flex;align-items:center;gap:20px;font-size:40px;font-weight:800;letter-spacing:-.02em}
+  .wordmark .dot{width:22px;height:22px;border-radius:6px;background:var(--cyan);box-shadow:0 0 24px var(--cyan)}
+  .wordmark .dev{color:var(--cyan)}
+  .mascot{width:300px;height:300px;flex:none}
+
+  /* ---------- final CTA ---------- */
+  .askgrid{display:grid;grid-template-columns:1.2fr 1fr;gap:80px;flex:1;margin-top:30px;align-items:center}
+  .asklist{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:30px}
+  .asklist li{font-size:32px;display:flex;gap:22px;align-items:flex-start;line-height:1.35}
+  .asklist li .ck{flex:none;width:42px;height:42px;border-radius:11px;background:rgba(51,204,255,.14);color:var(--cyan);display:grid;place-items:center;font-size:24px;font-weight:700;margin-top:2px}
+  .contact{border:1px solid var(--line-strong);border-radius:20px;padding:48px;background:linear-gradient(165deg,rgba(0,102,255,.14),transparent)}
+  .contact .lab{font-family:var(--mono);font-size:18px;color:var(--cyan);letter-spacing:.1em;text-transform:uppercase}
+  .contact .big{font-size:46px;font-weight:800;margin:18px 0 28px;letter-spacing:-.01em;line-height:1.05}
+  .contact .row{display:flex;align-items:center;gap:16px;font-size:25px;color:var(--txt-dim);margin-top:16px}
+  .contact .row b{color:#fff;font-weight:600}
+</style>
+</head>
+<body>
+<deck-stage width="1920" height="1080">
+
+  <!-- 01 · CAPA -->
+  <section data-label="Capa">
+    <div class="grid-bg"></div><div class="glow-tr"></div><div class="glow-bl"></div><div class="glow-mag"></div>
+    <div class="pad center">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:70px">
+        <div>
+          <div class="wordmark anim left" style="--i:0">
+            <span class="dot"></span>Brag<span class="dev">Dev</span>
+          </div>
+          <h1 class="cover-title anim left" style="--i:1">O sistema operacional<br>da sua <span class="accent">carreira.</span></h1>
+          <p class="cover-sub anim fade" style="--i:3">Um currículo vivo de impacto — para quem trabalha, ou quer trabalhar, em uma empresa de tecnologia.</p>
+          <div class="cover-eyebrow anim fade" style="--i:4;margin-top:46px">Pitch &nbsp;·&nbsp; <b>Group One</b> &nbsp;·&nbsp; MBA AI Engineering &amp; Multi-Agents — FIAP</div>
+        </div>
+        <svg class="mascot anim scale" style="--i:2" viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg">
+          <line x1="120" y1="52" x2="120" y2="32" stroke="#33CCFF" stroke-width="7" stroke-linecap="round"/><circle cx="120" cy="22" r="9" fill="#0066FF"/>
+          <rect x="26" y="108" width="22" height="48" rx="11" fill="#0066FF"/><rect x="192" y="108" width="22" height="48" rx="11" fill="#0066FF"/>
+          <rect x="46" y="50" width="148" height="134" rx="50" fill="#fff"/><rect x="64" y="76" width="112" height="86" rx="40" fill="#0A0F1E"/>
+          <path d="M90 124 q12 -17 24 0" stroke="#33CCFF" stroke-width="8" fill="none" stroke-linecap="round"/><path d="M126 124 q12 -17 24 0" stroke="#33CCFF" stroke-width="8" fill="none" stroke-linecap="round"/>
+          <path d="M108 142 q12 9 24 0" stroke="#33CCFF" stroke-width="6" fill="none" stroke-linecap="round" opacity=".9"/>
+        </svg>
+      </div>
+    </div>
+    <div class="chrome"><span class="ltag">bragdev.io</span><span>01</span></div>
+  </section>
+
+  <!-- 02 · PROBLEMA (gancho) -->
+  <section data-label="Problema">
+    <div class="glow-tr"></div>
+    <div class="pad center">
+      <p class="kicker anim fade">O problema</p>
+      <h2 class="stitle anim left" style="--i:1;max-width:1500px">Seu impacto<br>desaparece — e <span class="mag">você paga a conta.</span></h2>
+      <p class="lead anim fade" style="--i:2">Você entrega o ano inteiro. Mas na hora do feedback, da promoção ou da próxima vaga, o que sobra é memória — geralmente a dos últimos 30 dias. O trabalho real fica espalhado em PRs, tickets, docs e threads que ninguém junta.</p>
+      <div class="statrow">
+        <div class="ministat anim fade" style="--i:3"><div class="v" data-count="14" data-suffix="%">14%</div><div class="l">dos colaboradores concordam fortemente que as avaliações de desempenho os inspiram a melhorar.</div><div class="s">Gallup</div></div>
+        <div class="ministat anim fade" style="--i:4"><div class="v" data-count="95" data-suffix="%">95%</div><div class="l">dos gestores estão insatisfeitos com o processo de avaliação de desempenho da empresa.</div><div class="s">Gartner / CEB</div></div>
+        <div class="ministat anim fade" style="--i:5"><div class="v" data-count="3.9" data-suffix=" anos">3.9 anos</div><div class="l">é a mediana de permanência no emprego — seu histórico de impacto precisa ser portátil.</div><div class="s">U.S. BLS</div></div>
+      </div>
+    </div>
+    <div class="chrome"><img src="assets/group-one-mark-white.png" alt=""><span>02</span></div>
+  </section>
+
+  <!-- 03 · POR QUE AGORA -->
+  <section data-label="Por que agora">
+    <div class="grid-bg" style="opacity:.35"></div><div class="glow-bl"></div>
+    <div class="pad">
+      <p class="kicker anim fade">Por que agora</p>
+      <h2 class="stitle anim left" style="--i:1">A carreira virou dado.<br>Só que o dado <span class="accent">não é seu.</span></h2>
+      <div class="cards4" style="margin-top:40px">
+        <div class="card anim fade" style="--i:2"><span class="num">01</span><div class="ic">📊</div><h3>Tudo é medido</h3><p>DORA, SPACE, métricas de produtividade e monitoramento de RTO viraram padrão. As empresas medem você o tempo todo.</p></div>
+        <div class="card anim fade" style="--i:3"><span class="num">02</span><div class="ic">🔒</div><h3>Mas você não vê</h3><p>Esses dados ficam em dashboards corporativos fechados. O profissional raramente tem acesso — ou contexto — sobre o próprio impacto.</p></div>
+        <div class="card anim fade" style="--i:4"><span class="num">03</span><div class="ic">🤖</div><h3>IA mudou o jogo</h3><p>Estruturar conquistas, gerar narrativas e resumir evidências deixou de ser trabalho manual. A IA torna o "currículo vivo" viável.</p></div>
+        <div class="card anim fade" style="--i:5"><span class="num">04</span><div class="ic">🔀</div><h3>Carreira é portfólio</h3><p>Trocas de emprego mais frequentes e contratação baseada em skills exigem um histórico de impacto que viaje com a pessoa.</p></div>
+      </div>
+    </div>
+    <div class="chrome"><img src="assets/group-one-mark-white.png" alt=""><span>03</span></div>
+  </section>
+
+  <!-- 04 · INSIGHT / A VIRADA -->
+  <section data-label="Insight" class="blue">
+    <div class="grid-bg" style="opacity:.22"></div>
+    <div class="pad center">
+      <p class="kicker anim fade">A virada</p>
+      <h2 class="stitle anim left" style="--i:1;font-size:96px;max-width:1640px">E se cada pessoa tivesse<br>o <span style="text-decoration:underline;text-decoration-color:rgba(255,255,255,.45);text-underline-offset:12px">próprio hub</span> de impacto?</h2>
+      <p class="lead anim fade" style="--i:2;color:rgba(255,255,255,.88);max-width:1420px">Não mais um documento que você refaz do zero a cada ciclo. Um registro contínuo, privado e seu — que alimenta feedbacks, reuniões 1:1, casos de promoção, transições de carreira e até a conversa com recrutadores.</p>
+    </div>
+    <div class="chrome"><span class="ltag">insight</span><span>04</span></div>
+  </section>
+
+  <!-- 05 · SOLUÇÃO -->
+  <section data-label="Solução">
+    <div class="glow-tr"></div>
+    <div class="pad">
+      <p class="kicker anim fade">A solução</p>
+      <h2 class="stitle anim left" style="--i:1">BragDev — seu <span class="accent">currículo vivo.</span></h2>
+      <p class="lead anim fade" style="--i:2">Você fala em fluxo livre o que fez. A IA estrutura no framework STAR (Situação, Tarefa, Ação, Resultado), guarda no seu Google Drive e transforma em brag documents, PDFs e um portfólio público anonimizado.</p>
+      <div class="cards3" style="margin-top:46px">
+        <div class="card anim fade" style="--i:3"><div class="ic">🧠</div><h3>Captura sem fricção</h3><p>Stream of consciousness → conquista estruturada via Claude. Documentar leva segundos, não horas.</p></div>
+        <div class="card anim fade" style="--i:4"><div class="ic">🗂️</div><h3>Os dados são seus</h3><p>Tudo vive no seu Google Sheets. Sem lock-in, sem caixa-preta. Privacy-first de verdade.</p></div>
+        <div class="card anim fade" style="--i:5"><div class="ic">🚀</div><h3>Pronto para usar</h3><p>Brag doc trimestral, export PDF e perfil público com um clique. Do dia a dia ao review.</p></div>
+      </div>
+    </div>
+    <div class="chrome"><img src="assets/group-one-mark-white.png" alt=""><span>05</span></div>
+  </section>
+
+  <!-- 06 · COMO FUNCIONA (loop core, terminal flavor) -->
+  <section data-label="Como funciona">
+    <div class="grid-bg" style="opacity:.3"></div><div class="glow-tr"></div>
+    <div class="pad">
+      <p class="kicker anim fade">Como funciona</p>
+      <h2 class="stitle anim left" style="--i:1">Um loop. Do caos à <span class="accent">evidência.</span></h2>
+      <div class="term anim scale" style="--i:2;margin-top:38px;max-width:1660px">
+        <div class="term-bar"><i style="background:#ff5f56"></i><i style="background:#ffbd2e"></i><i style="background:#27c93f"></i><span class="t">~/career — bragdev</span></div>
+        <div class="term-body">
+          <div><span class="dim">$</span> <span class="c">brag</span> add <span class="v">"liderei a migração que cortou 40% do custo de infra"</span></div>
+          <div style="margin-top:10px"><span class="p">▸</span> <span class="k">situation</span> <span class="dim">·</span> <span class="k">task</span> <span class="dim">·</span> <span class="k">action</span> <span class="dim">·</span> <span class="k">result</span> &nbsp;<span class="c">✓ estruturado pela IA</span></div>
+          <div style="margin-top:10px"><span class="p">▸</span> salvo em <span class="v">Google Sheets</span> <span class="dim">(seu Drive)</span> &nbsp;→&nbsp; brag-doc Q2 atualizado<span class="cursor"></span></div>
+        </div>
+      </div>
+      <div class="pipe" style="margin-top:46px">
+        <div class="step anim fade" style="--i:3"><div class="si">💬</div><h4>Fala livre</h4><p>Stream of consciousness</p></div>
+        <div class="arrow anim fade" style="--i:4">→</div>
+        <div class="step anim fade" style="--i:5"><div class="si">✨</div><h4>IA · STAR</h4><p>Estrutura a conquista</p></div>
+        <div class="arrow anim fade" style="--i:6">→</div>
+        <div class="step anim fade" style="--i:7"><div class="si">🗂️</div><h4>Seu Drive</h4><p>Google Sheets</p></div>
+        <div class="arrow anim fade" style="--i:8">→</div>
+        <div class="step anim fade" style="--i:9"><div class="si">📄</div><h4>Brag doc</h4><p>Trimestral · PDF</p></div>
+        <div class="arrow anim fade" style="--i:10">→</div>
+        <div class="step anim fade" style="--i:11"><div class="si">🌐</div><h4>Perfil</h4><p>Portfólio público</p></div>
+      </div>
+    </div>
+    <div class="chrome"><img src="assets/group-one-mark-white.png" alt=""><span>06</span></div>
+  </section>
+
+  <!-- 07 · QUEM USA / CASOS DE USO -->
+  <section data-label="Casos de uso" class="light">
+    <div class="pad">
+      <p class="kicker anim fade">Para quem & para quê</p>
+      <h2 class="stitle anim left" style="--i:1">De engenheiro sênior<br>a <span style="color:var(--blue)">qualquer carreira em tech.</span></h2>
+      <p class="lead anim fade" style="--i:2">Começamos com engenheiros L5–L7, onde a dor é aguda. Mas o mesmo motor serve PMs, designers, dados, marketing — qualquer pessoa avaliada por impacto.</p>
+      <div class="cards4" style="margin-top:36px">
+        <div class="card anim fade" style="--i:3"><div class="ic">📈</div><h3>Promoção mais rápida</h3><p>Chega na banca de promoção com evidências organizadas — não com memória dos últimos dias.</p></div>
+        <div class="card anim fade" style="--i:4"><div class="ic">🔄</div><h3>Realocação ágil</h3><p>Mudou de time ou de empresa? Seu histórico de impacto vai junto, pronto em minutos.</p></div>
+        <div class="card anim fade" style="--i:5"><div class="ic">🧭</div><h3>Transição de carreira</h3><p>Traduz conquistas para uma nova área com narrativa que recrutador entende.</p></div>
+        <div class="card anim fade" style="--i:6"><div class="ic">🤝</div><h3>Recrutador interage</h3><p>Perfil público anonimizado que mostra impacto real — não só cargos e datas.</p></div>
+      </div>
+    </div>
+    <div class="chrome"><span class="ltag">use cases</span><span>07</span></div>
+  </section>
+
+  <!-- 08 · MERCADO (TAM/SAM/SOM + chart) -->
+  <section data-label="Mercado">
+    <div class="glow-tr"></div><div class="grid-bg" style="opacity:.3"></div>
+    <div class="pad">
+      <p class="kicker anim fade">Mercado</p>
+      <h2 class="stitle anim left" style="--i:1">Grande, em alta e <span class="accent">sem dono do lado do profissional.</span></h2>
+      <div class="two">
+        <div class="tam">
+          <div class="ring t1 anim left" style="--i:2"><div class="big"><span data-count="40" data-prefix="US$ " data-suffix="B">US$ 40B</span></div><div class="lab"><b>HR Tech (TAM)</b>Mercado global de tecnologia de RH</div></div>
+          <div class="ring t2 anim left" style="--i:3"><div class="big" style="color:var(--cyan)"><span data-count="11" data-prefix="US$ " data-suffix="B">US$ 11B</span></div><div class="lab"><b>Talent Management (SAM)</b>Software de gestão de talentos</div></div>
+          <div class="ring t3 anim left" style="--i:4"><div class="big" style="color:var(--mag)"><span data-count="1.5" data-prefix="US$ " data-suffix="B">US$ 1.5B</span></div><div class="lab"><b>Career OS B2C/B2B (SOM)</b>Currículo vivo + benefício de carreira</div></div>
+          <div class="src anim fade" style="--i:5">Estimativas internas a partir de Grand View Research / Fortune Business Insights</div>
+        </div>
+        <div class="chart anim fade" style="--i:4">
+          <div class="bar-track" data-chart="market">
+            <div class="bar"><span class="bv">40</span><div class="col" data-h="46"></div><span class="bl">2024</span></div>
+            <div class="bar"><span class="bv">52</span><div class="col" data-h="62"></div><span class="bl">2027</span></div>
+            <div class="bar"><span class="bv">68</span><div class="col" data-h="82"></div><span class="bl">2030</span></div>
+            <div class="bar"><span class="bv">81</span><div class="col" data-h="100"></div><span class="bl">2032</span></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;margin-top:24px;align-items:baseline">
+            <div style="font-size:24px;color:var(--txt-dim)">Mercado de HR Tech — <b style="color:#fff">US$ bilhões</b></div>
+            <div style="font-size:30px;font-weight:800;color:var(--cyan)">CAGR ~9–10%</div>
+          </div>
+          <div class="src" style="margin-top:18px">Fortune Business Insights — HR Technology Market</div>
+        </div>
+      </div>
+    </div>
+    <div class="chrome"><img src="assets/group-one-mark-white.png" alt=""><span>08</span></div>
+  </section>
+
+  <!-- 09 · MODELO DE NEGÓCIO -->
+  <section data-label="Modelo de negócio">
+    <div class="glow-bl"></div>
+    <div class="pad">
+      <p class="kicker anim fade">Modelo de negócio</p>
+      <h2 class="stitle anim left" style="--i:1">Do indivíduo ao <span class="accent">benefício corporativo.</span></h2>
+      <div class="bm">
+        <div class="phase anim fade" style="--i:2"><div class="tag">FASE 1 · B2C</div><h3>Freemium</h3><p>Grátis para capturar e organizar conquistas. Pro desbloqueia brag docs ilimitados, exports e perfil público.</p><div class="price">R$ 0 → R$ 29/mês</div></div>
+        <div class="phase anim fade" style="--i:3"><div class="tag">FASE 2 · B2B</div><h3>Times</h3><p>Gestores e RH oferecem o BragDev ao time. Ciclos de feedback com evidência real — sem vigiar, o dado é do colaborador.</p><div class="price">por assento / mês</div></div>
+        <div class="phase anim fade" style="--i:4"><div class="tag">FASE 3 · BENEFÍCIO</div><h3>Career OS</h3><p>Distribuído como benefício, no modelo Wellhub. A empresa cuida da vida profissional como cuida da saúde.</p><div class="price">contrato anual</div></div>
+      </div>
+      <p class="lead anim fade" style="--i:5;margin-top:22px;font-size:28px">Se existe o <b style="color:#fff">Wellhub (Gympass)</b> para sua saúde física e mental, por que não um <span class="accent">sistema operacional de carreira</span> para sua vida profissional?</p>
+    </div>
+    <div class="chrome"><img src="assets/group-one-mark-white.png" alt=""><span>09</span></div>
+  </section>
+
+  <!-- 10 · O ANÁLOGO (Gympass / Wellhub) -->
+  <section data-label="Análogo">
+    <div class="glow-tr"></div>
+    <div class="pad center">
+      <p class="kicker anim fade">O análogo</p>
+      <h2 class="stitle anim left" style="--i:1;max-width:1500px">"O <span class="accent">Wellhub da carreira.</span>"</h2>
+      <p class="lead anim fade" style="--i:2">O Wellhub provou que empresas pagam para cuidar do bem-estar das pessoas — e que o canal de distribuição B2B2C é gigante. A carreira é a próxima fronteira do mesmo playbook.</p>
+      <div class="statrow" style="margin-top:54px">
+        <div class="ministat anim fade" style="--i:3"><div class="v" data-count="2.4" data-prefix="US$ " data-suffix="B">US$ 2.4B</div><div class="l">valuation do Wellhub (Gympass) — a prova do modelo de benefício.</div><div class="s">Série F (SoftBank), 2022</div></div>
+        <div class="ministat anim fade" style="--i:4"><div class="v" data-count="15" data-suffix="k+">15k+</div><div class="l">empresas clientes distribuem bem-estar como benefício corporativo.</div><div class="s">Wellhub</div></div>
+        <div class="ministat anim fade" style="--i:5"><div class="v" data-count="1" data-suffix="B+">1B+</div><div class="l">profissionais no LinkedIn — a identidade profissional é estática. A nossa é viva.</div><div class="s">LinkedIn</div></div>
+      </div>
+    </div>
+    <div class="chrome"><img src="assets/group-one-mark-white.png" alt=""><span>10</span></div>
+  </section>
+
+  <!-- 11 · POR QUE NÓS (diferencial / comparação) -->
+  <section data-label="Diferencial" class="light">
+    <div class="pad">
+      <p class="kicker anim fade">Por que nós</p>
+      <h2 class="stitle anim left" style="--i:1">O único <span style="color:var(--blue)">privacy-first</span> e dirigido por impacto.</h2>
+      <table class="cmp anim fade" style="--i:2">
+        <thead><tr><th></th><th class="col-head col-us">BragDev</th><th class="col-head">LinkedIn</th><th class="col-head">Lattice / 15Five</th></tr></thead>
+        <tbody>
+          <tr class="us"><td>Dados pertencem ao usuário</td><td class="yes">✓ no seu Drive</td><td class="no">✕</td><td class="no">✕ (da empresa)</td></tr>
+          <tr><td>Registro contínuo de impacto (STAR)</td><td class="yes">✓</td><td class="no">✕</td><td class="no">parcial</td></tr>
+          <tr><td>IA estrutura a conquista</td><td class="yes">✓</td><td class="no">✕</td><td class="no">limitado</td></tr>
+          <tr><td>Viaja entre empregos</td><td class="yes">✓</td><td class="yes">✓</td><td class="no">✕</td></tr>
+          <tr class="us"><td>Portfólio anonimizado p/ recrutador</td><td class="yes">✓</td><td class="no">✕</td><td class="no">✕</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="chrome"><span class="ltag">moat</span><span>11</span></div>
+  </section>
+
+  <!-- 12 · TRAÇÃO / ROADMAP -->
+  <section data-label="Roadmap">
+    <div class="glow-bl"></div><div class="grid-bg" style="opacity:.3"></div>
+    <div class="pad">
+      <p class="kicker anim fade">Onde estamos & para onde vamos</p>
+      <h2 class="stitle anim left" style="--i:1">Produto real, hoje. <span class="accent">Plataforma, amanhã.</span></h2>
+      <div class="tl">
+        <div class="tphase done anim fade" style="--i:2"><div class="when">AGORA · MVP</div><h4>Núcleo funcionando</h4><ul><li>Captura STAR via Claude</li><li>Storage em Google Sheets</li><li>Brag doc + export PDF</li><li>Perfil público anonimizado</li><li>i18n EN + pt-BR</li></ul></div>
+        <div class="tphase anim fade" style="--i:3"><div class="when">PRÓXIMO · 6 meses</div><h4>Crescimento B2C</h4><ul><li>Integrações (GitHub, Jira, Linear)</li><li>Captura automática de evidência</li><li>Tier Pro + onboarding</li><li>Métricas de impacto agregadas</li></ul></div>
+        <div class="tphase anim fade" style="--i:4"><div class="when">DEPOIS · 12–18 meses</div><h4>B2B & Benefício</h4><ul><li>Workspaces de time</li><li>Ciclos de feedback</li><li>Distribuição via benefício</li><li>Marketplace de recrutadores</li></ul></div>
+      </div>
+    </div>
+    <div class="chrome"><img src="assets/group-one-mark-white.png" alt=""><span>12</span></div>
+  </section>
+
+  <!-- 13 · VISÃO -->
+  <section data-label="Visão" class="blue">
+    <div class="grid-bg" style="opacity:.2"></div>
+    <div class="pad center">
+      <div class="quote">
+        <div class="mark anim fade">"</div>
+        <p class="q anim left" style="--i:1">Todo mundo merece ser dono da prova<br>do impacto que gera no trabalho.</p>
+        <p class="by anim fade" style="--i:2;color:rgba(255,255,255,.82)">A visão do <b style="color:#fff">BragDev</b> — o currículo deixa de ser um documento e vira uma <b style="color:#fff">infraestrutura de carreira</b>.</p>
+      </div>
+    </div>
+    <div class="chrome"><span class="ltag">visão</span><span>13</span></div>
+  </section>
+
+  <!-- 14 · TIME + ASK / CTA -->
+  <section data-label="Junte-se">
+    <div class="glow-tr"></div><div class="glow-mag"></div>
+    <div class="pad">
+      <p class="kicker anim fade">Junte-se ao Group One</p>
+      <h2 class="stitle anim left" style="--i:1">Vamos construir o Career OS.</h2>
+      <div class="askgrid">
+        <ul class="asklist">
+          <li class="anim fade" style="--i:2"><span class="ck">→</span><div>Buscamos <b>parceiros de construção</b>: produto, IA/agentes, growth e design.</div></li>
+          <li class="anim fade" style="--i:3"><span class="ck">→</span><div>Base técnica pronta: Hono+Bun, React+Vite, Claude, repository pattern.</div></li>
+          <li class="anim fade" style="--i:4"><span class="ck">→</span><div>Mercado validado, análogo provado (Wellhub) e um wedge claro: engenheiros sênior.</div></li>
+        </ul>
+        <div class="contact anim scale" style="--i:3">
+          <div class="lab">Vamos conversar</div>
+          <div class="big">Brag<span class="accent">Dev</span></div>
+          <div class="row">✉️ <b>gabsdevops@gmail.com</b></div>
+          <div class="row">🔗 <b>github.com/gabriel-dantas98</b></div>
+          <div class="row">🎓 <b>MBA AI Engineering — FIAP</b></div>
+        </div>
+      </div>
+    </div>
+    <div class="chrome"><span class="ltag">obrigado</span><span>14</span></div>
+  </section>
+
+</deck-stage>
+
+<script>
+  // Count-up + bar-chart animation, retriggered each time a slide becomes active.
+  (function () {
+    const fmt = (val, dec) => (dec > 0 ? val.toFixed(dec) : Math.round(val).toString());
+    function countUp(el) {
+      const target = parseFloat(el.getAttribute('data-count'));
+      if (isNaN(target)) return;
+      const prefix = el.getAttribute('data-prefix') || '';
+      const suffix = el.getAttribute('data-suffix') || '';
+      const dec = (String(el.getAttribute('data-count')).split('.')[1] || '').length;
+      const dur = 1100, t0 = performance.now();
+      function tick(t) {
+        const p = Math.min(1, (t - t0) / dur);
+        const eased = 1 - Math.pow(1 - p, 3);
+        el.textContent = prefix + fmt(target * eased, dec) + suffix;
+        if (p < 1) requestAnimationFrame(tick);
+        else el.textContent = prefix + fmt(target, dec) + suffix;
+      }
+      requestAnimationFrame(tick);
+    }
+    function animateSlide(slide) {
+      if (!slide) return;
+      slide.querySelectorAll('[data-count]').forEach((el) => countUp(el));
+      slide.querySelectorAll('.col[data-h]').forEach((col) => {
+        col.style.height = '0';
+        requestAnimationFrame(() => requestAnimationFrame(() => {
+          col.style.height = col.getAttribute('data-h') + '%';
+        }));
+      });
+    }
+    const deck = document.querySelector('deck-stage');
+    if (deck) deck.addEventListener('slidechange', (e) => animateSlide(e.detail.slide));
+  })();
+</script>
+<script src="deck-stage.js"></script>
+</body>
+</html>

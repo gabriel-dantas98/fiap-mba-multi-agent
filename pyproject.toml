@@ -26,7 +26,7 @@ members = ["apps/*/*"]
 # package, so they must be excluded from the uv workspace — otherwise the
 # `apps/*/*` glob flags them as members missing a pyproject.toml and breaks
 # `uv sync`.
-exclude = ["apps/static-web-apps/*", "apps/group_one/bragdev"]
+exclude = ["apps/static-web-apps/*", "apps/group_one/careeros"]
 
 [tool.uv.sources]
 

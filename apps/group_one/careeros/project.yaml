@@ -1,0 +1,13 @@
+name: "careeros"
+slug: careeros
+description: "CareerOS — pitch VC: o sistema operacional da sua carreira"
+group: group-one
+members:
+  - Gabriel Dantas
+kind: frontend
+mount_path: /group-one/careeros
+static_dir: dist
+enabled: true
+checks:
+  pytest: false
+  mypy: false

@@ -1,6 +1,6 @@
-# BragDev — Pitch
+# CareerOS — Pitch
 
-Pitch VC do **BragDev**: o sistema operacional da sua carreira — um currículo vivo
+Pitch VC do **CareerOS**: o sistema operacional da sua carreira — um currículo vivo
 de impacto para quem trabalha (ou quer trabalhar) em uma empresa de tecnologia.
 
 Entrega do **Group One** — MBA AI Engineering & Multi-Agents (FIAP).
@@ -11,7 +11,7 @@ Deck de 14 slides em HTML estático, na identidade visual do Group One (tokens +
 tipografia Sora + mascote G-One). Usa o web component `deck-stage` (copiado de
 `brand/deck-stage.js`) para navegação, escala automática 1920×1080 e export PDF.
 
-Acesse em produção: `/<group-one>/bragdev/` (montado pela homepage via Railway).
+Acesse em produção: `/<group-one>/careeros/` (montado pela homepage via Railway).
 
 ## Navegação
 
@@ -38,10 +38,10 @@ dist/
 ```bash
 # a partir da raiz do monorepo
 uv run uvicorn homepage.main:app --reload
-# http://localhost:8000/group-one/bragdev/
+# http://localhost:8000/group-one/careeros/
 
 # ou direto, só o deck:
-python3 -m http.server 8192 --directory apps/group_one/bragdev/dist
+python3 -m http.server 8192 --directory apps/group_one/careeros/dist
 ```
 
 ## Fontes dos dados

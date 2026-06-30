@@ -204,19 +204,80 @@
   .term-body .tool{color:var(--cyan)}
   .term-body .ok{color:#7ee787}
 
-  /* ---------- personas (demo prática) ---------- */
-  .personas{display:grid;grid-template-columns:repeat(3,1fr);gap:30px;flex:1;margin-top:32px;align-items:stretch}
-  .persona{border:1px solid var(--line);border-radius:20px;padding:34px 32px;background:linear-gradient(165deg,rgba(0,102,255,.12),rgba(12,20,38,.4));display:flex;flex-direction:column;gap:14px}
-  .persona .ava{width:60px;height:60px;border-radius:16px;background:rgba(51,204,255,.14);display:grid;place-items:center;font-size:30px}
-  .persona h3{font-size:27px;margin:0;font-weight:700}
-  .persona .role{font-family:var(--mono);font-size:14px;color:var(--cyan);letter-spacing:.06em;text-transform:uppercase}
-  .persona .goal{font-size:19px;color:var(--txt-dim);line-height:1.45;margin:0}
-  .persona .ex{border-left:3px solid var(--cyan);padding:4px 0 4px 16px;font-size:18px;color:#fff;line-height:1.4;font-style:italic}
-  .persona .out{margin-top:auto;display:flex;align-items:center;gap:10px;font-size:19px;font-weight:700;color:var(--green)}
-  .light .persona{background:linear-gradient(165deg,rgba(0,102,255,.08),#fff);border-color:rgba(10,15,30,.1)}
-  .light .persona .goal{color:#5d6b86}
-  .light .persona .ex{color:var(--navy)}
-  .light .persona h3{color:var(--navy)}
+  /* ---------- persona header (intro/resultado) ---------- */
+  .pheader{display:flex;align-items:center;gap:20px;margin-bottom:8px}
+  .pheader .ava{width:68px;height:68px;border-radius:20px;background:rgba(51,204,255,.14);display:grid;place-items:center;font-size:36px;flex:none}
+  .pheader .nm{font-size:30px;font-weight:800;margin:0;color:#fff}
+  .pheader .rl{font-family:var(--mono);font-size:15px;color:var(--cyan);letter-spacing:.06em;text-transform:uppercase}
+  .light .pheader .nm{color:var(--navy)}
+  .light .pheader .ava{background:rgba(0,102,255,.1)}
+
+  /* ---------- pains + JTBD callout ---------- */
+  .pains{list-style:none;padding:0;margin:26px 0 0;display:flex;flex-direction:column;gap:16px;max-width:1100px}
+  .pains li{font-size:21px;line-height:1.4;display:flex;gap:16px;align-items:flex-start;color:var(--txt-dim)}
+  .pains li::before{content:"⚠";flex:none;color:var(--mag);font-size:18px;margin-top:2px}
+  .light .pains li{color:#5d6b86}
+  .jtbd{margin-top:28px;border-left:4px solid var(--cyan);padding:18px 26px;background:rgba(51,204,255,.08);border-radius:0 14px 14px 0;font-size:20px;line-height:1.5;max-width:1300px}
+  .jtbd b{color:var(--cyan);font-family:var(--mono);font-size:14px;letter-spacing:.08em;text-transform:uppercase;display:block;margin-bottom:8px}
+  .light .jtbd{background:rgba(0,102,255,.06)}
+  .light .jtbd b{color:var(--blue)}
+
+  /* ---------- app window / chat mockup ---------- */
+  .appwin{border-radius:18px;overflow:hidden;border:1px solid var(--line-strong);background:#070b15;box-shadow:0 40px 100px -30px rgba(0,0,0,.7)}
+  .appwin-bar{display:flex;align-items:center;gap:9px;padding:14px 20px;background:#0c1426;border-bottom:1px solid var(--line)}
+  .appwin-bar i{width:13px;height:13px;border-radius:50%;display:block}
+  .appwin-bar .t{margin-left:14px;font-size:15px;color:var(--txt-dim-2);font-family:var(--mono)}
+  .chatlog{padding:26px 28px;display:flex;flex-direction:column;gap:14px;min-height:200px}
+  .bubble{max-width:88%;padding:14px 20px;border-radius:16px;font-size:18px;line-height:1.4}
+  .bubble.user{align-self:flex-end;background:linear-gradient(135deg,#0066FF,#0a47b8);color:#fff;border-bottom-right-radius:4px}
+  .bubble.bot{align-self:flex-start;background:rgba(51,204,255,.1);border:1px solid var(--line);color:#fff;border-bottom-left-radius:4px}
+  .typing{align-self:flex-start;display:flex;gap:6px;padding:12px 18px}
+  .typing i{width:7px;height:7px;border-radius:50%;background:var(--cyan);display:inline-block;animation:typedot 1s ease-in-out infinite}
+  .typing i:nth-child(2){animation-delay:.15s}
+  .typing i:nth-child(3){animation-delay:.3s}
+  @keyframes typedot{0%,60%,100%{opacity:.25;transform:translateY(0)}30%{opacity:1;transform:translateY(-4px)}}
+
+  /* ---------- STAR fill card ---------- */
+  .starcard{border:1px solid var(--line-strong);border-radius:16px;padding:22px 26px;background:rgba(12,20,38,.6);display:flex;flex-direction:column;gap:12px}
+  .starcard .lab{font-family:var(--mono);font-size:13px;color:var(--txt-dim-2);letter-spacing:.08em;text-transform:uppercase;margin-bottom:2px}
+  .starfield{display:flex;gap:14px;align-items:baseline}
+  .starfield .tag{font-family:var(--mono);font-size:13px;color:var(--cyan);letter-spacing:.06em;text-transform:uppercase;min-width:84px;flex:none}
+  .starfield .val{font-size:17px;color:#fff;line-height:1.4}
+
+  /* ---------- output mockups (sheet / profile / pdf) ---------- */
+  .sheetmock{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#0c1426}
+  .sheetmock table{width:100%;border-collapse:collapse;font-size:14px}
+  .sheetmock th{background:#0f1830;color:var(--txt-dim-2);font-weight:600;text-align:left;padding:10px 14px;font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.05em}
+  .sheetmock td{padding:11px 14px;border-top:1px solid var(--line);color:var(--txt-dim)}
+  .sheetmock tr.new td{color:#fff;font-weight:600}
+
+  .profilemock{border:1px solid var(--line-strong);border-radius:18px;padding:24px 28px;background:linear-gradient(165deg,rgba(0,102,255,.12),rgba(12,20,38,.5));display:flex;flex-direction:column;gap:14px;position:relative}
+  .profilemock .ph{display:flex;align-items:center;gap:14px}
+  .profilemock .av{width:48px;height:48px;border-radius:50%;background:rgba(51,204,255,.18);display:grid;place-items:center;font-size:22px;flex:none}
+  .profilemock .nm{font-size:18px;font-weight:700;color:#fff}
+  .profilemock .rl{font-size:13px;color:var(--txt-dim-2);font-family:var(--mono)}
+  .profilemock ul{list-style:none;padding:0;margin:6px 0 0;display:flex;flex-direction:column;gap:9px}
+  .profilemock li{font-size:15px;color:var(--txt-dim);display:flex;gap:9px}
+  .profilemock li::before{content:"✓";color:var(--green);flex:none}
+  .toast{position:absolute;top:18px;right:18px;background:var(--green);color:#06210f;font-family:var(--mono);font-size:12px;font-weight:700;padding:7px 14px;border-radius:100px}
+
+  .pdfmock{display:flex;align-items:center;gap:24px}
+  .pdfpage{width:130px;height:172px;background:#fff;border-radius:8px;box-shadow:0 20px 50px -15px rgba(0,0,0,.6);position:relative;flex:none}
+  .pdfpage .ln{height:7px;background:rgba(10,15,30,.12);border-radius:4px;margin:12px 14px}
+  .pdfprog{flex:1;display:flex;flex-direction:column;gap:12px}
+  .pdfprog .bar{height:9px;border-radius:6px;background:rgba(51,204,255,.15);overflow:hidden}
+  .pdfprog .bar i{display:block;height:100%;width:0%;background:linear-gradient(90deg,var(--cyan),var(--blue));border-radius:6px}
+  .pdfprog .lab{font-family:var(--mono);font-size:15px;color:var(--txt-dim)}
+  .pdfprog .ok{color:#7ee787;font-weight:700}
+
+  /* ---------- resultado (outcome) ---------- */
+  .resulthead{font-size:60px;font-weight:800;line-height:1.18;letter-spacing:-.01em;margin:18px 0 0;max-width:1500px}
+  .resultquote{font-size:25px;line-height:1.5;color:rgba(255,255,255,.88);max-width:1300px;margin-top:26px;font-style:italic;border-left:3px solid rgba(255,255,255,.4);padding-left:24px}
+  .resultquote .by{display:block;margin-top:14px;font-style:normal;font-weight:600;font-size:18px;color:rgba(255,255,255,.7)}
+  .metrics{display:flex;gap:60px;margin-top:40px}
+  .metrics .m{display:flex;flex-direction:column;gap:6px}
+  .metrics .m .mv{font-size:42px;font-weight:800;color:#fff;font-variant-numeric:tabular-nums}
+  .metrics .m .ml{font-size:16px;color:rgba(255,255,255,.7);max-width:220px;line-height:1.3}
 
   /* ---------- revenue assumptions ---------- */
   .assume{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:14px}
@@ -409,43 +470,226 @@
     <div class="chrome"><span class="ltag">use cases</span><span>09</span></div>
   </section>
 
-  <!-- 10 · TRÊS PERSONAS (demo prática) -->
-  <section data-label="Personas" class="light">
+  <!-- 10 · MARINA · CONTEXTO -->
+  <section data-label="Marina · Contexto" class="light">
     <div class="pad">
-      <p class="kicker anim fade">Na prática</p>
-      <h2 class="stitle anim left" style="--i:1">Três pessoas. <span style="color:var(--blue)">O mesmo motor.</span></h2>
-      <p class="lead anim fade" style="--i:2">Personas reais do dia a dia — a mesma captura, o mesmo STAR, resultados diferentes.</p>
-      <div class="personas">
-        <div class="persona anim fade" style="--i:3">
-          <div class="ava">👩‍💻</div>
-          <h3>Marina</h3>
-          <div class="role">Eng. Sênior · L6</div>
-          <p class="goal">Quer evidência pronta pra banca de promoção.</p>
-          <div class="ex">"Liderei a migração que cortou 40% do custo de infra."</div>
-          <div class="out">📈 Promovida no 1º ciclo</div>
+      <p class="kicker anim fade">Persona 1 · Promoção</p>
+      <div class="pheader anim fade" style="--i:1">
+        <div class="ava">👩‍💻</div>
+        <div><div class="nm">Marina</div><div class="rl">Eng. Sênior · L6 · Fintech</div></div>
+      </div>
+      <h2 class="stitle anim left" style="--i:2;font-size:62px;max-width:1400px">Precisa provar, em 6 semanas, o impacto que já gerou.</h2>
+      <ul class="pains anim fade" style="--i:3">
+        <li>O trabalho do ano está espalhado em PRs, tickets e threads de Slack.</li>
+        <li>A banca de promoção pede evidência — memória recente não basta.</li>
+        <li>Montar o doc do zero toma um fim de semana que ela não tem.</li>
+      </ul>
+      <div class="jtbd anim fade" style="--i:4"><b>Job to be done</b>Transformar trabalho disperso em evidência pronta pra decisão — sem virar um projeto à parte.</div>
+    </div>
+    <div class="chrome"><span class="ltag">persona · marina</span><span>10</span></div>
+  </section>
+
+  <!-- 11 · MARINA · DEMO AO VIVO -->
+  <section data-label="Marina · Demo ao vivo" data-demo="marina">
+    <div class="grid-bg" style="opacity:.3"></div><div class="glow-tr"></div>
+    <div class="pad">
+      <p class="kicker anim fade">Demo ao vivo</p>
+      <h2 class="stitle anim left" style="--i:1;font-size:56px">Ela fala. O CareerOS estrutura. <span class="accent">A planilha atualiza.</span></h2>
+      <div class="two" style="margin-top:30px;grid-template-columns:1fr 1fr;gap:50px">
+        <div class="appwin anim scale" style="--i:2">
+          <div class="appwin-bar"><i style="background:#ff5f56"></i><i style="background:#ffbd2e"></i><i style="background:#27c93f"></i><span class="t">Claude — CareerOS</span></div>
+          <div class="chatlog">
+            <div class="bubble user"><span class="txt">Liderei a migração que cortou 40% do custo de infra, sem downtime.</span></div>
+            <div class="typing"><i></i><i></i><i></i></div>
+            <div class="bubble bot">Capturado! Estruturei em STAR e salvei no seu Drive.</div>
+          </div>
         </div>
-        <div class="persona anim fade" style="--i:4">
-          <div class="ava">🧑‍💼</div>
-          <h3>Diego</h3>
-          <div class="role">Product Manager</div>
-          <p class="goal">Mudou de empresa, precisa de narrativa de transição.</p>
-          <div class="ex">"Lancei a feature que subiu retenção em 18%."</div>
-          <div class="out">🤝 3 entrevistas em 2 semanas</div>
-        </div>
-        <div class="persona anim fade" style="--i:5">
-          <div class="ava">🎨</div>
-          <h3>Bia</h3>
-          <div class="role">Designer · freelancer</div>
-          <p class="goal">Quer portfólio vivo para fechar clientes.</p>
-          <div class="ex">"Redesenhei o onboarding e reduzi o churn em 12%."</div>
-          <div class="out">💼 Brag doc virou proposta</div>
+        <div style="display:flex;flex-direction:column;gap:24px">
+          <div class="starcard">
+            <div class="lab">STAR · estruturado pela IA</div>
+            <div class="starfield"><span class="tag">Situação</span><span class="val">Custo de infra subindo 15%/trimestre.</span></div>
+            <div class="starfield"><span class="tag">Tarefa</span><span class="val">Migrar o core para arquitetura serverless.</span></div>
+            <div class="starfield"><span class="tag">Ação</span><span class="val">Liderou squad de 4 pessoas por 8 semanas.</span></div>
+            <div class="starfield"><span class="tag">Resultado</span><span class="val">-40% de custo, zero downtime.</span></div>
+          </div>
+          <div class="sheetmock">
+            <table>
+              <thead><tr><th>Data</th><th>Conquista</th><th>Tag</th></tr></thead>
+              <tbody>
+                <tr><td>12/03</td><td>Onboarding do squad de pagamentos</td><td>Liderança</td></tr>
+                <tr><td>02/04</td><td>Postmortem do incidente de billing</td><td>Confiabilidade</td></tr>
+                <tr class="new"><td>18/05</td><td>Migração serverless · -40% custo infra</td><td>Impacto</td></tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
-    <div class="chrome"><span class="ltag">personas</span><span>10</span></div>
+    <div class="chrome"><span class="ltag">demo · marina</span><span>11</span></div>
   </section>
 
-  <!-- 11 · MERCADO (TAM/SAM/SOM + chart) -->
+  <!-- 12 · MARINA · RESULTADO -->
+  <section data-label="Marina · Resultado" class="blue">
+    <div class="grid-bg" style="opacity:.2"></div>
+    <div class="pad center">
+      <p class="kicker anim fade">Resultado</p>
+      <h2 class="resulthead anim left" style="--i:1">📈 Promovida no primeiro ciclo de avaliação.</h2>
+      <div class="resultquote anim fade" style="--i:2">"Cheguei na reunião com 12 conquistas documentadas, cada uma com números. Não defendi minha promoção — apresentei ela."<span class="by">— Marina, Eng. Sênior L6</span></div>
+      <div class="metrics anim fade" style="--i:3">
+        <div class="m"><div class="mv">6h → 12min</div><div class="ml">tempo de preparo pra banca de promoção</div></div>
+        <div class="m"><div class="mv">12</div><div class="ml">conquistas documentadas no trimestre</div></div>
+        <div class="m"><div class="mv">1 clique</div><div class="ml">do registro ao PDF pronto</div></div>
+      </div>
+    </div>
+    <div class="chrome"><span class="ltag">resultado · marina</span><span>12</span></div>
+  </section>
+
+  <!-- 13 · DIEGO · CONTEXTO -->
+  <section data-label="Diego · Contexto" class="light">
+    <div class="pad">
+      <p class="kicker anim fade">Persona 2 · Transição de carreira</p>
+      <div class="pheader anim fade" style="--i:1">
+        <div class="ava">🧑‍💼</div>
+        <div><div class="nm">Diego</div><div class="rl">Product Manager · Scale-up</div></div>
+      </div>
+      <h2 class="stitle anim left" style="--i:2;font-size:62px;max-width:1400px">Mudou de empresa. Precisa de uma narrativa pronta.</h2>
+      <ul class="pains anim fade" style="--i:3">
+        <li>O currículo está parado há 2 anos — só cargos e datas.</li>
+        <li>Cada processo seletivo pede uma versão nova da mesma história.</li>
+        <li>Recrutador decide em segundos; números convencem mais que adjetivos.</li>
+      </ul>
+      <div class="jtbd anim fade" style="--i:4"><b>Job to be done</b>Transformar conquistas de produto numa narrativa que o recrutador entenda em segundos — sem reescrever do zero a cada processo.</div>
+    </div>
+    <div class="chrome"><span class="ltag">persona · diego</span><span>13</span></div>
+  </section>
+
+  <!-- 14 · DIEGO · DEMO AO VIVO -->
+  <section data-label="Diego · Demo ao vivo" data-demo="diego">
+    <div class="grid-bg" style="opacity:.3"></div><div class="glow-tr"></div>
+    <div class="pad">
+      <p class="kicker anim fade">Demo ao vivo</p>
+      <h2 class="stitle anim left" style="--i:1;font-size:56px">Ele fala. O CareerOS estrutura. <span class="accent">O perfil público atualiza.</span></h2>
+      <div class="two" style="margin-top:30px;grid-template-columns:1fr 1fr;gap:50px">
+        <div class="appwin anim scale" style="--i:2">
+          <div class="appwin-bar"><i style="background:#ff5f56"></i><i style="background:#ffbd2e"></i><i style="background:#27c93f"></i><span class="t">Claude — CareerOS</span></div>
+          <div class="chatlog">
+            <div class="bubble user"><span class="txt">Lancei a feature que subiu retenção em 18% em 30 dias.</span></div>
+            <div class="typing"><i></i><i></i><i></i></div>
+            <div class="bubble bot">Registrado! Adicionei ao seu perfil público anonimizado.</div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:24px">
+          <div class="starcard">
+            <div class="lab">STAR · estruturado pela IA</div>
+            <div class="starfield"><span class="tag">Situação</span><span class="val">Retenção em 30 dias estagnada em 41%.</span></div>
+            <div class="starfield"><span class="tag">Tarefa</span><span class="val">Redesenhar o onboarding do produto.</span></div>
+            <div class="starfield"><span class="tag">Ação</span><span class="val">Rodou 3 testes A/B com o time de growth.</span></div>
+            <div class="starfield"><span class="tag">Resultado</span><span class="val">+18% de retenção em 30 dias.</span></div>
+          </div>
+          <div class="profilemock">
+            <span class="toast">🔗 link copiado</span>
+            <div class="ph"><div class="av">🧑‍💼</div><div><div class="nm">D. — PM Sênior</div><div class="rl">careeros.io/p/d-7f2a</div></div></div>
+            <ul>
+              <li>Liderou o redesign de pricing que subiu LTV em 9%</li>
+              <li>Lançou onboarding self-serve, +18% retenção em 30 dias</li>
+              <li>Reduziu time-to-value de 12 pra 4 dias</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="chrome"><span class="ltag">demo · diego</span><span>14</span></div>
+  </section>
+
+  <!-- 15 · DIEGO · RESULTADO -->
+  <section data-label="Diego · Resultado" class="blue">
+    <div class="grid-bg" style="opacity:.2"></div>
+    <div class="pad center">
+      <p class="kicker anim fade">Resultado</p>
+      <h2 class="resulthead anim left" style="--i:1">🤝 3 entrevistas em 2 semanas.</h2>
+      <div class="resultquote anim fade" style="--i:2">"Mandei só o link do perfil. Não escrevi uma linha de carta de apresentação — e o recrutador já chegou sabendo o que eu entrego."<span class="by">— Diego, Product Manager</span></div>
+      <div class="metrics anim fade" style="--i:3">
+        <div class="m"><div class="mv">+18%</div><div class="ml">retenção — a métrica que abriu a conversa</div></div>
+        <div class="m"><div class="mv">2 sem.</div><div class="ml">do perfil publicado à 1ª proposta</div></div>
+        <div class="m"><div class="mv">0</div><div class="ml">versões de currículo reescritas</div></div>
+      </div>
+    </div>
+    <div class="chrome"><span class="ltag">resultado · diego</span><span>15</span></div>
+  </section>
+
+  <!-- 16 · BIA · CONTEXTO -->
+  <section data-label="Bia · Contexto" class="light">
+    <div class="pad">
+      <p class="kicker anim fade">Persona 3 · Negócio freelancer</p>
+      <div class="pheader anim fade" style="--i:1">
+        <div class="ava">🎨</div>
+        <div><div class="nm">Bia</div><div class="rl">Designer · Freelancer</div></div>
+      </div>
+      <h2 class="stitle anim left" style="--i:2;font-size:62px;max-width:1400px">Telas bonitas não fecham proposta. Resultado fecha.</h2>
+      <ul class="pains anim fade" style="--i:3">
+        <li>O portfólio mostra prints de tela, não resultado de negócio.</li>
+        <li>Cada proposta exige garimpar métricas em e-mails antigos.</li>
+        <li>Perde clientes pra quem chega com números prontos.</li>
+      </ul>
+      <div class="jtbd anim fade" style="--i:4"><b>Job to be done</b>Transformar trabalho de design em prova de resultado de negócio — que vira proposta comercial sem trabalho extra.</div>
+    </div>
+    <div class="chrome"><span class="ltag">persona · bia</span><span>16</span></div>
+  </section>
+
+  <!-- 17 · BIA · DEMO AO VIVO -->
+  <section data-label="Bia · Demo ao vivo" data-demo="bia">
+    <div class="grid-bg" style="opacity:.3"></div><div class="glow-tr"></div>
+    <div class="pad">
+      <p class="kicker anim fade">Demo ao vivo</p>
+      <h2 class="stitle anim left" style="--i:1;font-size:56px">Ela fala. O CareerOS estrutura. <span class="accent">O brag doc gera.</span></h2>
+      <div class="two" style="margin-top:30px;grid-template-columns:1fr 1fr;gap:50px">
+        <div class="appwin anim scale" style="--i:2">
+          <div class="appwin-bar"><i style="background:#ff5f56"></i><i style="background:#ffbd2e"></i><i style="background:#27c93f"></i><span class="t">Claude — CareerOS</span></div>
+          <div class="chatlog">
+            <div class="bubble user"><span class="txt">Redesenhei o onboarding e reduzi o churn em 12% no trimestre.</span></div>
+            <div class="typing"><i></i><i></i><i></i></div>
+            <div class="bubble bot">Show! Vou gerar seu brag doc trimestral em PDF.</div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:24px">
+          <div class="starcard">
+            <div class="lab">STAR · estruturado pela IA</div>
+            <div class="starfield"><span class="tag">Situação</span><span class="val">Churn de 9% ao mês no app do cliente.</span></div>
+            <div class="starfield"><span class="tag">Tarefa</span><span class="val">Redesenhar o fluxo de onboarding.</span></div>
+            <div class="starfield"><span class="tag">Ação</span><span class="val">3 rounds de teste com usuário + protótipo.</span></div>
+            <div class="starfield"><span class="tag">Resultado</span><span class="val">-12% de churn no trimestre.</span></div>
+          </div>
+          <div class="pdfmock">
+            <div class="pdfpage"><div class="ln" style="width:60%"></div><div class="ln"></div><div class="ln" style="width:80%"></div><div class="ln" style="width:40%"></div></div>
+            <div class="pdfprog">
+              <div class="lab">Gerando brag-doc-Q2.pdf…</div>
+              <div class="bar"><i></i></div>
+              <div class="ok">✓ pronto pra enviar</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="chrome"><span class="ltag">demo · bia</span><span>17</span></div>
+  </section>
+
+  <!-- 18 · BIA · RESULTADO -->
+  <section data-label="Bia · Resultado" class="blue">
+    <div class="grid-bg" style="opacity:.2"></div>
+    <div class="pad center">
+      <p class="kicker anim fade">Resultado</p>
+      <h2 class="resulthead anim left" style="--i:1">💼 O brag doc virou proposta comercial.</h2>
+      <div class="resultquote anim fade" style="--i:2">"Anexei o mesmo PDF que uso pra organizar meu trabalho na proposta pro cliente. Ele viu números, não só telas."<span class="by">— Bia, Designer freelancer</span></div>
+      <div class="metrics anim fade" style="--i:3">
+        <div class="m"><div class="mv">+35%</div><div class="ml">taxa de fechamento de propostas</div></div>
+        <div class="m"><div class="mv">4</div><div class="ml">cases com métrica pronta, sempre atualizados</div></div>
+        <div class="m"><div class="mv">0</div><div class="ml">horas montando deck de portfólio</div></div>
+      </div>
+    </div>
+    <div class="chrome"><span class="ltag">resultado · bia</span><span>18</span></div>
+  </section>
+
+  <!-- 19 · MERCADO (TAM/SAM/SOM + chart) -->
   <section data-label="Mercado">
     <div class="glow-tr"></div><div class="grid-bg" style="opacity:.3"></div>
     <div class="pad">
@@ -473,10 +717,10 @@
         </div>
       </div>
     </div>
-    <div class="chrome"><img src="assets/group-one-mark-white.png" alt=""><span>11</span></div>
+    <div class="chrome"><img src="assets/group-one-mark-white.png" alt=""><span>19</span></div>
   </section>
 
-  <!-- 12 · MODELO DE NEGÓCIO -->
+  <!-- 20 · MODELO DE NEGÓCIO -->
   <section data-label="Modelo de negócio">
     <div class="glow-bl"></div>
     <div class="pad">
@@ -489,10 +733,10 @@
       </div>
       <p class="lead anim fade" style="--i:5;margin-top:22px;font-size:28px">Se existe o <b style="color:#fff">Wellhub (Gympass)</b> para sua saúde física e mental, por que não um <span class="accent">sistema operacional de carreira</span> para sua vida profissional?</p>
     </div>
-    <div class="chrome"><img src="assets/group-one-mark-white.png" alt=""><span>12</span></div>
+    <div class="chrome"><img src="assets/group-one-mark-white.png" alt=""><span>20</span></div>
   </section>
 
-  <!-- 13 · PROJEÇÃO DE FATURAMENTO -->
+  <!-- 21 · PROJEÇÃO DE FATURAMENTO -->
   <section data-label="Faturamento">
     <div class="glow-tr"></div><div class="grid-bg" style="opacity:.3"></div>
     <div class="pad">
@@ -525,10 +769,10 @@
         </div>
       </div>
     </div>
-    <div class="chrome"><img src="assets/group-one-mark-white.png" alt=""><span>13</span></div>
+    <div class="chrome"><img src="assets/group-one-mark-white.png" alt=""><span>21</span></div>
   </section>
 
-  <!-- 14 · O ANÁLOGO (Gympass / Wellhub) -->
+  <!-- 22 · O ANÁLOGO (Gympass / Wellhub) -->
   <section data-label="Análogo">
     <div class="glow-tr"></div>
     <div class="pad center">
@@ -541,10 +785,10 @@
         <div class="ministat anim fade" style="--i:5"><div class="v" data-count="1" data-suffix="B+">1B+</div><div class="l">profissionais no LinkedIn — a identidade profissional é estática. A nossa é viva.</div><div class="s">LinkedIn</div></div>
       </div>
     </div>
-    <div class="chrome"><img src="assets/group-one-mark-white.png" alt=""><span>14</span></div>
+    <div class="chrome"><img src="assets/group-one-mark-white.png" alt=""><span>22</span></div>
   </section>
 
-  <!-- 15 · POR QUE NÓS (diferencial / comparação) -->
+  <!-- 23 · POR QUE NÓS (diferencial / comparação) -->
   <section data-label="Diferencial" class="light">
     <div class="pad">
       <p class="kicker anim fade">Por que nós</p>
@@ -560,10 +804,10 @@
         </tbody>
       </table>
     </div>
-    <div class="chrome"><span class="ltag">moat</span><span>15</span></div>
+    <div class="chrome"><span class="ltag">moat</span><span>23</span></div>
   </section>
 
-  <!-- 16 · TRAÇÃO / ROADMAP -->
+  <!-- 24 · TRAÇÃO / ROADMAP -->
   <section data-label="Roadmap">
     <div class="glow-bl"></div><div class="grid-bg" style="opacity:.3"></div>
     <div class="pad">
@@ -575,10 +819,10 @@
         <div class="tphase anim fade" style="--i:4"><div class="when">DEPOIS · 12–18 meses</div><h4>B2B & Benefício</h4><ul><li>Workspaces de time</li><li>Ciclos de feedback</li><li>Distribuição via benefício</li><li>Marketplace de recrutadores</li></ul></div>
       </div>
     </div>
-    <div class="chrome"><img src="assets/group-one-mark-white.png" alt=""><span>16</span></div>
+    <div class="chrome"><img src="assets/group-one-mark-white.png" alt=""><span>24</span></div>
   </section>
 
-  <!-- 17 · VISÃO -->
+  <!-- 25 · VISÃO -->
   <section data-label="Visão" class="blue">
     <div class="grid-bg" style="opacity:.2"></div>
     <div class="pad center">
@@ -588,10 +832,10 @@
         <p class="by anim fade" style="--i:2;color:rgba(255,255,255,.82)">A visão do <b style="color:#fff">CareerOS</b> — o currículo deixa de ser um documento e vira uma <b style="color:#fff">infraestrutura de carreira</b>.</p>
       </div>
     </div>
-    <div class="chrome"><span class="ltag">visão</span><span>17</span></div>
+    <div class="chrome"><span class="ltag">visão</span><span>25</span></div>
   </section>
 
-  <!-- 18 · TIME + ASK / CTA -->
+  <!-- 26 · TIME + ASK / CTA -->
   <section data-label="Junte-se">
     <div class="glow-tr"></div><div class="glow-mag"></div>
     <div class="pad">
@@ -612,7 +856,7 @@
         </div>
       </div>
     </div>
-    <div class="chrome"><span class="ltag">obrigado</span><span>18</span></div>
+    <div class="chrome"><span class="ltag">obrigado</span><span>26</span></div>
   </section>
 
 </deck-stage>
@@ -649,6 +893,73 @@
     }
     const deck = document.querySelector('deck-stage');
     if (deck) deck.addEventListener('slidechange', (e) => animateSlide(e.detail.slide));
+  })();
+</script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script>
+  // Persona demo mini-animations (chat → STAR → output mockup), replayed on each visit.
+  // Degrades gracefully to static content if GSAP fails to load (no opacity:0 in CSS).
+  (function () {
+    if (typeof gsap === 'undefined') return;
+    const cache = new WeakMap();
+
+    function typeText(el, duration) {
+      const full = el.textContent;
+      const obj = { n: 0 };
+      return gsap.to(obj, {
+        n: full.length,
+        duration,
+        ease: 'none',
+        onStart: () => { el.textContent = ''; },
+        onUpdate: () => { el.textContent = full.slice(0, Math.round(obj.n)); },
+      });
+    }
+
+    function buildTimeline(slide) {
+      const userTxt = slide.querySelector('.bubble.user .txt');
+      const userBubble = slide.querySelector('.bubble.user');
+      const typing = slide.querySelector('.typing');
+      const botBubble = slide.querySelector('.bubble.bot');
+      const starcard = slide.querySelector('.starcard');
+      const starfields = slide.querySelectorAll('.starfield');
+      const tl = gsap.timeline({ paused: true });
+
+      tl.set([userBubble, typing, botBubble, starcard, ...starfields], { opacity: 0 });
+      tl.to(userBubble, { opacity: 1, duration: 0.25 });
+      if (userTxt) tl.add(typeText(userTxt, 1.1));
+      tl.to(typing, { opacity: 1, duration: 0.2 })
+        .to(typing, { opacity: 0, duration: 0.2, delay: 0.7 })
+        .to(botBubble, { opacity: 1, duration: 0.3 })
+        .to(starcard, { opacity: 1, duration: 0.3 }, '-=0.05')
+        .to(starfields, { opacity: 1, duration: 0.3, stagger: 0.22 });
+
+      const demo = slide.dataset.demo;
+      if (demo === 'marina') {
+        const rows = slide.querySelectorAll('.sheetmock tr.new');
+        tl.set(rows, { opacity: 0 }).to(rows, { opacity: 1, duration: 0.4, stagger: 0.1 }, '+=0.25');
+      } else if (demo === 'diego') {
+        const items = slide.querySelectorAll('.profilemock li');
+        const toast = slide.querySelector('.toast');
+        tl.set(items, { opacity: 0 }).to(items, { opacity: 1, duration: 0.3, stagger: 0.18 }, '+=0.2');
+        if (toast) tl.set(toast, { opacity: 0 }).to(toast, { opacity: 1, duration: 0.3 }).to(toast, { opacity: 0, duration: 0.3, delay: 1.1 });
+      } else if (demo === 'bia') {
+        const bar = slide.querySelector('.pdfprog .bar i');
+        const ok = slide.querySelector('.pdfprog .ok');
+        if (bar) tl.set(bar, { width: '0%' }).to(bar, { width: '100%', duration: 1.1, ease: 'power1.inOut' }, '+=0.2');
+        if (ok) tl.set(ok, { opacity: 0 }).to(ok, { opacity: 1, duration: 0.3 });
+      }
+      return tl;
+    }
+
+    function playDemo(slide) {
+      if (!slide || !slide.dataset.demo) return;
+      let tl = cache.get(slide);
+      if (!tl) { tl = buildTimeline(slide); cache.set(slide, tl); }
+      tl.restart();
+    }
+
+    const deck = document.querySelector('deck-stage');
+    if (deck) deck.addEventListener('slidechange', (e) => playDemo(e.detail.slide));
   })();
 </script>
 <script src="deck-stage.js"></script>

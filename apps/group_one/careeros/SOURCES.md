@@ -1,4 +1,4 @@
-# Fontes dos dados — BragDev Pitch
+# Fontes dos dados — CareerOS Pitch
 
 Referências usadas nos slides. Números de mercado em US$ são ordens de grandeza
 de relatórios públicos; o **SOM** e as projeções por ano são estimativas internas,

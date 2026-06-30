@@ -10,7 +10,7 @@ on:
     branches: [main]
     paths:
       - "apps/static-web-apps/ai-business-strategy/**"
-      - "apps/group_one/bragdev/dist/**"
+      - "apps/group_one/careeros/dist/**"
       - "brand/**"
       - "scripts/build_pages.sh"
       - ".github/workflows/pages.yml"

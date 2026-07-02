@@ -142,6 +142,28 @@
   .mini-profile li{font-size:12px;color:var(--txt-dim);display:flex;gap:8px}
   .mini-profile li::before{content:"✓";color:var(--green);flex:none}
 
+  /* ---------- public profile page + recruiter chat ---------- */
+  .urlbar{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:14px;color:var(--txt-dim);background:rgba(51,204,255,.08);border:1px solid var(--line);border-radius:100px;padding:10px 20px;width:max-content}
+  .urlbar b{color:var(--cyan);font-weight:600}
+  .pp-grid{display:grid;grid-template-columns:1fr 1fr;gap:30px}
+  .pp-profile{display:flex;flex-direction:column;gap:20px}
+  .pp-head{display:flex;align-items:center;gap:16px}
+  .pp-head .av{width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,var(--cyan),var(--blue));flex:none}
+  .pp-head h4{font-size:22px;margin:0;font-weight:800}
+  .pp-head p{font-size:14px;color:var(--txt-dim-2);margin:4px 0 0;font-family:var(--mono)}
+  .pp-achievements{display:flex;flex-direction:column;gap:10px}
+  .pp-ach{border:1px solid var(--line);border-radius:12px;padding:14px 18px;display:flex;align-items:center;gap:14px;font-size:15px;color:var(--txt-dim)}
+  .pp-ach .ic2{font-size:18px;flex:none}
+  .pp-ach b{color:#fff;font-weight:700}
+  .pp-chat{border:1px solid var(--line-strong);border-radius:16px;background:#0c1426;display:flex;flex-direction:column;overflow:hidden}
+  .pp-chat-top{padding:14px 20px;border-bottom:1px solid var(--line);font-family:var(--mono);font-size:13px;color:var(--txt-dim-2);display:flex;align-items:center;gap:8px}
+  .pp-chat-top::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green)}
+  .pp-chat-body{padding:22px;display:flex;flex-direction:column;gap:14px}
+  .pp-msg{max-width:88%;padding:13px 18px;border-radius:14px;font-size:15px;line-height:1.42}
+  .pp-msg.q{align-self:flex-end;background:linear-gradient(135deg,#0066FF,#0a47b8);color:#fff;border-bottom-right-radius:4px}
+  .pp-msg.a{align-self:flex-start;background:rgba(51,204,255,.1);border:1px solid var(--line);color:#fff;border-bottom-left-radius:4px}
+  .pp-chat-input{margin:0 22px 22px;display:flex;gap:10px;align-items:center;border:1px solid var(--line);border-radius:100px;padding:12px 18px;font-family:var(--mono);font-size:14px;color:var(--txt-dim-2)}
+
   /* ---------- market / chart ---------- */
   .two{display:grid;grid-template-columns:1.05fr .95fr;gap:80px;align-items:center;flex:1;margin-top:18px}
   .tam{display:flex;flex-direction:column;gap:22px}
@@ -304,10 +326,10 @@
     <div class="pad">
       <p class="kicker anim fade">A solução</p>
       <h2 class="stitle anim left" style="--i:1">CareerOS — seu <span class="accent">currículo vivo.</span></h2>
-      <p class="lead anim fade" style="--i:2">Você fala em fluxo livre o que fez. A IA estrutura no framework STAR (Situação, Tarefa, Ação, Resultado), guarda no seu Google Drive e transforma em brag documents, PDFs e um portfólio público anonimizado.</p>
+      <p class="lead anim fade" style="--i:2">Você fala em fluxo livre o que fez. A IA estrutura no framework STAR (Situação, Tarefa, Ação, Resultado), guarda no seu Google Drive e transforma em brag documents, PDFs e um link de perfil público — pronto pra colocar na bio.</p>
       <div class="cards3" style="margin-top:46px">
         <div class="card anim fade" style="--i:3"><div class="ic">🧠</div><h3>Captura sem fricção</h3><p>Stream of consciousness → conquista estruturada via Claude. Documentar leva segundos, não horas.</p></div>
-        <div class="card anim fade" style="--i:4"><div class="ic">🗂️</div><h3>Os dados são seus</h3><p>Tudo vive no seu Google Sheets. Sem lock-in, sem caixa-preta. Privacy-first de verdade.</p></div>
+        <div class="card anim fade" style="--i:4"><div class="ic">📊</div><h3>Impacto sempre atualizado</h3><p>Cada conquista nova entra no seu histórico automaticamente. Nunca mais começar do zero.</p></div>
         <div class="card anim fade" style="--i:5"><div class="ic">🚀</div><h3>Pronto para usar</h3><p>Brag doc trimestral, export PDF e perfil público com um clique. Do dia a dia ao review.</p></div>
       </div>
     </div>
@@ -369,11 +391,11 @@
               <div class="mini-doc"><ul><li>Migração de pagamentos: −40% custo de infra, zero downtime.</li><li>Mentoria contínua de 2 engenheiros júnior.</li></ul><div class="export">⬇ Export PDF</div></div>
             </div>
             <div class="outcard">
-              <div class="oh"><span class="oi">🌐</span>Perfil público<span class="ok-badge">✓ anônimo</span></div>
+              <div class="oh"><span class="oi">🌐</span>Perfil público<span class="ok-badge">✓ link na bio</span></div>
               <div class="mini-profile">
                 <div class="av"></div>
-                <h4>Eng. de Software Sênior</h4>
-                <p>Infra & Plataforma</p>
+                <h4>Gabriel Dantas</h4>
+                <p>careeros.io/p/gdantas</p>
                 <ul><li>−40% custo de infra</li><li>2 júniors mentorados</li></ul>
               </div>
             </div>
@@ -384,7 +406,47 @@
     <div class="chrome"><img src="assets/group-one-mark-white.png" alt=""><span>07</span></div>
   </section>
 
-  <!-- 08 · FUNCIONALIDADES -->
+  <!-- 08 · DEMO 3: PERFIL PÚBLICO + CHAT PRA RECRUTADOR -->
+  <section data-label="Demo · Perfil público">
+    <div class="grid-bg" style="opacity:.3"></div><div class="glow-mag"></div>
+    <div class="pad">
+      <p class="kicker anim fade">Demo · Perfil público</p>
+      <h2 class="stitle anim left" style="--i:1;font-size:58px">Um link pra bio. Uma conversa <span class="accent">com os dados reais.</span></h2>
+      <p class="lead anim fade" style="--i:2;font-size:22px;max-width:1400px">careeros.io/p/gdantas — no Instagram, no LinkedIn, no e-mail de candidatura. Quem recebe não lê um PDF: conversa direto com o seu histórico.</p>
+      <div class="app anim scale" style="--i:3;max-width:1660px;margin-top:26px">
+        <div class="app-top">
+          <div class="brand"><span class="dot"></span>Career<span class="dev">OS</span></div>
+          <div class="app-user"><span class="av"></span>perfil público</div>
+        </div>
+        <div class="app-body">
+          <div class="urlbar" style="margin-bottom:22px">🔗 careeros.io/p/<b>gdantas</b></div>
+          <div class="pp-grid">
+            <div class="pp-profile">
+              <div class="pp-head"><div class="av"></div><div><h4>Gabriel Dantas</h4><p>Eng. de Software Sênior · Infra & Plataforma</p></div></div>
+              <div class="pp-achievements">
+                <div class="pp-ach"><span class="ic2">🔀</span><span><b>Migração de pagamentos</b> — −40% custo de infra, zero downtime.</span></div>
+                <div class="pp-ach"><span class="ic2">📈</span><span><b>Redução de latência</b> — −30% de p95 na plataforma.</span></div>
+                <div class="pp-ach"><span class="ic2">🧑‍🏫</span><span><b>Mentoria técnica</b> — 2 engenheiros júnior promovidos.</span></div>
+              </div>
+            </div>
+            <div class="pp-chat">
+              <div class="pp-chat-top">pergunte sobre o histórico de Gabriel</div>
+              <div class="pp-chat-body">
+                <div class="pp-msg q">Ele já liderou alguma migração crítica de infra?</div>
+                <div class="pp-msg a">Sim — liderou a migração do serviço de pagamentos pro novo cluster, sem downtime, cortando 40% do custo de infra em 2 meses.</div>
+                <div class="pp-msg q">E experiência formando outras pessoas?</div>
+                <div class="pp-msg a">Mentorou 2 engenheiros júnior até a promoção e liderou o RFC do novo event bus.</div>
+              </div>
+              <div class="pp-chat-input">💬 Pergunte algo sobre a carreira de Gabriel…</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="chrome"><img src="assets/group-one-mark-white.png" alt=""><span>08</span></div>
+  </section>
+
+  <!-- 09 · FUNCIONALIDADES -->
   <section data-label="Funcionalidades">
     <div class="grid-bg" style="opacity:.3"></div><div class="glow-bl"></div>
     <div class="pad">
@@ -394,12 +456,12 @@
         <div class="card anim fade" style="--i:2"><div class="ic">🎙️</div><h3>Captura por voz/texto</h3><p>Fluxo livre, sem formulário. O Claude entende e organiza.</p></div>
         <div class="card anim fade" style="--i:3"><div class="ic">🧩</div><h3>STAR automático</h3><p>Situação, Tarefa, Ação, Resultado — estruturado em segundos.</p></div>
         <div class="card anim fade" style="--i:4"><div class="ic">🔌</div><h3>MCP + Skills</h3><p>Registre direto do seu agente, sem trocar de tela.</p></div>
-        <div class="card anim fade" style="--i:5"><div class="ic">🗂️</div><h3>Seu Google Sheets</h3><p>O dado vive no seu Drive. Exporte, audite, leve embora.</p></div>
+        <div class="card anim fade" style="--i:5"><div class="ic">🗂️</div><h3>Google Sheets</h3><p>Tudo organizado numa planilha, pronta pra consultar quando você precisar.</p></div>
         <div class="card anim fade" style="--i:6"><div class="ic">📄</div><h3>Brag doc + PDF</h3><p>Trimestral, pronto pra banca de promoção ou pro 1:1.</p></div>
-        <div class="card anim fade" style="--i:7"><div class="ic">🌐</div><h3>Perfil público</h3><p>Anonimizado, para recrutadores — um link, sem nome de empresa.</p></div>
+        <div class="card anim fade" style="--i:7"><div class="ic">🌐</div><h3>Perfil público</h3><p>Um link com sua identidade e suas conquistas — pra colocar na bio, currículo ou candidatura.</p></div>
       </div>
     </div>
-    <div class="chrome"><img src="assets/group-one-mark-white.png" alt=""><span>08</span></div>
+    <div class="chrome"><img src="assets/group-one-mark-white.png" alt=""><span>09</span></div>
   </section>
 
   <!-- 09 · QUEM USA / CASOS DE USO -->
@@ -415,7 +477,7 @@
         <div class="card anim fade" style="--i:6"><div class="ic">🔍</div><h3>Quem recruta, quer contexto</h3><p>Perfil público mostra o que a pessoa entrega de fato — além das hard skills do currículo.</p></div>
       </div>
     </div>
-    <div class="chrome"><span class="ltag">use cases</span><span>09</span></div>
+    <div class="chrome"><span class="ltag">use cases</span><span>10</span></div>
   </section>
 
   <!-- 10 · MERCADO (TAM/SAM/SOM + chart) -->
@@ -446,7 +508,7 @@
         </div>
       </div>
     </div>
-    <div class="chrome"><img src="assets/group-one-mark-white.png" alt=""><span>10</span></div>
+    <div class="chrome"><img src="assets/group-one-mark-white.png" alt=""><span>11</span></div>
   </section>
 
   <!-- 11 · MODELO DE NEGÓCIO -->
@@ -462,7 +524,7 @@
       </div>
       <p class="lead anim fade" style="--i:5;margin-top:22px;font-size:28px">Se existe o <b style="color:#fff">Wellhub (Gympass)</b> para sua saúde física e mental, por que não um <span class="accent">sistema operacional de carreira</span> para sua vida profissional?</p>
     </div>
-    <div class="chrome"><img src="assets/group-one-mark-white.png" alt=""><span>11</span></div>
+    <div class="chrome"><img src="assets/group-one-mark-white.png" alt=""><span>12</span></div>
   </section>
 
   <!-- 12 · PROJEÇÃO DE FATURAMENTO -->
@@ -498,7 +560,7 @@
         </div>
       </div>
     </div>
-    <div class="chrome"><img src="assets/group-one-mark-white.png" alt=""><span>12</span></div>
+    <div class="chrome"><img src="assets/group-one-mark-white.png" alt=""><span>13</span></div>
   </section>
 
   <!-- 13 · O ANÁLOGO (Gympass / Wellhub) -->
@@ -514,26 +576,26 @@
         <div class="ministat anim fade" style="--i:5"><div class="v" data-count="1" data-suffix="B+">1B+</div><div class="l">profissionais no LinkedIn — a identidade profissional é estática. A nossa é viva.</div><div class="s">LinkedIn</div></div>
       </div>
     </div>
-    <div class="chrome"><img src="assets/group-one-mark-white.png" alt=""><span>13</span></div>
+    <div class="chrome"><img src="assets/group-one-mark-white.png" alt=""><span>14</span></div>
   </section>
 
   <!-- 14 · POR QUE NÓS (diferencial / comparação) -->
   <section data-label="Diferencial" class="light">
     <div class="pad">
       <p class="kicker anim fade">Por que nós</p>
-      <h2 class="stitle anim left" style="--i:1">O único <span style="color:var(--blue)">privacy-first</span> e dirigido por impacto.</h2>
+      <h2 class="stitle anim left" style="--i:1">O único <span style="color:var(--blue)">dirigido por impacto real</span> — do dia a dia à promoção.</h2>
       <table class="cmp anim fade" style="--i:2">
         <thead><tr><th></th><th class="col-head col-us">CareerOS</th><th class="col-head">LinkedIn</th><th class="col-head">Lattice / 15Five</th></tr></thead>
         <tbody>
-          <tr class="us"><td>Dados pertencem ao usuário</td><td class="yes">✓ no seu Drive</td><td class="no">✕</td><td class="no">✕ (da empresa)</td></tr>
+          <tr class="us"><td>Funciona junto com o Claude (MCP + Skills)</td><td class="yes">✓</td><td class="no">✕</td><td class="no">✕</td></tr>
           <tr><td>Registro contínuo de impacto (STAR)</td><td class="yes">✓</td><td class="no">✕</td><td class="no">parcial</td></tr>
           <tr><td>IA estrutura a conquista</td><td class="yes">✓</td><td class="no">✕</td><td class="no">limitado</td></tr>
           <tr><td>Viaja entre empregos</td><td class="yes">✓</td><td class="yes">✓</td><td class="no">✕</td></tr>
-          <tr class="us"><td>Portfólio anonimizado p/ recrutador</td><td class="yes">✓</td><td class="no">✕</td><td class="no">✕</td></tr>
+          <tr class="us"><td>Link de perfil consultável por recrutador (chat)</td><td class="yes">✓</td><td class="no">✕</td><td class="no">✕</td></tr>
         </tbody>
       </table>
     </div>
-    <div class="chrome"><span class="ltag">moat</span><span>14</span></div>
+    <div class="chrome"><span class="ltag">moat</span><span>15</span></div>
   </section>
 
   <!-- 15 · TRAÇÃO / ROADMAP -->
@@ -543,12 +605,12 @@
       <p class="kicker anim fade">Onde estamos & para onde vamos</p>
       <h2 class="stitle anim left" style="--i:1">Produto real, hoje. <span class="accent">Plataforma, amanhã.</span></h2>
       <div class="tl">
-        <div class="tphase done anim fade" style="--i:2"><div class="when">AGORA · MVP</div><h4>Núcleo funcionando</h4><ul><li>Captura STAR via Claude</li><li>Storage em Google Sheets</li><li>Brag doc + export PDF</li><li>Perfil público anonimizado</li><li>i18n EN + pt-BR</li></ul></div>
+        <div class="tphase done anim fade" style="--i:2"><div class="when">AGORA · MVP</div><h4>Núcleo funcionando</h4><ul><li>Captura STAR via Claude</li><li>Storage em Google Sheets</li><li>Brag doc + export PDF</li><li>Perfil público com link na bio</li><li>i18n EN + pt-BR</li></ul></div>
         <div class="tphase anim fade" style="--i:3"><div class="when">PRÓXIMO · 6 meses</div><h4>Crescimento B2C</h4><ul><li>Integrações (GitHub, Jira, Linear)</li><li>Captura automática de evidência</li><li>Tier Pro + onboarding</li><li>Métricas de impacto agregadas</li></ul></div>
         <div class="tphase anim fade" style="--i:4"><div class="when">DEPOIS · 12–18 meses</div><h4>B2B & Benefício</h4><ul><li>Workspaces de time</li><li>Ciclos de feedback</li><li>Distribuição via benefício</li><li>Marketplace de recrutadores</li></ul></div>
       </div>
     </div>
-    <div class="chrome"><img src="assets/group-one-mark-white.png" alt=""><span>15</span></div>
+    <div class="chrome"><img src="assets/group-one-mark-white.png" alt=""><span>16</span></div>
   </section>
 
   <!-- 16 · VISÃO -->
@@ -561,7 +623,7 @@
         <p class="by anim fade" style="--i:2;color:rgba(255,255,255,.82)">A visão do <b style="color:#fff">CareerOS</b> — o currículo deixa de ser um documento e vira uma <b style="color:#fff">infraestrutura de carreira</b>.</p>
       </div>
     </div>
-    <div class="chrome"><span class="ltag">visão</span><span>16</span></div>
+    <div class="chrome"><span class="ltag">visão</span><span>17</span></div>
   </section>
 
   <!-- 17 · TIME + ASK / CTA -->
@@ -585,7 +647,7 @@
         </div>
       </div>
     </div>
-    <div class="chrome"><span class="ltag">obrigado</span><span>17</span></div>
+    <div class="chrome"><span class="ltag">obrigado</span><span>18</span></div>
   </section>
 
 </deck-stage>

@@ -7,7 +7,7 @@ Entrega do **Group One** — MBA AI Engineering & Multi-Agents (FIAP).
 
 ## O que é
 
-Deck de 14 slides em HTML estático, na identidade visual do Group One (tokens +
+Deck de 17 slides em HTML estático, na identidade visual do Group One (tokens +
 tipografia Sora + mascote G-One). Usa o web component `deck-stage` (copiado de
 `brand/deck-stage.js`) para navegação, escala automática 1920×1080 e export PDF.
 
@@ -24,7 +24,7 @@ Acesse em produção: `/<group-one>/careeros/` (montado pela homepage via Railwa
 
 ```
 dist/
-├── index.html          # o deck (14 slides) + animações (count-up, bar chart)
+├── index.html          # o deck (17 slides) + animações (count-up, bar chart)
 ├── deck-stage.js       # engine de slides (cópia self-contained do brand/)
 └── assets/             # logos Group One usados pelo deck
 ```

@@ -234,7 +234,29 @@
   .wordmark{display:flex;align-items:center;gap:20px;font-size:40px;font-weight:800;letter-spacing:-.02em}
   .wordmark .dot{width:22px;height:22px;border-radius:6px;background:var(--cyan);box-shadow:0 0 24px var(--cyan)}
   .wordmark .dev{color:var(--cyan)}
-  .mascot{width:300px;height:300px;flex:none}
+
+  /* ---------- cover flow diagram (4 stages) ---------- */
+  .flow4{position:relative;width:100%;height:400px;margin-top:14px}
+  .flow4-svg{position:absolute;inset:0;width:100%;height:100%}
+  .flow4-svg path{fill:none;stroke-width:2}
+  .flow4-svg .in{stroke:var(--cyan);stroke-dasharray:5 6;opacity:.55}
+  .flow4-svg .mid{stroke:#fff;stroke-dasharray:5 6;opacity:.4}
+  .flow4-svg .out{stroke:var(--green);opacity:.6}
+  .flow4-svg circle{fill:currentColor}
+  .f4-node{position:absolute;border:1px solid var(--line);border-radius:12px;background:rgba(12,20,38,.6);padding:13px 16px;display:flex;align-items:center;gap:11px}
+  .f4-node .ic{width:32px;height:32px;border-radius:8px;background:rgba(51,204,255,.12);display:grid;place-items:center;font-size:14px;flex:none}
+  .f4-node b{font-size:14px;font-weight:700;color:#fff}
+  .f4-node.chip{justify-content:center;text-align:center;background:rgba(51,204,255,.08);border-color:var(--line-strong)}
+  .f4-node.out .ic{background:rgba(22,176,116,.16)}
+  .f4-node.out .check{margin-left:auto;color:var(--green);font-weight:700;flex:none}
+  .f4-center{position:absolute;border:1px solid var(--line-strong);border-radius:16px;background:linear-gradient(165deg,rgba(0,102,255,.22),#0c1426);padding:20px 24px;box-shadow:0 30px 80px -24px rgba(0,0,0,.7)}
+  .f4-center .top{display:flex;align-items:center;justify-content:space-between}
+  .f4-center .brand{display:flex;align-items:center;gap:9px;font-weight:800;font-size:17px}
+  .f4-center .brand .dot{width:14px;height:14px;border-radius:4px;background:var(--cyan)}
+  .f4-center .live{font-family:var(--mono);font-size:10px;color:var(--green);display:flex;align-items:center;gap:5px;letter-spacing:.05em}
+  .f4-center .live::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green)}
+  .f4-center p{font-size:13px;color:var(--txt-dim);margin:12px 0 0;line-height:1.4}
+  .f4-label{position:absolute;font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--txt-dim-2);top:-30px}
 
   /* ---------- final CTA ---------- */
   .askgrid{display:grid;grid-template-columns:1.2fr 1fr;gap:80px;flex:1;margin-top:30px;align-items:center}
@@ -254,24 +276,58 @@
   <!-- 01 · CAPA -->
   <section data-label="Capa">
     <div class="grid-bg"></div><div class="glow-tr"></div><div class="glow-bl"></div><div class="glow-mag"></div>
-    <div class="pad center">
-      <div style="display:flex;align-items:center;justify-content:space-between;gap:70px">
-        <div>
-          <div class="wordmark anim left" style="--i:0">
-            <span class="dot"></span>Career<span class="dev">OS</span>
-          </div>
-          <h1 class="cover-title anim left" style="--i:1">O sistema operacional<br>da sua <span class="accent">carreira.</span></h1>
-          <p class="cover-sub anim fade" style="--i:3">Um currículo vivo de impacto — para quem trabalha, ou quer trabalhar, em uma empresa de tecnologia.</p>
-          <div class="cover-eyebrow anim fade" style="--i:4;margin-top:46px">Pitch &nbsp;·&nbsp; <b>Group One</b> &nbsp;·&nbsp; MBA AI Engineering &amp; Multi-Agents — FIAP</div>
-        </div>
-        <svg class="mascot anim scale" style="--i:2" viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg">
-          <line x1="120" y1="52" x2="120" y2="32" stroke="#33CCFF" stroke-width="7" stroke-linecap="round"/><circle cx="120" cy="22" r="9" fill="#0066FF"/>
-          <rect x="26" y="108" width="22" height="48" rx="11" fill="#0066FF"/><rect x="192" y="108" width="22" height="48" rx="11" fill="#0066FF"/>
-          <rect x="46" y="50" width="148" height="134" rx="50" fill="#fff"/><rect x="64" y="76" width="112" height="86" rx="40" fill="#0A0F1E"/>
-          <path d="M90 124 q12 -17 24 0" stroke="#33CCFF" stroke-width="8" fill="none" stroke-linecap="round"/><path d="M126 124 q12 -17 24 0" stroke="#33CCFF" stroke-width="8" fill="none" stroke-linecap="round"/>
-          <path d="M108 142 q12 9 24 0" stroke="#33CCFF" stroke-width="6" fill="none" stroke-linecap="round" opacity=".9"/>
-        </svg>
+    <div class="pad">
+      <div class="wordmark anim left" style="--i:0">
+        <span class="dot"></span>Career<span class="dev">OS</span>
       </div>
+      <h1 class="cover-title anim left" style="--i:1;font-size:76px;margin-top:30px">O sistema operacional da sua <span class="accent">carreira.</span></h1>
+      <p class="cover-sub anim fade" style="--i:3;font-size:25px;max-width:1180px;margin-top:18px">Um currículo vivo de impacto — para quem trabalha, ou quer trabalhar, em uma empresa de tecnologia.</p>
+
+      <div class="flow4 anim scale" style="--i:4">
+        <svg class="flow4-svg" viewBox="0 0 1660 400" preserveAspectRatio="none">
+          <g class="in" style="color:var(--cyan)">
+            <path d="M230,77 C420,77 420,200 610,200"/><circle cx="230" cy="77" r="4"/>
+            <path d="M230,159 C420,159 420,200 610,200"/><circle cx="230" cy="159" r="4"/>
+            <path d="M230,241 C420,241 420,200 610,200"/><circle cx="230" cy="241" r="4"/>
+            <path d="M230,323 C420,323 420,200 610,200"/><circle cx="230" cy="323" r="4"/>
+          </g>
+          <g class="mid" style="color:#fff">
+            <path d="M890,200 C930,200 930,160 970,160"/><circle cx="970" cy="160" r="4"/>
+            <path d="M890,200 C930,200 930,240 970,240"/><circle cx="970" cy="240" r="4"/>
+          </g>
+          <g class="out" style="color:var(--green)">
+            <path d="M1180,160 C1220,160 1220,114 1300,114"/>
+            <path d="M1180,160 C1220,160 1220,200 1300,200"/>
+            <path d="M1180,160 C1220,160 1220,286 1300,286"/>
+            <path d="M1180,240 C1220,240 1220,114 1300,114"/>
+            <path d="M1180,240 C1220,240 1220,200 1300,200"/>
+            <path d="M1180,240 C1220,240 1220,286 1300,286"/>
+            <circle cx="1300" cy="114" r="4"/><circle cx="1300" cy="200" r="4"/><circle cx="1300" cy="286" r="4"/>
+          </g>
+        </svg>
+
+        <div class="f4-node" style="left:0;width:230px;top:46px"><div class="ic">💬</div><b>Feedbacks</b></div>
+        <div class="f4-node" style="left:0;width:230px;top:128px"><div class="ic">🚀</div><b>Projetos</b></div>
+        <div class="f4-node" style="left:0;width:230px;top:210px"><div class="ic">🎤</div><b>Apresentações</b></div>
+        <div class="f4-node" style="left:0;width:230px;top:292px"><div class="ic">✅</div><b>Tarefas</b></div>
+
+        <div class="f4-center" style="left:610px;width:280px;top:115px">
+          <div class="top">
+            <div class="brand"><span class="dot"></span>Career<span class="accent">OS</span></div>
+            <div class="live">LIVE</div>
+          </div>
+          <p>Captura tudo que você faz e estrutura em evidência de impacto.</p>
+        </div>
+
+        <div class="f4-node chip" style="left:970px;width:210px;top:131px"><b>Currículo Vivo</b></div>
+        <div class="f4-node chip" style="left:970px;width:210px;top:211px"><b>STAR Record</b></div>
+
+        <div class="f4-node out" style="left:1300px;width:360px;top:81px"><div class="ic">📈</div><b>Promoção</b><span class="check">✓</span></div>
+        <div class="f4-node out" style="left:1300px;width:360px;top:167px"><div class="ic">🔀</div><b>Transição de carreira</b><span class="check">✓</span></div>
+        <div class="f4-node out" style="left:1300px;width:360px;top:253px"><div class="ic">🌱</div><b>Crescimento profissional</b><span class="check">✓</span></div>
+      </div>
+
+      <div class="cover-eyebrow anim fade" style="--i:5;margin-top:10px">Pitch &nbsp;·&nbsp; <b>Group One</b> &nbsp;·&nbsp; MBA AI Engineering &amp; Multi-Agents — FIAP</div>
     </div>
     <div class="chrome"><span class="ltag">careeros.io</span><span>01</span></div>
   </section>
@@ -630,20 +686,18 @@
   <section data-label="Junte-se">
     <div class="glow-tr"></div><div class="glow-mag"></div>
     <div class="pad">
-      <p class="kicker anim fade">Junte-se ao Group One</p>
+      <p class="kicker anim fade">Obrigado</p>
       <h2 class="stitle anim left" style="--i:1">Vamos construir o Career OS.</h2>
       <div class="askgrid">
         <ul class="asklist">
-          <li class="anim fade" style="--i:2"><span class="ck">→</span><div>Buscamos <b>parceiros de construção</b>: produto, IA/agentes, growth e design.</div></li>
+          <li class="anim fade" style="--i:2"><span class="ck">→</span><div>Produto real, hoje: motor de captura, estruturação STAR e evidência prontos.</div></li>
           <li class="anim fade" style="--i:3"><span class="ck">→</span><div>Base técnica pronta: Hono+Bun, React+Vite, Claude, repository pattern.</div></li>
           <li class="anim fade" style="--i:4"><span class="ck">→</span><div>Mercado validado, análogo provado (Wellhub) e um wedge claro: engenheiros sênior.</div></li>
         </ul>
         <div class="contact anim scale" style="--i:3">
-          <div class="lab">Vamos conversar</div>
-          <div class="big">Career<span class="accent">OS</span></div>
-          <div class="row">✉️ <b>gabsdevops@gmail.com</b></div>
-          <div class="row">🔗 <b>github.com/gabriel-dantas98</b></div>
-          <div class="row">🎓 <b>MBA AI Engineering — FIAP</b></div>
+          <div class="lab">Um projeto do</div>
+          <div class="big">Group One</div>
+          <div class="row">🎓 <b>MBA AI Engineering & Multi-Agents — FIAP</b></div>
         </div>
       </div>
     </div>

@@ -59,16 +59,7 @@
   section[data-deck-active] .anim{opacity:1;transform:none}
   @media (prefers-reduced-motion:reduce){.anim{transition:none;opacity:1;transform:none}}
 
-  /* ---------- bullets ---------- */
-  .bullets{list-style:none;padding:0;margin:44px 0 0;display:flex;flex-direction:column;gap:28px;max-width:1280px}
-  .bullets li{font-size:33px;line-height:1.4;display:flex;gap:26px;align-items:flex-start}
-  .bullets li::before{content:"";flex:none;width:16px;height:16px;border-radius:5px;background:var(--cyan);margin-top:13px;box-shadow:0 0 16px rgba(51,204,255,.6)}
-
   /* ---------- big stat ---------- */
-  .statwrap{display:flex;flex-direction:column;justify-content:center;flex:1}
-  .bigstat{font-size:240px;line-height:.84;font-weight:800;letter-spacing:-.03em;color:var(--cyan);font-variant-numeric:tabular-nums}
-  .bigstat .u{font-size:120px}
-  .statcap{font-size:34px;color:var(--txt-dim);max-width:1180px;margin-top:18px;line-height:1.35}
   .src{font-family:var(--mono);font-size:16px;color:var(--txt-dim-2);margin-top:auto;letter-spacing:.01em}
   .src::before{content:"⌖ ";color:var(--cyan)}
 
@@ -93,27 +84,85 @@
   .light .ministat .l{color:#5d6b86}
   .ministat .s{font-family:var(--mono);font-size:14px;color:var(--txt-dim-2);margin-top:12px}
 
-  /* ---------- terminal / IDE flavor ---------- */
-  .term{border-radius:16px;overflow:hidden;border:1px solid var(--line-strong);background:#070b15;box-shadow:0 40px 100px -30px rgba(0,0,0,.7);font-family:var(--mono)}
-  .term-bar{display:flex;align-items:center;gap:9px;padding:16px 20px;background:#0c1426;border-bottom:1px solid var(--line)}
-  .term-bar i{width:13px;height:13px;border-radius:50%;display:block}
-  .term-bar .t{margin-left:14px;font-size:17px;color:var(--txt-dim-2)}
-  .term-body{padding:34px 40px;font-size:25px;line-height:1.75}
-  .term-body .c{color:#7ee787}
-  .term-body .k{color:var(--cyan)}
-  .term-body .v{color:#fff}
-  .term-body .p{color:var(--mag)}
-  .term-body .dim{color:var(--txt-dim-2)}
-  .cursor{display:inline-block;width:13px;height:26px;background:var(--cyan);vertical-align:-4px;margin-left:4px;animation:blink 1.1s steps(2) infinite}
+  /* ---------- problem list (5 pain scenarios) ---------- */
+  .problist{display:flex;flex-direction:column;gap:14px;margin-top:34px}
+  .probitem{display:flex;align-items:center;gap:24px;padding:18px 28px;border:1px solid var(--line);border-radius:14px;background:rgba(12,20,38,.45)}
+  .probitem .pic{width:50px;height:50px;border-radius:13px;background:rgba(255,45,120,.14);display:grid;place-items:center;font-size:22px;flex:none}
+  .probitem p{font-size:20px;line-height:1.42;margin:0;color:var(--txt-dim)}
+  .probitem b{color:#fff;font-weight:700}
+
+  /* ---------- app window (product UI mockups) ---------- */
+  .app{border-radius:20px;overflow:hidden;border:1px solid var(--line-strong);background:#0b1226;box-shadow:0 50px 120px -30px rgba(0,0,0,.75);margin-top:34px}
+  .app-top{display:flex;align-items:center;justify-content:space-between;padding:20px 34px;background:#0c1426;border-bottom:1px solid var(--line)}
+  .app-top .brand{display:flex;align-items:center;gap:12px;font-weight:800;font-size:22px;flex:none}
+  .app-top .brand .dot{width:17px;height:17px;border-radius:5px;background:var(--cyan);box-shadow:0 0 14px var(--cyan)}
+  .app-top .brand .dev{color:var(--cyan)}
+  .app-tabs{display:flex;gap:6px;font-family:var(--mono);font-size:14px}
+  .app-tab{padding:9px 18px;border-radius:100px;color:var(--txt-dim-2)}
+  .app-tab.active{background:rgba(51,204,255,.14);color:var(--cyan);font-weight:600}
+  .app-user{display:flex;align-items:center;gap:10px;font-size:14px;color:var(--txt-dim);font-family:var(--mono);flex:none}
+  .app-user .av{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,var(--cyan),var(--blue))}
+  .app-body{padding:36px 40px}
+
+  /* capture / STAR mockup */
+  .capture-input{border:1px solid var(--line);border-radius:14px;background:#0f1830;padding:26px 30px;font-size:22px;line-height:1.5;color:#fff}
+  .capture-input .ph{color:var(--txt-dim-2);font-size:14px;font-family:var(--mono);letter-spacing:.04em;text-transform:uppercase;display:block;margin-bottom:12px}
+  .capture-badge{display:inline-flex;align-items:center;gap:10px;margin-top:18px;font-family:var(--mono);font-size:14px;color:var(--txt-dim)}
+  .capture-badge b{color:var(--cyan);font-weight:600}
+  .capture-arrow{display:flex;justify-content:center;color:var(--cyan);font-size:26px;margin:18px 0 2px}
+  .star-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:4px}
+  .star-card{border:1px solid var(--line);border-radius:14px;padding:20px 22px;background:rgba(51,204,255,.06)}
+  .star-card .lab{font-family:var(--mono);font-size:12px;color:var(--cyan);letter-spacing:.09em;text-transform:uppercase;font-weight:600}
+  .star-card p{font-size:16px;color:#fff;margin:10px 0 0;line-height:1.4}
+  .cursor{display:inline-block;width:12px;height:24px;background:var(--cyan);vertical-align:-4px;margin-left:4px;animation:blink 1.1s steps(2) infinite}
   @keyframes blink{0%,50%{opacity:1}50.01%,100%{opacity:0}}
 
-  /* ---------- pipeline (loop core) ---------- */
-  .pipe{display:flex;gap:0;flex:1;margin-top:40px;align-items:center}
-  .step{flex:1;border:1px solid var(--line);border-radius:16px;background:rgba(12,20,38,.55);padding:34px 22px;text-align:center;position:relative}
-  .step .si{font-size:42px;margin-bottom:18px}
-  .step h4{font-size:25px;margin:0 0 10px;font-weight:700}
-  .step p{font-size:18px;color:var(--txt-dim);margin:0;line-height:1.4}
-  .arrow{flex:none;width:60px;display:grid;place-items:center;color:var(--cyan);font-size:38px;font-weight:700}
+  /* output trio: timeline / brag doc / perfil */
+  .outrow{display:grid;grid-template-columns:.85fr 1.15fr .85fr;gap:22px}
+  .outcard{border:1px solid var(--line);border-radius:16px;padding:22px 24px;background:rgba(12,20,38,.5);display:flex;flex-direction:column;gap:14px}
+  .outcard .oh{display:flex;align-items:center;gap:10px;font-size:15px;font-weight:700;color:#fff}
+  .outcard .oh .oi{font-size:18px}
+  .outcard .ok-badge{margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--green)}
+  .mini-feed{display:flex;flex-direction:column;gap:9px}
+  .mini-feed .fi{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--txt-dim);padding:9px 12px;border:1px solid var(--line);border-radius:10px}
+  .mini-feed .fi span{margin-left:auto;font-family:var(--mono);font-size:10px;color:var(--txt-dim-2)}
+  .mini-doc-stats{display:flex;gap:22px;padding-bottom:14px;border-bottom:1px solid var(--line)}
+  .mini-doc-stats div{font-family:var(--mono)}
+  .mini-doc-stats b{display:block;font-size:24px;color:#fff;font-weight:800}
+  .mini-doc-stats span{font-size:11px;color:var(--txt-dim-2)}
+  .mini-doc ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+  .mini-doc li{font-size:14px;color:var(--txt-dim);line-height:1.4;padding-left:18px;position:relative}
+  .mini-doc li::before{content:"—";position:absolute;left:0;color:var(--txt-dim-2)}
+  .mini-doc .export{margin-top:4px;align-self:flex-start;font-family:var(--mono);font-size:12px;font-weight:600;color:#05080f;background:var(--cyan);padding:9px 16px;border-radius:8px}
+  .mini-profile{display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px}
+  .mini-profile .av{width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--cyan),var(--blue))}
+  .mini-profile h4{font-size:15px;margin:0;font-weight:700}
+  .mini-profile p{font-size:12px;color:var(--txt-dim-2);margin:0}
+  .mini-profile ul{list-style:none;margin:8px 0 0;padding:0;text-align:left;display:flex;flex-direction:column;gap:6px}
+  .mini-profile li{font-size:12px;color:var(--txt-dim);display:flex;gap:8px}
+  .mini-profile li::before{content:"✓";color:var(--green);flex:none}
+
+  /* ---------- public profile page + recruiter chat ---------- */
+  .urlbar{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:14px;color:var(--txt-dim);background:rgba(51,204,255,.08);border:1px solid var(--line);border-radius:100px;padding:10px 20px;width:max-content}
+  .urlbar b{color:var(--cyan);font-weight:600}
+  .pp-grid{display:grid;grid-template-columns:1fr 1fr;gap:30px}
+  .pp-profile{display:flex;flex-direction:column;gap:20px}
+  .pp-head{display:flex;align-items:center;gap:16px}
+  .pp-head .av{width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,var(--cyan),var(--blue));flex:none}
+  .pp-head h4{font-size:22px;margin:0;font-weight:800}
+  .pp-head p{font-size:14px;color:var(--txt-dim-2);margin:4px 0 0;font-family:var(--mono)}
+  .pp-achievements{display:flex;flex-direction:column;gap:10px}
+  .pp-ach{border:1px solid var(--line);border-radius:12px;padding:14px 18px;display:flex;align-items:center;gap:14px;font-size:15px;color:var(--txt-dim)}
+  .pp-ach .ic2{font-size:18px;flex:none}
+  .pp-ach b{color:#fff;font-weight:700}
+  .pp-chat{border:1px solid var(--line-strong);border-radius:16px;background:#0c1426;display:flex;flex-direction:column;overflow:hidden}
+  .pp-chat-top{padding:14px 20px;border-bottom:1px solid var(--line);font-family:var(--mono);font-size:13px;color:var(--txt-dim-2);display:flex;align-items:center;gap:8px}
+  .pp-chat-top::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green)}
+  .pp-chat-body{padding:22px;display:flex;flex-direction:column;gap:14px}
+  .pp-msg{max-width:88%;padding:13px 18px;border-radius:14px;font-size:15px;line-height:1.42}
+  .pp-msg.q{align-self:flex-end;background:linear-gradient(135deg,#0066FF,#0a47b8);color:#fff;border-bottom-right-radius:4px}
+  .pp-msg.a{align-self:flex-start;background:rgba(51,204,255,.1);border:1px solid var(--line);color:#fff;border-bottom-left-radius:4px}
+  .pp-chat-input{margin:0 22px 22px;display:flex;gap:10px;align-items:center;border:1px solid var(--line);border-radius:100px;padding:12px 18px;font-family:var(--mono);font-size:14px;color:var(--txt-dim-2)}
 
   /* ---------- market / chart ---------- */
   .two{display:grid;grid-template-columns:1.05fr .95fr;gap:80px;align-items:center;flex:1;margin-top:18px}
@@ -142,6 +191,11 @@
   .phase p{font-size:22px;color:var(--txt-dim);line-height:1.45;margin:0 0 16px}
   .phase .price{font-size:25px;font-weight:700;color:#fff}
   .phase:not(:last-child)::after{content:"→";position:absolute;right:-16px;top:50%;transform:translateY(-50%);color:var(--cyan);font-size:40px;z-index:2}
+
+  /* ---------- revenue assumptions ---------- */
+  .assume{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:14px}
+  .assume li{font-size:20px;color:var(--txt-dim);display:flex;justify-content:space-between;gap:12px;padding-bottom:14px;border-bottom:1px solid var(--line)}
+  .assume li b{color:#fff;font-weight:700;font-variant-numeric:tabular-nums}
 
   /* ---------- compare table ---------- */
   .cmp{width:100%;border-collapse:collapse;margin-top:34px;font-size:26px}
@@ -192,97 +246,6 @@
   .contact .big{font-size:46px;font-weight:800;margin:18px 0 28px;letter-spacing:-.01em;line-height:1.05}
   .contact .row{display:flex;align-items:center;gap:16px;font-size:25px;color:var(--txt-dim);margin-top:16px}
   .contact .row b{color:#fff;font-weight:600}
-
-  /* ---------- demo · MCP + skills ---------- */
-  .chips{display:flex;gap:16px;margin-top:30px;flex-wrap:wrap}
-  .chip{display:inline-flex;align-items:center;gap:12px;font-family:var(--mono);font-size:20px;padding:12px 22px;border-radius:100px;border:1px solid var(--line-strong);background:rgba(51,204,255,.08);color:#fff}
-  .chip .dotc{width:11px;height:11px;border-radius:50%;flex:none;box-shadow:0 0 12px currentColor}
-  .chip.mcp{color:var(--cyan)}.chip.skill{color:var(--mag)}.chip.store{color:var(--green)}
-  .chip b{font-weight:600}
-  .term-body .role{color:var(--cyan);font-weight:600}
-  .term-body .role.you{color:var(--mag)}
-  .term-body .tool{color:var(--cyan)}
-  .term-body .ok{color:#7ee787}
-
-  /* ---------- persona header (intro/resultado) ---------- */
-  .pheader{display:flex;align-items:center;gap:20px;margin-bottom:8px}
-  .pheader .ava{width:68px;height:68px;border-radius:20px;background:rgba(51,204,255,.14);display:grid;place-items:center;font-size:36px;flex:none}
-  .pheader .nm{font-size:30px;font-weight:800;margin:0;color:#fff}
-  .pheader .rl{font-family:var(--mono);font-size:15px;color:var(--cyan);letter-spacing:.06em;text-transform:uppercase}
-  .light .pheader .nm{color:var(--navy)}
-  .light .pheader .ava{background:rgba(0,102,255,.1)}
-
-  /* ---------- pains + JTBD callout ---------- */
-  .pains{list-style:none;padding:0;margin:26px 0 0;display:flex;flex-direction:column;gap:16px;max-width:1100px}
-  .pains li{font-size:21px;line-height:1.4;display:flex;gap:16px;align-items:flex-start;color:var(--txt-dim)}
-  .pains li::before{content:"⚠";flex:none;color:var(--mag);font-size:18px;margin-top:2px}
-  .light .pains li{color:#5d6b86}
-  .jtbd{margin-top:28px;border-left:4px solid var(--cyan);padding:18px 26px;background:rgba(51,204,255,.08);border-radius:0 14px 14px 0;font-size:20px;line-height:1.5;max-width:1300px}
-  .jtbd b{color:var(--cyan);font-family:var(--mono);font-size:14px;letter-spacing:.08em;text-transform:uppercase;display:block;margin-bottom:8px}
-  .light .jtbd{background:rgba(0,102,255,.06)}
-  .light .jtbd b{color:var(--blue)}
-
-  /* ---------- app window / chat mockup ---------- */
-  .appwin{border-radius:18px;overflow:hidden;border:1px solid var(--line-strong);background:#070b15;box-shadow:0 40px 100px -30px rgba(0,0,0,.7)}
-  .appwin-bar{display:flex;align-items:center;gap:9px;padding:14px 20px;background:#0c1426;border-bottom:1px solid var(--line)}
-  .appwin-bar i{width:13px;height:13px;border-radius:50%;display:block}
-  .appwin-bar .t{margin-left:14px;font-size:15px;color:var(--txt-dim-2);font-family:var(--mono)}
-  .chatlog{padding:26px 28px;display:flex;flex-direction:column;gap:14px;min-height:200px}
-  .bubble{max-width:88%;padding:14px 20px;border-radius:16px;font-size:18px;line-height:1.4}
-  .bubble.user{align-self:flex-end;background:linear-gradient(135deg,#0066FF,#0a47b8);color:#fff;border-bottom-right-radius:4px}
-  .bubble.bot{align-self:flex-start;background:rgba(51,204,255,.1);border:1px solid var(--line);color:#fff;border-bottom-left-radius:4px}
-  .typing{align-self:flex-start;display:flex;gap:6px;padding:12px 18px}
-  .typing i{width:7px;height:7px;border-radius:50%;background:var(--cyan);display:inline-block;animation:typedot 1s ease-in-out infinite}
-  .typing i:nth-child(2){animation-delay:.15s}
-  .typing i:nth-child(3){animation-delay:.3s}
-  @keyframes typedot{0%,60%,100%{opacity:.25;transform:translateY(0)}30%{opacity:1;transform:translateY(-4px)}}
-
-  /* ---------- STAR fill card ---------- */
-  .starcard{border:1px solid var(--line-strong);border-radius:16px;padding:22px 26px;background:rgba(12,20,38,.6);display:flex;flex-direction:column;gap:12px}
-  .starcard .lab{font-family:var(--mono);font-size:13px;color:var(--txt-dim-2);letter-spacing:.08em;text-transform:uppercase;margin-bottom:2px}
-  .starfield{display:flex;gap:14px;align-items:baseline}
-  .starfield .tag{font-family:var(--mono);font-size:13px;color:var(--cyan);letter-spacing:.06em;text-transform:uppercase;min-width:84px;flex:none}
-  .starfield .val{font-size:17px;color:#fff;line-height:1.4}
-
-  /* ---------- output mockups (sheet / profile / pdf) ---------- */
-  .sheetmock{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#0c1426}
-  .sheetmock table{width:100%;border-collapse:collapse;font-size:14px}
-  .sheetmock th{background:#0f1830;color:var(--txt-dim-2);font-weight:600;text-align:left;padding:10px 14px;font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.05em}
-  .sheetmock td{padding:11px 14px;border-top:1px solid var(--line);color:var(--txt-dim)}
-  .sheetmock tr.new td{color:#fff;font-weight:600}
-
-  .profilemock{border:1px solid var(--line-strong);border-radius:18px;padding:24px 28px;background:linear-gradient(165deg,rgba(0,102,255,.12),rgba(12,20,38,.5));display:flex;flex-direction:column;gap:14px;position:relative}
-  .profilemock .ph{display:flex;align-items:center;gap:14px}
-  .profilemock .av{width:48px;height:48px;border-radius:50%;background:rgba(51,204,255,.18);display:grid;place-items:center;font-size:22px;flex:none}
-  .profilemock .nm{font-size:18px;font-weight:700;color:#fff}
-  .profilemock .rl{font-size:13px;color:var(--txt-dim-2);font-family:var(--mono)}
-  .profilemock ul{list-style:none;padding:0;margin:6px 0 0;display:flex;flex-direction:column;gap:9px}
-  .profilemock li{font-size:15px;color:var(--txt-dim);display:flex;gap:9px}
-  .profilemock li::before{content:"✓";color:var(--green);flex:none}
-  .toast{position:absolute;top:18px;right:18px;background:var(--green);color:#06210f;font-family:var(--mono);font-size:12px;font-weight:700;padding:7px 14px;border-radius:100px}
-
-  .pdfmock{display:flex;align-items:center;gap:24px}
-  .pdfpage{width:130px;height:172px;background:#fff;border-radius:8px;box-shadow:0 20px 50px -15px rgba(0,0,0,.6);position:relative;flex:none}
-  .pdfpage .ln{height:7px;background:rgba(10,15,30,.12);border-radius:4px;margin:12px 14px}
-  .pdfprog{flex:1;display:flex;flex-direction:column;gap:12px}
-  .pdfprog .bar{height:9px;border-radius:6px;background:rgba(51,204,255,.15);overflow:hidden}
-  .pdfprog .bar i{display:block;height:100%;width:0%;background:linear-gradient(90deg,var(--cyan),var(--blue));border-radius:6px}
-  .pdfprog .lab{font-family:var(--mono);font-size:15px;color:var(--txt-dim)}
-  .pdfprog .ok{color:#7ee787;font-weight:700}
-
-  /* ---------- resultado (outcome) ---------- */
-  .resulthead{font-size:60px;font-weight:800;line-height:1.18;letter-spacing:-.01em;margin:18px 0 0;max-width:1500px}
-  .resultquote{font-size:25px;line-height:1.5;color:rgba(255,255,255,.88);max-width:1300px;margin-top:26px;font-style:italic;border-left:3px solid rgba(255,255,255,.4);padding-left:24px}
-  .resultquote .by{display:block;margin-top:14px;font-style:normal;font-weight:600;font-size:18px;color:rgba(255,255,255,.7)}
-  .metrics{display:flex;gap:60px;margin-top:40px}
-  .metrics .m{display:flex;flex-direction:column;gap:6px}
-  .metrics .m .mv{font-size:42px;font-weight:800;color:#fff;font-variant-numeric:tabular-nums}
-  .metrics .m .ml{font-size:16px;color:rgba(255,255,255,.7);max-width:220px;line-height:1.3}
-
-  /* ---------- revenue assumptions ---------- */
-  .assume{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:14px}
-  .assume li{font-size:20px;color:var(--txt-dim);display:flex;justify-content:space-between;gap:12px;padding-bottom:14px;border-bottom:1px solid var(--line)}
-  .assume li b{color:#fff;font-weight:700;font-variant-numeric:tabular-nums}
 </style>
 </head>
 <body>
@@ -313,17 +276,18 @@
     <div class="chrome"><span class="ltag">careeros.io</span><span>01</span></div>
   </section>
 
-  <!-- 02 · PROBLEMA (gancho) -->
+  <!-- 02 · PROBLEMA (5 cenários de dor) -->
   <section data-label="Problema">
     <div class="glow-tr"></div>
     <div class="pad center">
       <p class="kicker anim fade">O problema</p>
-      <h2 class="stitle anim left" style="--i:1;max-width:1500px">Seu impacto<br>desaparece — e <span class="mag">você paga a conta.</span></h2>
-      <p class="lead anim fade" style="--i:2">Você entrega o ano inteiro. Mas na hora do feedback, da promoção ou da próxima vaga, o que sobra é memória — geralmente a dos últimos 30 dias. O trabalho real fica espalhado em PRs, tickets, docs e threads que ninguém junta.</p>
-      <div class="statrow">
-        <div class="ministat anim fade" style="--i:3"><div class="v" data-count="14" data-suffix="%">14%</div><div class="l">dos colaboradores concordam fortemente que as avaliações de desempenho os inspiram a melhorar.</div><div class="s">Gallup</div></div>
-        <div class="ministat anim fade" style="--i:4"><div class="v" data-count="95" data-suffix="%">95%</div><div class="l">dos gestores estão insatisfeitos com o processo de avaliação de desempenho da empresa.</div><div class="s">Gartner / CEB</div></div>
-        <div class="ministat anim fade" style="--i:5"><div class="v" data-count="3.9" data-suffix=" anos">3.9 anos</div><div class="l">é a mediana de permanência no emprego — seu histórico de impacto precisa ser portátil.</div><div class="s">U.S. BLS</div></div>
+      <h2 class="stitle anim left" style="--i:1;font-size:66px;max-width:1500px">Talvez você já tenha passado por <span class="mag">algum desses.</span></h2>
+      <div class="problist">
+        <div class="probitem anim fade" style="--i:2"><div class="pic">🔁</div><p><b>Ciclo de avaliação e feedback</b> — você gastou dias pra reunir tudo que fez e ainda precisou de ajuda pra demonstrar o valor do que entregou.</p></div>
+        <div class="probitem anim fade" style="--i:3"><div class="pic">🚪</div><p><b>Mudou de empresa</b> — e tudo que você fez ficou pra trás. Nenhuma talk, slide ou material público que provasse aquilo.</p></div>
+        <div class="probitem anim fade" style="--i:4"><div class="pic">🧑‍💼</div><p><b>Você lidera</b> — e tem dificuldade de ter visibilidade e insumo pra justificar a promoção dos seus liderados.</p></div>
+        <div class="probitem anim fade" style="--i:5"><div class="pic">🌱</div><p><b>Você está no início da carreira</b> — e não consegue contar uma boa história do que já fez, na faculdade ou fora dela, como valor.</p></div>
+        <div class="probitem anim fade" style="--i:6"><div class="pic">🔍</div><p><b>Você lidera e precisa recrutar</b> — e tem dificuldade de obter informação além das hard skills dos candidatos.</p></div>
       </div>
     </div>
     <div class="chrome"><img src="assets/group-one-mark-white.png" alt=""><span>02</span></div>
@@ -334,7 +298,7 @@
     <div class="grid-bg" style="opacity:.35"></div><div class="glow-bl"></div>
     <div class="pad">
       <p class="kicker anim fade">Por que agora</p>
-      <h2 class="stitle anim left" style="--i:1">A carreira virou dado.<br>Só que o dado <span class="accent">não é seu.</span></h2>
+      <h2 class="stitle anim left" style="--i:1;font-size:70px">O trabalho vai mudar. <span class="accent">Hard skills não bastarão</span> no currículo.</h2>
       <div class="cards4" style="margin-top:24px">
         <div class="card anim fade" style="--i:2"><span class="num">01</span><div class="ic">📊</div><h3>Tudo é medido</h3><p>DORA, SPACE, métricas de produtividade e monitoramento de RTO viraram padrão. As empresas medem você o tempo todo.</p></div>
         <div class="card anim fade" style="--i:3"><span class="num">02</span><div class="ic">🔒</div><h3>Mas você não vê</h3><p>Esses dados ficam em dashboards corporativos fechados. O profissional raramente tem acesso — ou contexto — sobre o próprio impacto.</p></div>
@@ -362,81 +326,127 @@
     <div class="pad">
       <p class="kicker anim fade">A solução</p>
       <h2 class="stitle anim left" style="--i:1">CareerOS — seu <span class="accent">currículo vivo.</span></h2>
-      <p class="lead anim fade" style="--i:2">Você fala em fluxo livre o que fez. A IA estrutura no framework STAR (Situação, Tarefa, Ação, Resultado), guarda no seu Google Drive e transforma em brag documents, PDFs e um portfólio público anonimizado.</p>
+      <p class="lead anim fade" style="--i:2">Você fala em fluxo livre o que fez. A IA estrutura no framework STAR (Situação, Tarefa, Ação, Resultado), guarda no seu Google Drive e transforma em brag documents, PDFs e um link de perfil público — pronto pra colocar na bio.</p>
       <div class="cards3" style="margin-top:46px">
         <div class="card anim fade" style="--i:3"><div class="ic">🧠</div><h3>Captura sem fricção</h3><p>Stream of consciousness → conquista estruturada via Claude. Documentar leva segundos, não horas.</p></div>
-        <div class="card anim fade" style="--i:4"><div class="ic">🗂️</div><h3>Os dados são seus</h3><p>Tudo vive no seu Google Sheets. Sem lock-in, sem caixa-preta. Privacy-first de verdade.</p></div>
+        <div class="card anim fade" style="--i:4"><div class="ic">📊</div><h3>Impacto sempre atualizado</h3><p>Cada conquista nova entra no seu histórico automaticamente. Nunca mais começar do zero.</p></div>
         <div class="card anim fade" style="--i:5"><div class="ic">🚀</div><h3>Pronto para usar</h3><p>Brag doc trimestral, export PDF e perfil público com um clique. Do dia a dia ao review.</p></div>
       </div>
     </div>
     <div class="chrome"><img src="assets/group-one-mark-white.png" alt=""><span>05</span></div>
   </section>
 
-  <!-- 06 · COMO FUNCIONA (loop core, terminal flavor) -->
-  <section data-label="Como funciona">
+  <!-- 06 · DEMO 1: CAPTURA + STAR -->
+  <section data-label="Demo · Captura">
     <div class="grid-bg" style="opacity:.3"></div><div class="glow-tr"></div>
     <div class="pad">
-      <p class="kicker anim fade">Como funciona</p>
-      <h2 class="stitle anim left" style="--i:1">Um loop. Do caos à <span class="accent">evidência.</span></h2>
-      <div class="term anim scale" style="--i:2;margin-top:38px;max-width:1660px">
-        <div class="term-bar"><i style="background:#ff5f56"></i><i style="background:#ffbd2e"></i><i style="background:#27c93f"></i><span class="t">~/career — careeros</span></div>
-        <div class="term-body">
-          <div><span class="dim">$</span> <span class="c">careeros</span> add <span class="v">"liderei a migração que cortou 40% do custo de infra"</span></div>
-          <div style="margin-top:10px"><span class="p">▸</span> <span class="k">situation</span> <span class="dim">·</span> <span class="k">task</span> <span class="dim">·</span> <span class="k">action</span> <span class="dim">·</span> <span class="k">result</span> &nbsp;<span class="c">✓ estruturado pela IA</span></div>
-          <div style="margin-top:10px"><span class="p">▸</span> salvo em <span class="v">Google Sheets</span> <span class="dim">(seu Drive)</span> &nbsp;→&nbsp; brag-doc Q2 atualizado<span class="cursor"></span></div>
+      <p class="kicker anim fade">Demo · Captura</p>
+      <h2 class="stitle anim left" style="--i:1;font-size:60px">Fale livre. A IA estrutura em <span class="accent">STAR.</span></h2>
+      <div class="app anim scale" style="--i:2;max-width:1660px">
+        <div class="app-top">
+          <div class="brand"><span class="dot"></span>Career<span class="dev">OS</span></div>
+          <div class="app-tabs"><span class="app-tab active">Capturar</span><span class="app-tab">Timeline</span><span class="app-tab">Brag Doc</span><span class="app-tab">Perfil</span></div>
+          <div class="app-user"><span class="av"></span>Ana Souza</div>
         </div>
-      </div>
-      <div class="pipe" style="margin-top:46px">
-        <div class="step anim fade" style="--i:3"><div class="si">💬</div><h4>Fala livre</h4><p>Stream of consciousness</p></div>
-        <div class="arrow anim fade" style="--i:4">→</div>
-        <div class="step anim fade" style="--i:5"><div class="si">✨</div><h4>IA · STAR</h4><p>Estrutura a conquista</p></div>
-        <div class="arrow anim fade" style="--i:6">→</div>
-        <div class="step anim fade" style="--i:7"><div class="si">🗂️</div><h4>Seu Drive</h4><p>Google Sheets</p></div>
-        <div class="arrow anim fade" style="--i:8">→</div>
-        <div class="step anim fade" style="--i:9"><div class="si">📄</div><h4>Brag doc</h4><p>Trimestral · PDF</p></div>
-        <div class="arrow anim fade" style="--i:10">→</div>
-        <div class="step anim fade" style="--i:11"><div class="si">🌐</div><h4>Perfil</h4><p>Portfólio público</p></div>
+        <div class="app-body">
+          <div class="capture-input"><span class="ph">O que você fez essa semana? (chat, voz ou Claude Skill)</span>Liderei a migração do serviço de pagamentos pro novo cluster, sem downtime, e cortamos 40% do custo de infra em 2 meses<span class="cursor"></span></div>
+          <div class="capture-badge">✨ <b>estruturado automaticamente pela IA</b> · salvo no seu Google Drive</div>
+          <div class="capture-arrow">↓</div>
+          <div class="star-grid">
+            <div class="star-card"><div class="lab">Situação</div><p>Infra de pagamentos em cluster legado, custo subindo 18%/trimestre.</p></div>
+            <div class="star-card"><div class="lab">Tarefa</div><p>Migrar sem downtime e reduzir custo operacional.</p></div>
+            <div class="star-card"><div class="lab">Ação</div><p>Liderei a migração faseada com o time de SRE.</p></div>
+            <div class="star-card"><div class="lab">Resultado</div><p>−40% custo de infra · zero downtime · 2 meses.</p></div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="chrome"><img src="assets/group-one-mark-white.png" alt=""><span>06</span></div>
   </section>
 
-  <!-- 07 · DEMO — MCP + SKILLS (inserção ao vivo) -->
-  <section data-label="Demo · MCP + Skills">
-    <div class="grid-bg" style="opacity:.3"></div><div class="glow-tr"></div><div class="glow-mag"></div>
+  <!-- 07 · DEMO 2: DE UM REGISTRO A EVIDÊNCIA PRONTA -->
+  <section data-label="Demo · Resultados">
+    <div class="glow-bl"></div>
     <div class="pad">
-      <p class="kicker anim fade">Demo · ao vivo</p>
-      <h2 class="stitle anim left" style="--i:1">Da conversa ao registro — via <span class="accent">MCP + Skills.</span></h2>
-      <p class="lead anim fade" style="--i:2;max-width:1500px">O CareerOS expõe um <b style="color:#fff">servidor MCP</b> e uma <b style="color:#fff">Claude Skill</b>. Você fala com o Claude do seu jeito; a skill reconhece a intenção, chama a ferramenta MCP e grava a conquista já estruturada em STAR no <b style="color:#fff">seu</b> Google Sheets.</p>
-      <div class="chips anim fade" style="--i:3">
-        <span class="chip mcp"><span class="dotc"></span>MCP&nbsp;<b>careeros-server</b></span>
-        <span class="chip skill"><span class="dotc"></span>Skill&nbsp;<b>capture-impact</b></span>
-        <span class="chip store"><span class="dotc"></span>Sink&nbsp;<b>Google Sheets (seu Drive)</b></span>
-      </div>
-      <div class="term anim scale" style="--i:4;margin-top:34px;max-width:1660px">
-        <div class="term-bar"><i style="background:#ff5f56"></i><i style="background:#ffbd2e"></i><i style="background:#27c93f"></i><span class="t">claude — careeros (mcp + skill)</span></div>
-        <div class="term-body">
-          <div><span class="role you">você ▸</span> <span class="v">registra aí: liderei a migração que cortou 40% do custo de infra</span></div>
-          <div style="margin-top:14px"><span class="role">claude ▸</span> <span class="dim">skill</span> <span class="p">capture-impact</span> <span class="dim">ativada — reconheci uma conquista</span></div>
-          <div style="margin-top:10px"><span class="dim">&nbsp;&nbsp;▸</span> <span class="tool">mcp · careeros.add_achievement(</span><span class="dim">…)</span></div>
-          <div style="margin-top:10px"><span class="dim">&nbsp;&nbsp;▸</span> <span class="k">situation</span> <span class="dim">·</span> <span class="k">task</span> <span class="dim">·</span> <span class="k">action</span> <span class="dim">·</span> <span class="k">result</span> &nbsp;<span class="ok">✓ estruturado em STAR</span></div>
-          <div style="margin-top:10px"><span class="dim">&nbsp;&nbsp;▸</span> <span class="ok">✓ gravado no Google Sheets</span> <span class="dim">·</span> brag-doc Q2 atualizado<span class="cursor"></span></div>
+      <p class="kicker anim fade">Demo · Resultados</p>
+      <h2 class="stitle anim left" style="--i:1;font-size:60px">De um registro a <span class="accent">evidência pronta.</span></h2>
+      <div class="app anim scale" style="--i:2;max-width:1660px">
+        <div class="app-top">
+          <div class="brand"><span class="dot"></span>Career<span class="dev">OS</span></div>
+          <div class="app-user"><span class="av"></span>careeros.io/p/8f2a</div>
+        </div>
+        <div class="app-body">
+          <div class="outrow">
+            <div class="outcard">
+              <div class="oh"><span class="oi">🗂️</span>Timeline<span class="ok-badge">✓ auto</span></div>
+              <div class="mini-feed">
+                <div class="fi">🔀 Migração de pagamentos<span>PR #482</span></div>
+                <div class="fi">💬 Feedback do tech lead<span>1:1</span></div>
+                <div class="fi">📈 −30% p95 latência<span>Jira</span></div>
+              </div>
+            </div>
+            <div class="outcard">
+              <div class="oh"><span class="oi">📄</span>Brag Doc — Q2 2026<span class="ok-badge">✓ pronto</span></div>
+              <div class="mini-doc-stats"><div><b>12</b><span>CONQUISTAS</span></div><div><b>3</b><span>MÉTRICAS</span></div><div><b>4</b><span>ÁREAS</span></div></div>
+              <div class="mini-doc"><ul><li>Migração de pagamentos: −40% custo de infra, zero downtime.</li><li>Mentoria contínua de 2 engenheiros júnior.</li></ul><div class="export">⬇ Export PDF</div></div>
+            </div>
+            <div class="outcard">
+              <div class="oh"><span class="oi">🌐</span>Perfil público<span class="ok-badge">✓ link na bio</span></div>
+              <div class="mini-profile">
+                <div class="av"></div>
+                <h4>Gabriel Dantas</h4>
+                <p>careeros.io/p/gdantas</p>
+                <ul><li>−40% custo de infra</li><li>2 júniors mentorados</li></ul>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-      <div class="pipe" style="margin-top:42px">
-        <div class="step anim fade" style="--i:5"><div class="si">💬</div><h4>Você fala</h4><p>Linguagem natural, no chat</p></div>
-        <div class="arrow anim fade" style="--i:6">→</div>
-        <div class="step anim fade" style="--i:7"><div class="si">🧩</div><h4>Skill</h4><p>capture-impact reconhece</p></div>
-        <div class="arrow anim fade" style="--i:8">→</div>
-        <div class="step anim fade" style="--i:9"><div class="si">🔌</div><h4>MCP tool</h4><p>careeros.add_achievement</p></div>
-        <div class="arrow anim fade" style="--i:10">→</div>
-        <div class="step anim fade" style="--i:11"><div class="si">🗂️</div><h4>Seu Drive</h4><p>STAR no Google Sheets</p></div>
-      </div>
     </div>
-    <div class="chrome"><span class="ltag">demo · mcp + skills</span><span>07</span></div>
+    <div class="chrome"><img src="assets/group-one-mark-white.png" alt=""><span>07</span></div>
   </section>
 
-  <!-- 08 · FUNCIONALIDADES -->
+  <!-- 08 · DEMO 3: PERFIL PÚBLICO + CHAT PRA RECRUTADOR -->
+  <section data-label="Demo · Perfil público">
+    <div class="grid-bg" style="opacity:.3"></div><div class="glow-mag"></div>
+    <div class="pad">
+      <p class="kicker anim fade">Demo · Perfil público</p>
+      <h2 class="stitle anim left" style="--i:1;font-size:58px">Um link pra bio. Uma conversa <span class="accent">com os dados reais.</span></h2>
+      <p class="lead anim fade" style="--i:2;font-size:22px;max-width:1400px">careeros.io/p/gdantas — no Instagram, no LinkedIn, no e-mail de candidatura. Quem recebe não lê um PDF: conversa direto com o seu histórico.</p>
+      <div class="app anim scale" style="--i:3;max-width:1660px;margin-top:26px">
+        <div class="app-top">
+          <div class="brand"><span class="dot"></span>Career<span class="dev">OS</span></div>
+          <div class="app-user"><span class="av"></span>perfil público</div>
+        </div>
+        <div class="app-body">
+          <div class="urlbar" style="margin-bottom:22px">🔗 careeros.io/p/<b>gdantas</b></div>
+          <div class="pp-grid">
+            <div class="pp-profile">
+              <div class="pp-head"><div class="av"></div><div><h4>Gabriel Dantas</h4><p>Eng. de Software Sênior · Infra & Plataforma</p></div></div>
+              <div class="pp-achievements">
+                <div class="pp-ach"><span class="ic2">🔀</span><span><b>Migração de pagamentos</b> — −40% custo de infra, zero downtime.</span></div>
+                <div class="pp-ach"><span class="ic2">📈</span><span><b>Redução de latência</b> — −30% de p95 na plataforma.</span></div>
+                <div class="pp-ach"><span class="ic2">🧑‍🏫</span><span><b>Mentoria técnica</b> — 2 engenheiros júnior promovidos.</span></div>
+              </div>
+            </div>
+            <div class="pp-chat">
+              <div class="pp-chat-top">pergunte sobre o histórico de Gabriel</div>
+              <div class="pp-chat-body">
+                <div class="pp-msg q">Ele já liderou alguma migração crítica de infra?</div>
+                <div class="pp-msg a">Sim — liderou a migração do serviço de pagamentos pro novo cluster, sem downtime, cortando 40% do custo de infra em 2 meses.</div>
+                <div class="pp-msg q">E experiência formando outras pessoas?</div>
+                <div class="pp-msg a">Mentorou 2 engenheiros júnior até a promoção e liderou o RFC do novo event bus.</div>
+              </div>
+              <div class="pp-chat-input">💬 Pergunte algo sobre a carreira de Gabriel…</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="chrome"><img src="assets/group-one-mark-white.png" alt=""><span>08</span></div>
+  </section>
+
+  <!-- 09 · FUNCIONALIDADES -->
   <section data-label="Funcionalidades">
     <div class="grid-bg" style="opacity:.3"></div><div class="glow-bl"></div>
     <div class="pad">
@@ -446,250 +456,31 @@
         <div class="card anim fade" style="--i:2"><div class="ic">🎙️</div><h3>Captura por voz/texto</h3><p>Fluxo livre, sem formulário. O Claude entende e organiza.</p></div>
         <div class="card anim fade" style="--i:3"><div class="ic">🧩</div><h3>STAR automático</h3><p>Situação, Tarefa, Ação, Resultado — estruturado em segundos.</p></div>
         <div class="card anim fade" style="--i:4"><div class="ic">🔌</div><h3>MCP + Skills</h3><p>Registre direto do seu agente, sem trocar de tela.</p></div>
-        <div class="card anim fade" style="--i:5"><div class="ic">🗂️</div><h3>Seu Google Sheets</h3><p>O dado vive no seu Drive. Exporte, audite, leve embora.</p></div>
+        <div class="card anim fade" style="--i:5"><div class="ic">🗂️</div><h3>Google Sheets</h3><p>Tudo organizado numa planilha, pronta pra consultar quando você precisar.</p></div>
         <div class="card anim fade" style="--i:6"><div class="ic">📄</div><h3>Brag doc + PDF</h3><p>Trimestral, pronto pra banca de promoção ou pro 1:1.</p></div>
-        <div class="card anim fade" style="--i:7"><div class="ic">🌐</div><h3>Perfil público</h3><p>Anonimizado, para recrutadores — um link, sem nome de empresa.</p></div>
+        <div class="card anim fade" style="--i:7"><div class="ic">🌐</div><h3>Perfil público</h3><p>Um link com sua identidade e suas conquistas — pra colocar na bio, currículo ou candidatura.</p></div>
       </div>
     </div>
-    <div class="chrome"><img src="assets/group-one-mark-white.png" alt=""><span>08</span></div>
+    <div class="chrome"><img src="assets/group-one-mark-white.png" alt=""><span>09</span></div>
   </section>
 
   <!-- 09 · QUEM USA / CASOS DE USO -->
   <section data-label="Casos de uso" class="light">
     <div class="pad">
       <p class="kicker anim fade">Para quem & para quê</p>
-      <h2 class="stitle anim left" style="--i:1">De engenheiro sênior<br>a <span style="color:var(--blue)">qualquer carreira em tech.</span></h2>
-      <p class="lead anim fade" style="--i:2">Começamos com engenheiros L5–L7, onde a dor é aguda. Mas o mesmo motor serve PMs, designers, dados, marketing — qualquer pessoa avaliada por impacto.</p>
+      <h2 class="stitle anim left" style="--i:1">De quem constrói <br>a <span style="color:var(--blue)">quem lidera e quem começa.</span></h2>
+      <p class="lead anim fade" style="--i:2">O mesmo motor de captura serve para papéis muito diferentes — o que muda é o que cada um faz com a evidência.</p>
       <div class="cards4" style="margin-top:22px">
-        <div class="card anim fade" style="--i:3"><div class="ic">📈</div><h3>Promoção mais rápida</h3><p>Chega na banca de promoção com evidências organizadas — não com memória dos últimos dias.</p></div>
-        <div class="card anim fade" style="--i:4"><div class="ic">🔄</div><h3>Realocação ágil</h3><p>Mudou de time ou de empresa? Seu histórico de impacto vai junto, pronto em minutos.</p></div>
-        <div class="card anim fade" style="--i:5"><div class="ic">🧭</div><h3>Transição de carreira</h3><p>Traduz conquistas para uma nova área com narrativa que recrutador entende.</p></div>
-        <div class="card anim fade" style="--i:6"><div class="ic">🤝</div><h3>Recrutador interage</h3><p>Perfil público anonimizado que mostra impacto real — não só cargos e datas.</p></div>
+        <div class="card anim fade" style="--i:3"><div class="ic">📈</div><h3>Quem entrega, quer promoção</h3><p>Chega na banca com evidências organizadas — não com memória dos últimos dias.</p></div>
+        <div class="card anim fade" style="--i:4"><div class="ic">🧑‍💼</div><h3>Quem lidera, quer visibilidade</h3><p>Ganha insumo real pra justificar a promoção e o crescimento dos seus liderados.</p></div>
+        <div class="card anim fade" style="--i:5"><div class="ic">🌱</div><h3>Quem começa, quer contar história</h3><p>Transforma projetos de faculdade ou pessoais numa narrativa de valor de verdade.</p></div>
+        <div class="card anim fade" style="--i:6"><div class="ic">🔍</div><h3>Quem recruta, quer contexto</h3><p>Perfil público mostra o que a pessoa entrega de fato — além das hard skills do currículo.</p></div>
       </div>
     </div>
-    <div class="chrome"><span class="ltag">use cases</span><span>09</span></div>
+    <div class="chrome"><span class="ltag">use cases</span><span>10</span></div>
   </section>
 
-  <!-- 10 · MARINA · CONTEXTO -->
-  <section data-label="Marina · Contexto" class="light">
-    <div class="pad">
-      <p class="kicker anim fade">Persona 1 · Promoção</p>
-      <div class="pheader anim fade" style="--i:1">
-        <div class="ava">👩‍💻</div>
-        <div><div class="nm">Marina</div><div class="rl">Eng. Sênior · L6 · Fintech</div></div>
-      </div>
-      <h2 class="stitle anim left" style="--i:2;font-size:62px;max-width:1400px">Precisa provar, em 6 semanas, o impacto que já gerou.</h2>
-      <ul class="pains anim fade" style="--i:3">
-        <li>O trabalho do ano está espalhado em PRs, tickets e threads de Slack.</li>
-        <li>A banca de promoção pede evidência — memória recente não basta.</li>
-        <li>Montar o doc do zero toma um fim de semana que ela não tem.</li>
-      </ul>
-      <div class="jtbd anim fade" style="--i:4"><b>Job to be done</b>Transformar trabalho disperso em evidência pronta pra decisão — sem virar um projeto à parte.</div>
-    </div>
-    <div class="chrome"><span class="ltag">persona · marina</span><span>10</span></div>
-  </section>
-
-  <!-- 11 · MARINA · DEMO AO VIVO -->
-  <section data-label="Marina · Demo ao vivo" data-demo="marina">
-    <div class="grid-bg" style="opacity:.3"></div><div class="glow-tr"></div>
-    <div class="pad">
-      <p class="kicker anim fade">Demo ao vivo</p>
-      <h2 class="stitle anim left" style="--i:1;font-size:56px">Ela fala. O CareerOS estrutura. <span class="accent">A planilha atualiza.</span></h2>
-      <div class="two" style="margin-top:30px;grid-template-columns:1fr 1fr;gap:50px">
-        <div class="appwin anim scale" style="--i:2">
-          <div class="appwin-bar"><i style="background:#ff5f56"></i><i style="background:#ffbd2e"></i><i style="background:#27c93f"></i><span class="t">Claude — CareerOS</span></div>
-          <div class="chatlog">
-            <div class="bubble user"><span class="txt">Liderei a migração que cortou 40% do custo de infra, sem downtime.</span></div>
-            <div class="typing"><i></i><i></i><i></i></div>
-            <div class="bubble bot">Capturado! Estruturei em STAR e salvei no seu Drive.</div>
-          </div>
-        </div>
-        <div style="display:flex;flex-direction:column;gap:24px">
-          <div class="starcard">
-            <div class="lab">STAR · estruturado pela IA</div>
-            <div class="starfield"><span class="tag">Situação</span><span class="val">Custo de infra subindo 15%/trimestre.</span></div>
-            <div class="starfield"><span class="tag">Tarefa</span><span class="val">Migrar o core para arquitetura serverless.</span></div>
-            <div class="starfield"><span class="tag">Ação</span><span class="val">Liderou squad de 4 pessoas por 8 semanas.</span></div>
-            <div class="starfield"><span class="tag">Resultado</span><span class="val">-40% de custo, zero downtime.</span></div>
-          </div>
-          <div class="sheetmock">
-            <table>
-              <thead><tr><th>Data</th><th>Conquista</th><th>Tag</th></tr></thead>
-              <tbody>
-                <tr><td>12/03</td><td>Onboarding do squad de pagamentos</td><td>Liderança</td></tr>
-                <tr><td>02/04</td><td>Postmortem do incidente de billing</td><td>Confiabilidade</td></tr>
-                <tr class="new"><td>18/05</td><td>Migração serverless · -40% custo infra</td><td>Impacto</td></tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="chrome"><span class="ltag">demo · marina</span><span>11</span></div>
-  </section>
-
-  <!-- 12 · MARINA · RESULTADO -->
-  <section data-label="Marina · Resultado" class="blue">
-    <div class="grid-bg" style="opacity:.2"></div>
-    <div class="pad center">
-      <p class="kicker anim fade">Resultado</p>
-      <h2 class="resulthead anim left" style="--i:1">📈 Promovida no primeiro ciclo de avaliação.</h2>
-      <div class="resultquote anim fade" style="--i:2">"Cheguei na reunião com 12 conquistas documentadas, cada uma com números. Não defendi minha promoção — apresentei ela."<span class="by">— Marina, Eng. Sênior L6</span></div>
-      <div class="metrics anim fade" style="--i:3">
-        <div class="m"><div class="mv">6h → 12min</div><div class="ml">tempo de preparo pra banca de promoção</div></div>
-        <div class="m"><div class="mv">12</div><div class="ml">conquistas documentadas no trimestre</div></div>
-        <div class="m"><div class="mv">1 clique</div><div class="ml">do registro ao PDF pronto</div></div>
-      </div>
-    </div>
-    <div class="chrome"><span class="ltag">resultado · marina</span><span>12</span></div>
-  </section>
-
-  <!-- 13 · DIEGO · CONTEXTO -->
-  <section data-label="Diego · Contexto" class="light">
-    <div class="pad">
-      <p class="kicker anim fade">Persona 2 · Transição de carreira</p>
-      <div class="pheader anim fade" style="--i:1">
-        <div class="ava">🧑‍💼</div>
-        <div><div class="nm">Diego</div><div class="rl">Product Manager · Scale-up</div></div>
-      </div>
-      <h2 class="stitle anim left" style="--i:2;font-size:62px;max-width:1400px">Mudou de empresa. Precisa de uma narrativa pronta.</h2>
-      <ul class="pains anim fade" style="--i:3">
-        <li>O currículo está parado há 2 anos — só cargos e datas.</li>
-        <li>Cada processo seletivo pede uma versão nova da mesma história.</li>
-        <li>Recrutador decide em segundos; números convencem mais que adjetivos.</li>
-      </ul>
-      <div class="jtbd anim fade" style="--i:4"><b>Job to be done</b>Transformar conquistas de produto numa narrativa que o recrutador entenda em segundos — sem reescrever do zero a cada processo.</div>
-    </div>
-    <div class="chrome"><span class="ltag">persona · diego</span><span>13</span></div>
-  </section>
-
-  <!-- 14 · DIEGO · DEMO AO VIVO -->
-  <section data-label="Diego · Demo ao vivo" data-demo="diego">
-    <div class="grid-bg" style="opacity:.3"></div><div class="glow-tr"></div>
-    <div class="pad">
-      <p class="kicker anim fade">Demo ao vivo</p>
-      <h2 class="stitle anim left" style="--i:1;font-size:56px">Ele fala. O CareerOS estrutura. <span class="accent">O perfil público atualiza.</span></h2>
-      <div class="two" style="margin-top:30px;grid-template-columns:1fr 1fr;gap:50px">
-        <div class="appwin anim scale" style="--i:2">
-          <div class="appwin-bar"><i style="background:#ff5f56"></i><i style="background:#ffbd2e"></i><i style="background:#27c93f"></i><span class="t">Claude — CareerOS</span></div>
-          <div class="chatlog">
-            <div class="bubble user"><span class="txt">Lancei a feature que subiu retenção em 18% em 30 dias.</span></div>
-            <div class="typing"><i></i><i></i><i></i></div>
-            <div class="bubble bot">Registrado! Adicionei ao seu perfil público anonimizado.</div>
-          </div>
-        </div>
-        <div style="display:flex;flex-direction:column;gap:24px">
-          <div class="starcard">
-            <div class="lab">STAR · estruturado pela IA</div>
-            <div class="starfield"><span class="tag">Situação</span><span class="val">Retenção em 30 dias estagnada em 41%.</span></div>
-            <div class="starfield"><span class="tag">Tarefa</span><span class="val">Redesenhar o onboarding do produto.</span></div>
-            <div class="starfield"><span class="tag">Ação</span><span class="val">Rodou 3 testes A/B com o time de growth.</span></div>
-            <div class="starfield"><span class="tag">Resultado</span><span class="val">+18% de retenção em 30 dias.</span></div>
-          </div>
-          <div class="profilemock">
-            <span class="toast">🔗 link copiado</span>
-            <div class="ph"><div class="av">🧑‍💼</div><div><div class="nm">D. — PM Sênior</div><div class="rl">careeros.io/p/d-7f2a</div></div></div>
-            <ul>
-              <li>Liderou o redesign de pricing que subiu LTV em 9%</li>
-              <li>Lançou onboarding self-serve, +18% retenção em 30 dias</li>
-              <li>Reduziu time-to-value de 12 pra 4 dias</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="chrome"><span class="ltag">demo · diego</span><span>14</span></div>
-  </section>
-
-  <!-- 15 · DIEGO · RESULTADO -->
-  <section data-label="Diego · Resultado" class="blue">
-    <div class="grid-bg" style="opacity:.2"></div>
-    <div class="pad center">
-      <p class="kicker anim fade">Resultado</p>
-      <h2 class="resulthead anim left" style="--i:1">🤝 3 entrevistas em 2 semanas.</h2>
-      <div class="resultquote anim fade" style="--i:2">"Mandei só o link do perfil. Não escrevi uma linha de carta de apresentação — e o recrutador já chegou sabendo o que eu entrego."<span class="by">— Diego, Product Manager</span></div>
-      <div class="metrics anim fade" style="--i:3">
-        <div class="m"><div class="mv">+18%</div><div class="ml">retenção — a métrica que abriu a conversa</div></div>
-        <div class="m"><div class="mv">2 sem.</div><div class="ml">do perfil publicado à 1ª proposta</div></div>
-        <div class="m"><div class="mv">0</div><div class="ml">versões de currículo reescritas</div></div>
-      </div>
-    </div>
-    <div class="chrome"><span class="ltag">resultado · diego</span><span>15</span></div>
-  </section>
-
-  <!-- 16 · BIA · CONTEXTO -->
-  <section data-label="Bia · Contexto" class="light">
-    <div class="pad">
-      <p class="kicker anim fade">Persona 3 · Negócio freelancer</p>
-      <div class="pheader anim fade" style="--i:1">
-        <div class="ava">🎨</div>
-        <div><div class="nm">Bia</div><div class="rl">Designer · Freelancer</div></div>
-      </div>
-      <h2 class="stitle anim left" style="--i:2;font-size:62px;max-width:1400px">Telas bonitas não fecham proposta. Resultado fecha.</h2>
-      <ul class="pains anim fade" style="--i:3">
-        <li>O portfólio mostra prints de tela, não resultado de negócio.</li>
-        <li>Cada proposta exige garimpar métricas em e-mails antigos.</li>
-        <li>Perde clientes pra quem chega com números prontos.</li>
-      </ul>
-      <div class="jtbd anim fade" style="--i:4"><b>Job to be done</b>Transformar trabalho de design em prova de resultado de negócio — que vira proposta comercial sem trabalho extra.</div>
-    </div>
-    <div class="chrome"><span class="ltag">persona · bia</span><span>16</span></div>
-  </section>
-
-  <!-- 17 · BIA · DEMO AO VIVO -->
-  <section data-label="Bia · Demo ao vivo" data-demo="bia">
-    <div class="grid-bg" style="opacity:.3"></div><div class="glow-tr"></div>
-    <div class="pad">
-      <p class="kicker anim fade">Demo ao vivo</p>
-      <h2 class="stitle anim left" style="--i:1;font-size:56px">Ela fala. O CareerOS estrutura. <span class="accent">O brag doc gera.</span></h2>
-      <div class="two" style="margin-top:30px;grid-template-columns:1fr 1fr;gap:50px">
-        <div class="appwin anim scale" style="--i:2">
-          <div class="appwin-bar"><i style="background:#ff5f56"></i><i style="background:#ffbd2e"></i><i style="background:#27c93f"></i><span class="t">Claude — CareerOS</span></div>
-          <div class="chatlog">
-            <div class="bubble user"><span class="txt">Redesenhei o onboarding e reduzi o churn em 12% no trimestre.</span></div>
-            <div class="typing"><i></i><i></i><i></i></div>
-            <div class="bubble bot">Show! Vou gerar seu brag doc trimestral em PDF.</div>
-          </div>
-        </div>
-        <div style="display:flex;flex-direction:column;gap:24px">
-          <div class="starcard">
-            <div class="lab">STAR · estruturado pela IA</div>
-            <div class="starfield"><span class="tag">Situação</span><span class="val">Churn de 9% ao mês no app do cliente.</span></div>
-            <div class="starfield"><span class="tag">Tarefa</span><span class="val">Redesenhar o fluxo de onboarding.</span></div>
-            <div class="starfield"><span class="tag">Ação</span><span class="val">3 rounds de teste com usuário + protótipo.</span></div>
-            <div class="starfield"><span class="tag">Resultado</span><span class="val">-12% de churn no trimestre.</span></div>
-          </div>
-          <div class="pdfmock">
-            <div class="pdfpage"><div class="ln" style="width:60%"></div><div class="ln"></div><div class="ln" style="width:80%"></div><div class="ln" style="width:40%"></div></div>
-            <div class="pdfprog">
-              <div class="lab">Gerando brag-doc-Q2.pdf…</div>
-              <div class="bar"><i></i></div>
-              <div class="ok">✓ pronto pra enviar</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="chrome"><span class="ltag">demo · bia</span><span>17</span></div>
-  </section>
-
-  <!-- 18 · BIA · RESULTADO -->
-  <section data-label="Bia · Resultado" class="blue">
-    <div class="grid-bg" style="opacity:.2"></div>
-    <div class="pad center">
-      <p class="kicker anim fade">Resultado</p>
-      <h2 class="resulthead anim left" style="--i:1">💼 O brag doc virou proposta comercial.</h2>
-      <div class="resultquote anim fade" style="--i:2">"Anexei o mesmo PDF que uso pra organizar meu trabalho na proposta pro cliente. Ele viu números, não só telas."<span class="by">— Bia, Designer freelancer</span></div>
-      <div class="metrics anim fade" style="--i:3">
-        <div class="m"><div class="mv">+35%</div><div class="ml">taxa de fechamento de propostas</div></div>
-        <div class="m"><div class="mv">4</div><div class="ml">cases com métrica pronta, sempre atualizados</div></div>
-        <div class="m"><div class="mv">0</div><div class="ml">horas montando deck de portfólio</div></div>
-      </div>
-    </div>
-    <div class="chrome"><span class="ltag">resultado · bia</span><span>18</span></div>
-  </section>
-
-  <!-- 19 · MERCADO (TAM/SAM/SOM + chart) -->
+  <!-- 10 · MERCADO (TAM/SAM/SOM + chart) -->
   <section data-label="Mercado">
     <div class="glow-tr"></div><div class="grid-bg" style="opacity:.3"></div>
     <div class="pad">
@@ -717,10 +508,10 @@
         </div>
       </div>
     </div>
-    <div class="chrome"><img src="assets/group-one-mark-white.png" alt=""><span>19</span></div>
+    <div class="chrome"><img src="assets/group-one-mark-white.png" alt=""><span>11</span></div>
   </section>
 
-  <!-- 20 · MODELO DE NEGÓCIO -->
+  <!-- 11 · MODELO DE NEGÓCIO -->
   <section data-label="Modelo de negócio">
     <div class="glow-bl"></div>
     <div class="pad">
@@ -733,10 +524,10 @@
       </div>
       <p class="lead anim fade" style="--i:5;margin-top:22px;font-size:28px">Se existe o <b style="color:#fff">Wellhub (Gympass)</b> para sua saúde física e mental, por que não um <span class="accent">sistema operacional de carreira</span> para sua vida profissional?</p>
     </div>
-    <div class="chrome"><img src="assets/group-one-mark-white.png" alt=""><span>20</span></div>
+    <div class="chrome"><img src="assets/group-one-mark-white.png" alt=""><span>12</span></div>
   </section>
 
-  <!-- 21 · PROJEÇÃO DE FATURAMENTO -->
+  <!-- 12 · PROJEÇÃO DE FATURAMENTO -->
   <section data-label="Faturamento">
     <div class="glow-tr"></div><div class="grid-bg" style="opacity:.3"></div>
     <div class="pad">
@@ -769,10 +560,10 @@
         </div>
       </div>
     </div>
-    <div class="chrome"><img src="assets/group-one-mark-white.png" alt=""><span>21</span></div>
+    <div class="chrome"><img src="assets/group-one-mark-white.png" alt=""><span>13</span></div>
   </section>
 
-  <!-- 22 · O ANÁLOGO (Gympass / Wellhub) -->
+  <!-- 13 · O ANÁLOGO (Gympass / Wellhub) -->
   <section data-label="Análogo">
     <div class="glow-tr"></div>
     <div class="pad center">
@@ -785,44 +576,44 @@
         <div class="ministat anim fade" style="--i:5"><div class="v" data-count="1" data-suffix="B+">1B+</div><div class="l">profissionais no LinkedIn — a identidade profissional é estática. A nossa é viva.</div><div class="s">LinkedIn</div></div>
       </div>
     </div>
-    <div class="chrome"><img src="assets/group-one-mark-white.png" alt=""><span>22</span></div>
+    <div class="chrome"><img src="assets/group-one-mark-white.png" alt=""><span>14</span></div>
   </section>
 
-  <!-- 23 · POR QUE NÓS (diferencial / comparação) -->
+  <!-- 14 · POR QUE NÓS (diferencial / comparação) -->
   <section data-label="Diferencial" class="light">
     <div class="pad">
       <p class="kicker anim fade">Por que nós</p>
-      <h2 class="stitle anim left" style="--i:1">O único <span style="color:var(--blue)">privacy-first</span> e dirigido por impacto.</h2>
+      <h2 class="stitle anim left" style="--i:1">O único <span style="color:var(--blue)">dirigido por impacto real</span> — do dia a dia à promoção.</h2>
       <table class="cmp anim fade" style="--i:2">
         <thead><tr><th></th><th class="col-head col-us">CareerOS</th><th class="col-head">LinkedIn</th><th class="col-head">Lattice / 15Five</th></tr></thead>
         <tbody>
-          <tr class="us"><td>Dados pertencem ao usuário</td><td class="yes">✓ no seu Drive</td><td class="no">✕</td><td class="no">✕ (da empresa)</td></tr>
+          <tr class="us"><td>Funciona junto com o Claude (MCP + Skills)</td><td class="yes">✓</td><td class="no">✕</td><td class="no">✕</td></tr>
           <tr><td>Registro contínuo de impacto (STAR)</td><td class="yes">✓</td><td class="no">✕</td><td class="no">parcial</td></tr>
           <tr><td>IA estrutura a conquista</td><td class="yes">✓</td><td class="no">✕</td><td class="no">limitado</td></tr>
           <tr><td>Viaja entre empregos</td><td class="yes">✓</td><td class="yes">✓</td><td class="no">✕</td></tr>
-          <tr class="us"><td>Portfólio anonimizado p/ recrutador</td><td class="yes">✓</td><td class="no">✕</td><td class="no">✕</td></tr>
+          <tr class="us"><td>Link de perfil consultável por recrutador (chat)</td><td class="yes">✓</td><td class="no">✕</td><td class="no">✕</td></tr>
         </tbody>
       </table>
     </div>
-    <div class="chrome"><span class="ltag">moat</span><span>23</span></div>
+    <div class="chrome"><span class="ltag">moat</span><span>15</span></div>
   </section>
 
-  <!-- 24 · TRAÇÃO / ROADMAP -->
+  <!-- 15 · TRAÇÃO / ROADMAP -->
   <section data-label="Roadmap">
     <div class="glow-bl"></div><div class="grid-bg" style="opacity:.3"></div>
     <div class="pad">
       <p class="kicker anim fade">Onde estamos & para onde vamos</p>
       <h2 class="stitle anim left" style="--i:1">Produto real, hoje. <span class="accent">Plataforma, amanhã.</span></h2>
       <div class="tl">
-        <div class="tphase done anim fade" style="--i:2"><div class="when">AGORA · MVP</div><h4>Núcleo funcionando</h4><ul><li>Captura STAR via Claude</li><li>Storage em Google Sheets</li><li>Brag doc + export PDF</li><li>Perfil público anonimizado</li><li>i18n EN + pt-BR</li></ul></div>
+        <div class="tphase done anim fade" style="--i:2"><div class="when">AGORA · MVP</div><h4>Núcleo funcionando</h4><ul><li>Captura STAR via Claude</li><li>Storage em Google Sheets</li><li>Brag doc + export PDF</li><li>Perfil público com link na bio</li><li>i18n EN + pt-BR</li></ul></div>
         <div class="tphase anim fade" style="--i:3"><div class="when">PRÓXIMO · 6 meses</div><h4>Crescimento B2C</h4><ul><li>Integrações (GitHub, Jira, Linear)</li><li>Captura automática de evidência</li><li>Tier Pro + onboarding</li><li>Métricas de impacto agregadas</li></ul></div>
         <div class="tphase anim fade" style="--i:4"><div class="when">DEPOIS · 12–18 meses</div><h4>B2B & Benefício</h4><ul><li>Workspaces de time</li><li>Ciclos de feedback</li><li>Distribuição via benefício</li><li>Marketplace de recrutadores</li></ul></div>
       </div>
     </div>
-    <div class="chrome"><img src="assets/group-one-mark-white.png" alt=""><span>24</span></div>
+    <div class="chrome"><img src="assets/group-one-mark-white.png" alt=""><span>16</span></div>
   </section>
 
-  <!-- 25 · VISÃO -->
+  <!-- 16 · VISÃO -->
   <section data-label="Visão" class="blue">
     <div class="grid-bg" style="opacity:.2"></div>
     <div class="pad center">
@@ -832,10 +623,10 @@
         <p class="by anim fade" style="--i:2;color:rgba(255,255,255,.82)">A visão do <b style="color:#fff">CareerOS</b> — o currículo deixa de ser um documento e vira uma <b style="color:#fff">infraestrutura de carreira</b>.</p>
       </div>
     </div>
-    <div class="chrome"><span class="ltag">visão</span><span>25</span></div>
+    <div class="chrome"><span class="ltag">visão</span><span>17</span></div>
   </section>
 
-  <!-- 26 · TIME + ASK / CTA -->
+  <!-- 17 · TIME + ASK / CTA -->
   <section data-label="Junte-se">
     <div class="glow-tr"></div><div class="glow-mag"></div>
     <div class="pad">
@@ -856,7 +647,7 @@
         </div>
       </div>
     </div>
-    <div class="chrome"><span class="ltag">obrigado</span><span>26</span></div>
+    <div class="chrome"><span class="ltag">obrigado</span><span>18</span></div>
   </section>
 
 </deck-stage>
@@ -893,73 +684,6 @@
     }
     const deck = document.querySelector('deck-stage');
     if (deck) deck.addEventListener('slidechange', (e) => animateSlide(e.detail.slide));
-  })();
-</script>
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
-<script>
-  // Persona demo mini-animations (chat → STAR → output mockup), replayed on each visit.
-  // Degrades gracefully to static content if GSAP fails to load (no opacity:0 in CSS).
-  (function () {
-    if (typeof gsap === 'undefined') return;
-    const cache = new WeakMap();
-
-    function typeText(el, duration) {
-      const full = el.textContent;
-      const obj = { n: 0 };
-      return gsap.to(obj, {
-        n: full.length,
-        duration,
-        ease: 'none',
-        onStart: () => { el.textContent = ''; },
-        onUpdate: () => { el.textContent = full.slice(0, Math.round(obj.n)); },
-      });
-    }
-
-    function buildTimeline(slide) {
-      const userTxt = slide.querySelector('.bubble.user .txt');
-      const userBubble = slide.querySelector('.bubble.user');
-      const typing = slide.querySelector('.typing');
-      const botBubble = slide.querySelector('.bubble.bot');
-      const starcard = slide.querySelector('.starcard');
-      const starfields = slide.querySelectorAll('.starfield');
-      const tl = gsap.timeline({ paused: true });
-
-      tl.set([userBubble, typing, botBubble, starcard, ...starfields], { opacity: 0 });
-      tl.to(userBubble, { opacity: 1, duration: 0.25 });
-      if (userTxt) tl.add(typeText(userTxt, 1.1));
-      tl.to(typing, { opacity: 1, duration: 0.2 })
-        .to(typing, { opacity: 0, duration: 0.2, delay: 0.7 })
-        .to(botBubble, { opacity: 1, duration: 0.3 })
-        .to(starcard, { opacity: 1, duration: 0.3 }, '-=0.05')
-        .to(starfields, { opacity: 1, duration: 0.3, stagger: 0.22 });
-
-      const demo = slide.dataset.demo;
-      if (demo === 'marina') {
-        const rows = slide.querySelectorAll('.sheetmock tr.new');
-        tl.set(rows, { opacity: 0 }).to(rows, { opacity: 1, duration: 0.4, stagger: 0.1 }, '+=0.25');
-      } else if (demo === 'diego') {
-        const items = slide.querySelectorAll('.profilemock li');
-        const toast = slide.querySelector('.toast');
-        tl.set(items, { opacity: 0 }).to(items, { opacity: 1, duration: 0.3, stagger: 0.18 }, '+=0.2');
-        if (toast) tl.set(toast, { opacity: 0 }).to(toast, { opacity: 1, duration: 0.3 }).to(toast, { opacity: 0, duration: 0.3, delay: 1.1 });
-      } else if (demo === 'bia') {
-        const bar = slide.querySelector('.pdfprog .bar i');
-        const ok = slide.querySelector('.pdfprog .ok');
-        if (bar) tl.set(bar, { width: '0%' }).to(bar, { width: '100%', duration: 1.1, ease: 'power1.inOut' }, '+=0.2');
-        if (ok) tl.set(ok, { opacity: 0 }).to(ok, { opacity: 1, duration: 0.3 });
-      }
-      return tl;
-    }
-
-    function playDemo(slide) {
-      if (!slide || !slide.dataset.demo) return;
-      let tl = cache.get(slide);
-      if (!tl) { tl = buildTimeline(slide); cache.set(slide, tl); }
-      tl.restart();
-    }
-
-    const deck = document.querySelector('deck-stage');
-    if (deck) deck.addEventListener('slidechange', (e) => playDemo(e.detail.slide));
   })();
 </script>
 <script src="deck-stage.js"></script>

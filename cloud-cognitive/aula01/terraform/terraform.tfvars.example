@@ -1,0 +1,3 @@
+# Copie apenas valores não sensíveis para terraform.tfvars.
+# Prefira exportar subscription_id e ssh_public_key via TF_VAR_* conforme o README.
+meu_ip = "203.0.113.10"

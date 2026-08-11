@@ -1,0 +1,60 @@
+flowchart LR
+    users["Clientes<br/>Web e Mobile"]
+
+    subgraph edge["Edge e entrega"]
+        frontDoor["Azure Front Door<br/>CDN + WAF"]
+        web["Frontend<br/>Azure Static Web Apps"]
+    end
+
+    subgraph compute["APIs e processamento"]
+        api["Backend<br/>Azure App Service"]
+        functions["Workers<br/>Azure Functions"]
+        bus["Azure Service Bus<br/>Filas e eventos"]
+    end
+
+    subgraph ai["IA cognitiva e RAG"]
+        openai["Azure OpenAI<br/>LLM e embeddings"]
+        search["Azure AI Search<br/>Índice vetorial"]
+        cognitive["Azure AI Services<br/>Visão, fala e linguagem"]
+    end
+
+    subgraph data["Dados"]
+        sql["Azure SQL<br/>Pedidos e pagamentos"]
+        cosmos["Cosmos DB<br/>Sessões e conversas"]
+        blob["Blob Storage<br/>Catálogo e imagens"]
+    end
+
+    subgraph platform["Segurança e observabilidade"]
+        identity["Microsoft Entra ID<br/>Managed Identity"]
+        vault["Azure Key Vault<br/>Segredos e chaves"]
+        monitor["Azure Monitor<br/>Logs, métricas e alertas"]
+    end
+
+    users --> frontDoor --> web --> api
+    api --> sql
+    api --> cosmos
+    api --> bus --> functions
+    functions --> blob
+    api --> openai
+    openai <--> search
+    search --> blob
+    api --> cognitive
+    identity -. autentica .-> api
+    identity -. autentica .-> functions
+    vault -. configura .-> api
+    vault -. configura .-> functions
+    api -. telemetria .-> monitor
+    functions -. telemetria .-> monitor
+    openai -. telemetria .-> monitor
+
+    classDef edgeNode fill:#dbeafe,stroke:#2563eb,color:#172554;
+    classDef computeNode fill:#dcfce7,stroke:#16a34a,color:#052e16;
+    classDef aiNode fill:#f3e8ff,stroke:#9333ea,color:#3b0764;
+    classDef dataNode fill:#fef3c7,stroke:#d97706,color:#451a03;
+    classDef platformNode fill:#f1f5f9,stroke:#475569,color:#0f172a;
+
+    class frontDoor,web edgeNode;
+    class api,functions,bus computeNode;
+    class openai,search,cognitive aiNode;
+    class sql,cosmos,blob dataNode;
+    class identity,vault,monitor platformNode;

@@ -34,27 +34,29 @@
 | AWS Lambda | FaaS | Irmão do Azure Functions / Cloud Functions: unit of billing = invocação × duração × memória, não VM ociosa. Mais abstraído que PaaS clássico — host/OS somem; você ainda responde por runtime choice, cold start, concurrency, IAM da function, segredos e o código do handler. |
 | Azure SQL Database | PaaS | App Service do mundo de banco: sobe o schema/query, some o patch do motor (RDS / Cloud SQL no outro lado). Infra + plataforma no provedor; dados, criptografia e permissões no cliente. SKU muda o ticket — Oracle gerenciado (ex.: Azure Database for Oracle / RDS Oracle) costuma sair bem acima de SQL Server/PostgreSQL na mesma faixa. |
 | Salesforce CRM | SaaS | Mesmo jogo do Dynamics 365 / HubSpot: serviço totalmente gerenciado. Você não opera infra; paga licença/seat, acessos e add-ons. Ainda manda em quem entra e no que faz com o dado. |
-| Google Kubernetes Engine (GKE) | PaaS/IaaS híbrido | Como AKS e EKS: control plane do provedor, pods e YAML do time. Fronteira típica "of/in the cloud" no meio do stack. |
-| Azure Blob Storage | PaaS | S3 / GCS com outro nome: objeto gerenciado, ACL e lifecycle no cliente. AWS chama isso de serviço abstraído — *of the cloud* no storage engine; *in the cloud* em classificação, encryption e IAM. |
+| Google Kubernetes Engine (GKE) | PaaS/IaaS híbrido | Kubernetes gerenciado (AKS/EKS no mesmo jogo): o time ganha liberdade de pods, Deployments e YAML sem operar o baixo nível — control plane, etcd, upgrades do master e patch do nó de controle ficam com o provedor. Você ainda cuida de workloads, RBAC do cluster, network policies e o que roda dentro do pod. |
+| Azure Blob Storage | PaaS | Pense Google Drive / OneDrive para armazenar arquivo — só que com API de objeto, lifecycle, versioning, SAS/ACL e integração com CDN/IA. Equivalente a S3/GCS: motor gerenciado (*of the cloud*); classificação, encryption e IAM (*in the cloud*) no cliente. Ver [Shared Responsibility Model](https://aws.amazon.com/compliance/shared-responsibility-model/) (serviços abstraídos). |
 | Azure OpenAI Service | SaaS / API-as-a-Service | Bedrock e Vertex AI sem você comprar GPU: chama modelo, não opera cluster. Patch de GPU some; prompt, PII no payload e keys/Managed Identity continuam no seu lado. |
 
-**Responsabilidade compartilhada (lente AWS, válido nos três):** a AWS formaliza o split como *Security of the Cloud* (provedor) vs *Security in the Cloud* (cliente). O quanto você "herda" de tarefa sobe ou desce conforme o modelo — IaaS (VM/EC2) exige quase tudo acima do hipervisor; PaaS/FaaS/serviços abstraídos (S3, DynamoDB, Blob, SQL gerenciado) empurram OS/plataforma pro provedor; SaaS deixa só dados, identidades e config. Azure e GCP desenham a mesma escada; a AWS só batizou o meme. Em qualquer modelo, **dado e identidade não saem do cliente**.
+**Responsabilidade compartilhada (lente AWS, válido nos três):** a AWS formaliza o split como *Security of the Cloud* (provedor) vs *Security in the Cloud* (cliente) no [Shared Responsibility Model](https://aws.amazon.com/compliance/shared-responsibility-model/). O quanto você "herda" de tarefa sobe ou desce conforme o modelo — IaaS (VM/EC2) exige quase tudo acima do hipervisor; PaaS/FaaS/serviços abstraídos (S3, DynamoDB, Blob, SQL gerenciado) empurram OS/plataforma pro provedor; SaaS deixa só dados, identidades e config. Azure e GCP desenham a mesma escada; a AWS só batizou o meme. Em qualquer modelo, **dado e identidade não saem do cliente**.
 
 ### Exercício 1.2 — Os 6 Rs
 
-**Cenário A:** **Rehost (Lift & Shift)**. Legado de 2008, um mantenedor, zero doc. Empurra a VM pro IaaS (Azure VM / EC2 / GCE) e ganha elasticidade sem reescrever.
+Respostas originais do grupo (não copiamos o gabarito da disciplina). Cada R ganha uma analogia com produto/serviço de founders brasileiros.
 
-**Cenário B:** **Retire**. Menos de 5 usuários/mês. Arquiva em Blob frio / S3 Glacier / Coldline e mata o ERP.
+**Cenário A — Rehost (Lift & Shift).** Rastreamento de frota em servidor físico, código 2008, um mantenedor. Empurra a VM pro IaaS (EC2 / Azure VM / GCE) e ganha elasticidade sem reescrever. Analogia BR: early-stage de logísticas tipo **Loggi** / **99** — primeiro tira o box do DC, depois moderniza. Reescrever sem doc é o caminho mais caro de falhar.
 
-**Cenário C:** **Refactor**. Quebrar monolito em microserviços + K8s + eventos é reescrita estrutural, não maquiagem.
+**Cenário B — Retire.** ERP de RH com <5 usuários/mês. Arquiva em S3 Glacier / Blob frio / Coldline e desliga. Analogia BR: startup matando módulo interno morto (estilo **Nubank** / **Creditas** cortando produto que não puxa métrica) — migrar o que ninguém abre só gera fatura e risco.
 
-**Cenário D:** **Repurchase**. SaaS cobre ~90% do CRM com TCO menor: troca o interno por Salesforce / Dynamics / HubSpot.
+**Cenário C — Refactor.** API de pagamentos monolítica → microserviços + K8s + eventos. Aqui o negócio *pediu* reescrita estrutural. Analogia BR: jornada de **iFood** / **Stone** saindo de monolito para domínio (pedido, antifraude, settlement) com event-driven — caro, mas o R certo quando o monolito trava o roadmap.
 
-**Cenário E:** **Retain**. BACEN segura o mainframe on-prem; nuvem só onde a auditoria deixar.
+**Cenário D — Repurchase.** CRM interno de 15 anos; SaaS cobre ~90% com TCO menor → Salesforce / Dynamics / HubSpot. Analogia BR: founders trocando CRM caseiro por **Pipedrive** / Salesforce (comum em **QuintoAndar**, **Loft**, SaaS B2B) — compra o produto, não o fardo de manter o fork eterno.
+
+**Cenário E — Retain.** Mainframe on-prem por exigência BACEN. Nuvem só onde a auditoria deixar. Analogia BR: core bancário tradicional vs **Nubank** cloud-native — regulação/compliance manda; Retain não é covardia, é restrição externa.
 
 ### Exercício 1.3 — SLA
 
-Premissa: ano comercial de 8.760 horas.
+Premissa: ano comercial de **8.760 horas** (`365 × 24`). Prova determinística em [`scripts/check_calcs.py`](scripts/check_calcs.py) (`python3 scripts/check_calcs.py` — `Decimal`, sem float solto).
 
 a) Downtime anual com SLA 99,9%:
 
@@ -68,49 +70,75 @@ c) Para impacto < R$ 50.000/ano:
 
 Downtime máximo = `50.000 / 50.000 = 1 hora/ano`.
 
-`1 / 8.760 ≈ 0,0114%` de downtime → disponibilidade mínima `99,9886%`.
+`1 / 8.760 ≈ 0,011415525114%` de downtime → disponibilidade mínima `99,988584474886%`.
 
-Na prática, o SLA comercial que fecha a conta é **99,99%** (~52,56 min/ano; impacto ≈ R$ 43.800).
+Na prática, o SLA comercial que fecha a conta é **99,99%** (`8.760 × 0,0001 = 0,876 h` ≈ 52,56 min/ano; impacto = `0,876 × 50.000 = R$ 43.800`).
+
+**Prova (saída do script, trecho SLA):**
+
+```text
+=== prova SLA 1.3 (Decimal) ===
+premissa: hours_year = 365 * 24 = 8760
+ok  1.3a downtime horas: 8.760
+ok  1.3a downtime minutos: 525.600
+ok  1.3b impacto anual: 438000.000
+ok  1.3c downtime máximo: 1
+ok  1.3c % downtime: 0.01141552511415525114155251142
+ok  1.3c disponibilidade: 99.98858447488584474885844749
+ok  1.3 99.99% horas: 0.8760
+ok  1.3 99.99% minutos: 52.5600
+ok  1.3 99.99% impacto: 43800.0000
+=== fim prova SLA ===
+```
 
 ### Exercício 1.4 — RBAC
 
-| Perfil | Role Azure | Justificativa |
-|--------|------------|---------------|
-| Agente de IA que LÊ produtos do Storage | Storage Blob Data Reader | Equivalente a `s3:GetObject` / `storage.objects.get`: lê o plano de dados, não mexe na conta. |
-| Engenheiro de dados que CARREGA catálogos | Storage Blob Data Contributor | Como `s3:PutObject` sem Account Owner: sobe blob, não herda billing da subscription. |
-| Time de FinOps que VÊ custos | Cost Management Reader | Espelho do Cost Explorer read-only / Billing Viewer: enxerga fatura, não altera SKU. |
-| Auditor externo que LÊ a assinatura | Reader (escopo subscription) | `ViewOnlyAccess` / `roles/viewer` no escopo da conta: olha config, não muta. |
-| CI/CD que provisiona via Terraform | Contributor no Resource Group + Service Principal dedicado | Igual pipeline com role scoped no AWS account/project GCP: sobe infra no RG, nunca `Owner` da subscription. |
+Referência oficial: [Azure built-in roles](https://learn.microsoft.com/en-us/azure/role-based-access-control/built-in-roles) (e detalhe de storage em [built-in roles — Storage](https://learn.microsoft.com/en-us/azure/role-based-access-control/built-in-roles/storage)). Analogias AWS/GCP só pra leitura cruzada.
 
-Least privilege: escopo no RG, não na subscription.
+| Perfil | Role Azure (built-in) | Justificativa |
+|--------|----------------------|---------------|
+| Agente de IA que LÊ produtos do Storage | **Storage Blob Data Reader** (`2a2b9908-6ea1-4ae2-8e65-a410df84e7d1`) | Role de *data plane*: `…/blobs/read` — lista/lê blob, não administra a conta. Espelho mental: `s3:GetObject` / `storage.objects.get`. |
+| Engenheiro de dados que CARREGA catálogos | **Storage Blob Data Contributor** (`ba92f5b4-2d11-453d-a403-e96b0029c9fe`) | Read/write/delete no plano de dados; sem Owner da subscription. Espelho: `s3:PutObject` sem Account Owner. |
+| Time de FinOps que VÊ custos | **Cost Management Reader** | View-only de Cost Analysis / forecast / recommendations ([Cost Management scopes](https://learn.microsoft.com/en-us/azure/cost-management-billing/costs/understand-work-scopes)). Espelho: Cost Explorer read-only. |
+| Auditor externo que LÊ a assinatura | **Reader** (escopo *subscription*) | Control plane read-only em todos os recursos da assinatura; sem mutação. Espelho: `ViewOnlyAccess` / `roles/viewer`. |
+| CI/CD que provisiona via Terraform | **Contributor** no *Resource Group* + Service Principal dedicado | Sobe/altera recursos no RG; **nunca** `Owner`/`Contributor` da subscription. Espelho: role scoped na AWS account / GCP project. |
+
+Least privilege: escopo no RG (ou no storage account), não na subscription.
 
 ## Nível 2 — Respostas + implementação
 
 ### Exercício 2.1 — Arquitetura da Quantum Commerce
 
-**Provedor principal:** Azure. Não porque "é o da disciplina", e sim porque o pacote agentic fecha num lugar só: Entra ID + Managed Identity (o que no AWS vira Cognito/IAM Roles e no GCP vira Workload Identity), Azure OpenAI + AI Search (Bedrock+OpenSearch / Vertex+Vector Search), App Service/Functions no lugar de ECS+Lambda ou Cloud Run+Functions. Menos cola entre provedores no caminho crítico do agente.
+**Provedor principal: AWS.** Defesa com cases reais (não "porque a disciplina é Azure"):
 
-**Camadas:**
+1. **[iFood × Bedrock/SageMaker](https://aws.amazon.com/solutions/case-studies/ifood-bedrock/)** — marketplace BR com 80M+ pedidos/mês; personalização e antifraude em 100+ modelos; PoC do garçom virtual **Garçon** (RAG + Claude/Titan no Bedrock). Prova que o caminho agentic de e-commerce conversacional já roda em produção/PoC sério na AWS LatAm.
+2. **[Amazon Rufus × Bedrock](https://aws.amazon.com/blogs/machine-learning/how-rufus-scales-conversational-shopping-experiences-to-millions-of-amazon-customers-with-amazon-bedrock/)** — assistente de compra conversacional em escala; tool calling + RAG sobre catálogo/pedido. Blueprint direto pra QC.
+3. **[Natura × OpenSearch + Bedrock](https://aws.amazon.com/solutions/case-studies/natura-ia-generativa/)** — busca semântica/vetorial de catálogo em produção (BR). Camada de retrieval que o agente precisa antes de gerar.
+4. **[Mercado Libre × Bedrock](https://aws.amazon.com/solutions/case-studies/mercado-libre-mutt-data/)** — gen AI no catálogo/retail media (S3 + DynamoDB + Bedrock). Escala LatAm de enriquecimento de SKU.
 
-1. **Edge/entrega** — Front Door/CDN + WAF e frontend estático (CloudFront / Cloud CDN do outro lado).
-2. **APIs e processamento** — App Service (API síncrona) + Service Bus + Functions (assíncrono).
-3. **IA cognitiva / RAG** — Azure OpenAI, AI Search (vetorial) e AI Services (visão/fala/linguagem).
-4. **Dados** — SQL (transacional), Cosmos DB (sessões/conversas), Blob (catálogo/imagens).
-5. **Plataforma** — Entra ID, Key Vault e Azure Monitor.
+Pacote agentic na AWS fecha sem cola: **IAM Roles + Cognito**, **Bedrock + OpenSearch Serverless**, **ECS Fargate + Lambda + SQS/SNS**, **S3 + RDS + DynamoDB**, **CloudFront + WAF**, **CloudWatch + Secrets Manager**. Azure/GCP entram como alternativa ou DR — não no caminho crítico do agente.
+
+**Camadas (AWS):**
+
+1. **Edge/entrega** — CloudFront + WAF + frontend estático (S3 / Amplify).
+2. **APIs e processamento** — ECS Fargate (API síncrona) + SQS/SNS + Lambda (assíncrono).
+3. **IA cognitiva / RAG** — Bedrock (LLM/embeddings), OpenSearch Serverless (vetorial), Comprehend/Rekognition.
+4. **Dados** — RDS (transacional), DynamoDB (sessões/conversas), S3 (catálogo/imagens).
+5. **Plataforma** — IAM/Cognito, Secrets Manager, CloudWatch.
 
 Diagrama: [`diagramas/arquitetura-qc-aula01.png`](diagramas/arquitetura-qc-aula01.png) (fonte Mermaid: [`diagramas/arquitetura-qc-aula01.mmd`](diagramas/arquitetura-qc-aula01.mmd)).
 
-| Categoria | Serviço Azure | Alternativa AWS | Alternativa GCP |
-|-----------|---------------|-----------------|-----------------|
-| Compute (backend) | Azure App Service | Amazon ECS/Fargate ou Elastic Beanstalk | Cloud Run |
-| Storage (catálogo, imagens) | Azure Blob Storage | Amazon S3 | Cloud Storage |
-| Banco relacional | Azure SQL Database | Amazon RDS | Cloud SQL |
-| Banco NoSQL | Azure Cosmos DB | Amazon DynamoDB | Firestore / Bigtable |
-| Vector Database | Azure AI Search | Amazon OpenSearch Serverless / Aurora pgvector | Vertex AI Vector Search |
-| Serviços de IA cognitivos | Azure OpenAI + AI Services | Amazon Bedrock + Amazon Comprehend/Rekognition | Vertex AI + Cloud Vision/Speech |
-| CDN | Azure Front Door / CDN | Amazon CloudFront | Cloud CDN |
-| Mensageria/Filas | Azure Service Bus | Amazon SQS/SNS | Pub/Sub |
-| Observabilidade | Azure Monitor | Amazon CloudWatch | Cloud Monitoring/Logging |
+| Categoria | Escolha AWS (primário) | Alternativa Azure | Alternativa GCP |
+|-----------|------------------------|-------------------|-----------------|
+| Compute (backend) | Amazon ECS/Fargate (+ Lambda workers) | Azure App Service / Container Apps | Cloud Run |
+| Storage (catálogo, imagens) | Amazon S3 | Azure Blob Storage | Cloud Storage |
+| Banco relacional | Amazon RDS | Azure SQL Database | Cloud SQL |
+| Banco NoSQL | Amazon DynamoDB | Azure Cosmos DB | Firestore / Bigtable |
+| Vector Database | Amazon OpenSearch Serverless / Aurora pgvector | Azure AI Search | Vertex AI Vector Search |
+| Serviços de IA cognitivos | Amazon Bedrock + Comprehend/Rekognition | Azure OpenAI + AI Services | Vertex AI + Cloud Vision/Speech |
+| CDN | Amazon CloudFront | Azure Front Door / CDN | Cloud CDN |
+| Mensageria/Filas | Amazon SQS/SNS | Azure Service Bus | Pub/Sub |
+| Observabilidade | Amazon CloudWatch | Azure Monitor | Cloud Monitoring/Logging |
 
 ### Exercício 2.2 — Comparativo de custos
 
@@ -139,18 +167,28 @@ a) **GCP ganhou** neste recorte; AWS no meio. O buraco Azure↔GCP (~US$ 148/mê
 
 b) **RI / Savings Plans / CUDs de 1 ano** no Azure cortam compute ~30–40%. Aproxima VM, **não apaga** o premium do SQL GP. Commit no AWS/GCP com banco Azure substituído pode inverter o ranking.
 
-c) Em projeto agentic, preço bruto sem FinOps de dados é mentira parcial. O que decide: região do modelo (Azure OpenAI vs Bedrock vs Vertex), identidade (Managed Identity vs IAM Role vs Workload Identity), vetor (AI Search vs OpenSearch vs Vertex Vector), latência pro Brasil e egress.
+c) Em projeto agentic, preço bruto sem FinOps de dados é mentira parcial. O que decide: região do modelo (Bedrock vs Azure OpenAI vs Vertex), identidade (IAM Role vs Managed Identity vs Workload Identity), vetor (OpenSearch vs AI Search vs Vertex Vector), latência pro Brasil e egress. Com a QC em **AWS**, Savings Plans + Graviton no compute e RDS right-size fecham o meio do ranking sem pagar o premium do SQL GP Azure.
 
 ### Exercício 2.3 — Estratégia de migração
 
-a) **Workload:** monolito on-prem de e-commerce (catálogo + pedidos + busca), pico de campanha, assistente conversacional pedindo passagem.
+Base conceitual: [Sam Newman — Monolith Decomposition Patterns](https://samnewman.io/talks/monolith-decomposition-patterns/) ([InfoQ](https://www.infoq.com/presentations/microservices-principles-patterns/), [Strangler Fig](https://samnewman.io/patterns/refactoring/strangler-fig-application/), [Branch by Abstraction](https://samnewman.io/patterns/architectural/branch-by-abstraction/)). Evitar big-bang rewrite.
 
-b) **R: Replatform** (Refactor só no canal de IA).  
-   Custa mais que lift-and-shift puro (EC2/Azure VM/GCE), menos que rewrite. App vai pra App Service/Container Apps (ou ECS/Cloud Run no outro mundo); dados pra Azure SQL/Blob. Em semanas/meses, não anos.
+a) **Workload:** monolito on-prem de e-commerce (catálogo + pedidos + busca), pico de campanha, assistente conversacional pedindo passagem — o próprio contexto QC / founders de marketplace BR.
 
-c) **Serviços:** App Service ou Container Apps, Azure SQL, Blob, AI Search, Azure OpenAI, Front Door, Monitor. Dev/homolog enxuto: **US$ 250–450**/mês, SQL e tokens mandam no ticket.
+b) **R: Replatform** no core (monolito → containers gerenciados), com **Refactor incremental** só nos bounded contexts que doem (busca + canal de IA). Custa mais que lift-and-shift puro (EC2), menos que rewrite. Prazo: semanas/meses, não anos.
 
-d) **Obstáculo real:** PII/pagamento + medo de mexer no monolito. Resposta: tokenization, Private Endpoints (o VPC endpoint / Private Service Connect do Azure), catálogo primeiro com feature flags.
+   Plano com patterns do Newman:
+
+   | Fatia | Pattern | Como na QC |
+   |-------|---------|------------|
+   | Pedidos / checkout (HTTP na borda) | **Strangler Fig** + **Parallel Run** | API Gateway / ALB na frente do monolito; rotas `/orders` vão pro Order Service; dual-run compara totais antes do cutover |
+   | Catálogo (páginas/widgets) | **UI Composition** + Strangler | Widget de product detail/list vem do Catalog Service; resto da storefront ainda no monolito |
+   | Busca / indexação interna | **Branch by Abstraction** ou **CDC** | Abstrai `SearchIndexer`; se o código for intocável, CDC na tabela `products` alimenta OpenSearch |
+   | Assistente conversacional | **UI Composition** (chat widget) + **Decorating Collaborator** | Chat novo chama Bedrock/RAG; no sucesso do checkout, decorator dispara follow-up sem reescrever o monolito |
+
+c) **Serviços AWS:** CloudFront, ECS Fargate (ou App Runner), Lambda, SQS/SNS, RDS, S3, OpenSearch Serverless, Bedrock, Cognito/IAM, Secrets Manager, CloudWatch. Dev/homolog enxuto: **US$ 250–450**/mês — RDS e tokens Bedrock mandam no ticket. Azure/GCP equivalentes na tabela do 2.1.
+
+d) **Obstáculo real:** PII/pagamento + medo de mexer no monolito. Resposta Newman-compatível: deployment ≠ release (feature flags / dark launch), Parallel Run no pricing/checkout, PrivateLink/VPC endpoints, tokenization, catálogo primeiro via Strangler.
 
 ## Nível 3 — Bônus
 
@@ -198,18 +236,18 @@ Docs: [`bicep/README.md`](bicep/README.md). Evidências: [`evidencias/bicep.md`]
 
 Diagrama: [`diagramas/arquitetura-qc-multicloud.png`](diagramas/arquitetura-qc-multicloud.png).
 
-a) **Azure + AWS:**
+a) **AWS + Azure:**
 
-- **Azure (agente):** frontend, APIs, OpenAI, AI Search, Cosmos/SQL, Entra ID.
-- **AWS (mídia/DR):** S3 + CloudFront no catálogo de imagem (onde a AWS ainda é o "CDN barato clássico"); RDS replica ou backup cross-cloud pro failover.
-- Por quê essa divisão: o caminho do agente fica num provedor (menos hop de identidade). Mídia e DR vão pra quem já tem músculo de egress/CDN. GCP entraria no jogo se o ganho fosse BigQuery/Vertex, não neste recorte.
+- **AWS (primário — agente):** CloudFront, ECS/Lambda, Bedrock, OpenSearch, RDS/DynamoDB, S3, IAM/Cognito (ver cases iFood/Rufus/Natura no 2.1).
+- **Azure (secundário — analytics/DR):** Blob espelho / backup, Front Door em região secundária, SQL/Blob pra failover frio.
+- Por quê essa divisão: caminho do agente fica num provedor (menos hop de identidade). DR e espelho frio vão pro segundo cloud sem colocar latência no p95 do chat. GCP entraria se o ganho fosse BigQuery/Vertex, não neste recorte.
 
 b) **Desafios:**
 
 1. Latência cross-cloud sobe o p95 do assistente.
-2. Identidade: Entra ID ↔ IAM via OIDC (sem isso vira senha espalhada).
+2. Identidade: Cognito/IAM ↔ Entra ID via OIDC (sem isso vira senha espalhada).
 3. Egress de 10 TB/mês (conta abaixo).
-4. Trace único: Azure Monitor ↔ CloudWatch (ou OpenTelemetry no meio).
+4. Trace único: CloudWatch ↔ Azure Monitor (ou OpenTelemetry no meio).
 
 c) **Terraform vs Pulumi:**
 
@@ -233,26 +271,35 @@ Routing Preference (ISP): **US$ 0,12 / GB** → **≈ US$ 1.188 / mês**.
 
 AWS DTO us-east-1 (~US$ 0,09/GB após 100 GB free): ~US$ 891. Ainda dói; dói menos que sair do Brazil South no Premium Network. GCP egress intercontinental na mesma ordem: o problema não é "Azure caro", é "dado atravessando oceano".
 
-**Azure Arc / AWS Outposts:** Arc = governança Azure em VM/cluster fora da Azure (tipo Anthos no GCP, mas do lado Microsoft). Outposts = rack AWS no DC. Na QC, Arc unifica policy de agente híbrido; Outposts só se loja/DC exigir locality de verdade.
+**Azure Arc / AWS Outposts:** Arc = governança Azure em VM/cluster fora da Azure (tipo Anthos no GCP, mas do lado Microsoft). Outposts = rack AWS no DC. Na QC (AWS-first), Outposts só se loja/DC exigir locality; Arc só se o DR Azure precisar de policy unificada.
 
 ## Reflexão coletiva
 
 Cloud sem IaC não se reproduz. Mudar o NSG e ver o `plan` sem recriar a VM foi o momento "ok, isso serve em produção": mudança cirúrgica, auditável. No Azure for Students, policy e capacidade pesaram mais que elegância de HCL. Acontece igual com AZ esgotada na AWS ou quota de GPU no GCP.
 
-Agente com `Storage Blob Data Reader` + OpenAI via Managed Identity só é seguro se RBAC e infra forem git. Ambiente "quase igual" vira incidente às três da manhã.
+Agente com least privilege (`Storage Blob Data Reader` no exercício Azure; na QC AWS vira IAM role só com `s3:GetObject`) + Bedrock via IAM Role só é seguro se RBAC e infra forem git. Ambiente "quase igual" vira incidente às três da manhã.
 
-Se recomeçássemos a QC: Private Endpoints + Key Vault no dia 1, Bastion no lugar de SSH público, banco escolhido com FinOps (SQL GP comeu o comparativo). Multi-cloud só com motivo (DR, mídia). Egress Brazil South → us-east-1 de 10 TB (~US$ 1,2k–1,8k) apaga economia de lock-in antes do slide de arquitetura esfriar.
+Se recomeçássemos a QC: AWS-first (Bedrock + OpenSearch) com cases iFood/Rufus/Natura no slide 1, PrivateLink + Secrets Manager no dia 1, Bastion/SSM no lugar de SSH público, Strangler Fig no checkout antes de sonhar com rewrite. Multi-cloud só com motivo (DR). Egress Brazil South → us-east-1 de 10 TB (~US$ 1,2k–1,8k) apaga economia de lock-in antes do slide de arquitetura esfriar.
+
+## Referências (fontes usadas nesta entrega)
+
+- AWS — [Shared Responsibility Model](https://aws.amazon.com/compliance/shared-responsibility-model/)
+- Microsoft — [Azure built-in roles](https://learn.microsoft.com/en-us/azure/role-based-access-control/built-in-roles)
+- Sam Newman — [Monolith Decomposition Patterns](https://samnewman.io/talks/monolith-decomposition-patterns/) · [InfoQ](https://www.infoq.com/presentations/microservices-principles-patterns/)
+- AWS Cases — [iFood](https://aws.amazon.com/solutions/case-studies/ifood-bedrock/) · [Rufus/Bedrock](https://aws.amazon.com/blogs/machine-learning/how-rufus-scales-conversational-shopping-experiences-to-millions-of-amazon-customers-with-amazon-bedrock/) · [Natura](https://aws.amazon.com/solutions/case-studies/natura-ia-generativa/) · [Mercado Libre](https://aws.amazon.com/solutions/case-studies/mercado-libre-mutt-data/)
+- Azure Bandwidth — [Pricing](https://azure.microsoft.com/pricing/details/bandwidth/)
 
 ## Artefatos do ZIP
 
-- Diagrama QC: `diagramas/arquitetura-qc-aula01.png`
+- Diagrama QC (AWS): `diagramas/arquitetura-qc-aula01.png`
 - Fonte Mermaid QC: `diagramas/arquitetura-qc-aula01.mmd`
-- Diagrama multi-cloud: `diagramas/arquitetura-qc-multicloud.png`
+- Diagrama multi-cloud (AWS+Azure): `diagramas/arquitetura-qc-multicloud.png`
 - Fonte Mermaid multi-cloud: `diagramas/arquitetura-qc-multicloud.mmd`
 - Código Terraform: `terraform/`
 - Código Bicep: `bicep/`
 - Página Nginx (brand Group One): `nginx/index.html`
 - Print Nginx: `evidencias/nginx-group-one.png`
 - Validação SSH/HTTP: `scripts/validate-nginx.sh`
+- Prova SLA/custos/egress: `scripts/check_calcs.py`
 - Evidências Terraform: `evidencias/provisionamento.md`
 - Evidências Bicep: `evidencias/bicep.md`

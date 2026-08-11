@@ -2,8 +2,8 @@
 
 | Arquivo | Conteúdo |
 |---------|----------|
-| `arquitetura-qc-aula01.mmd` / `.png` | Arquitetura Azure da Quantum Commerce (Exercício 2.1) |
-| `arquitetura-qc-multicloud.mmd` / `.png` | Visão multi-cloud Azure+AWS (Exercício 3.3) |
+| `arquitetura-qc-aula01.mmd` / `.png` | Arquitetura AWS da Quantum Commerce (Exercício 2.1) |
+| `arquitetura-qc-multicloud.mmd` / `.png` | Visão multi-cloud AWS+Azure (Exercício 3.3) |
 
 Render:
 

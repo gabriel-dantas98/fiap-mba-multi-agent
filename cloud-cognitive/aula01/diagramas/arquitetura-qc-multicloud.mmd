@@ -1,38 +1,38 @@
 flowchart TB
     users["Clientes Web e Mobile"]
 
-    subgraph azurePrimary ["Azure primário — agentes e APIs"]
-        frontDoor["Azure Front Door"]
-        api["App Service / APIs"]
-        openai["Azure OpenAI"]
-        search["Azure AI Search"]
-        sql["Azure SQL / Cosmos"]
-        identity["Entra ID + Key Vault"]
+    subgraph awsPrimary ["AWS primário — agentes, APIs e RAG"]
+        cloudFront["CloudFront + WAF"]
+        api["ECS Fargate / Lambda"]
+        bedrock["Amazon Bedrock"]
+        search["OpenSearch Serverless"]
+        sql["RDS + DynamoDB"]
+        identity["IAM + Cognito + Secrets Manager"]
     end
 
-    subgraph awsSecondary ["AWS secundário — mídia e DR"]
-        cloudFront["CloudFront"]
-        s3["S3 catálogo/imagens"]
-        rds["RDS read-replica / backup"]
+    subgraph azureSecondary ["Azure secundário — analytics e DR"]
+        frontDoor["Azure Front Door"]
+        blob["Blob Storage espelho"]
+        sqlDr["Azure SQL / Blob backup"]
     end
 
     subgraph challenges ["Desafios multi-cloud"]
         latency["Latência cross-cloud"]
-        idFed["Identidade federada"]
+        idFed["Identidade federada OIDC"]
         egress["Egress 10 TB/mês"]
         obs["Observabilidade unificada"]
     end
 
-    users --> frontDoor --> api
-    api --> openai
-    openai --> search
+    users --> cloudFront --> api
+    api --> bedrock
+    bedrock --> search
     api --> sql
     identity --> api
-    api -->|"assets quentes"| s3
-    s3 --> cloudFront --> users
-    sql -->|"DR / replica"| rds
+    api -->|"espelho frio / analytics"| blob
+    blob --> frontDoor
+    sql -->|"DR / backup"| sqlDr
     api -.-> latency
     identity -.-> idFed
-    s3 -.-> egress
+    blob -.-> egress
     api -.-> obs
-    rds -.-> obs
+    sqlDr -.-> obs

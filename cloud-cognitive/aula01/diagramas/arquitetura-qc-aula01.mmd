@@ -2,42 +2,42 @@ flowchart LR
     users["Clientes<br/>Web e Mobile"]
 
     subgraph edge["Edge e entrega"]
-        frontDoor["Azure Front Door<br/>CDN + WAF"]
-        web["Frontend<br/>Azure Static Web Apps"]
+        cloudFront["Amazon CloudFront<br/>CDN + WAF"]
+        web["Frontend<br/>S3 + Amplify Hosting"]
     end
 
     subgraph compute["APIs e processamento"]
-        api["Backend<br/>Azure App Service"]
-        functions["Workers<br/>Azure Functions"]
-        bus["Azure Service Bus<br/>Filas e eventos"]
+        api["Backend<br/>ECS Fargate / ALB"]
+        functions["Workers<br/>AWS Lambda"]
+        bus["SQS + SNS<br/>Filas e eventos"]
     end
 
     subgraph ai["IA cognitiva e RAG"]
-        openai["Azure OpenAI<br/>LLM e embeddings"]
-        search["Azure AI Search<br/>Índice vetorial"]
-        cognitive["Azure AI Services<br/>Visão, fala e linguagem"]
+        bedrock["Amazon Bedrock<br/>LLM e embeddings"]
+        search["OpenSearch Serverless<br/>Índice vetorial"]
+        cognitive["Comprehend / Rekognition<br/>Visão, fala e linguagem"]
     end
 
     subgraph data["Dados"]
-        sql["Azure SQL<br/>Pedidos e pagamentos"]
-        cosmos["Cosmos DB<br/>Sessões e conversas"]
-        blob["Blob Storage<br/>Catálogo e imagens"]
+        sql["Amazon RDS<br/>Pedidos e pagamentos"]
+        dynamo["DynamoDB<br/>Sessões e conversas"]
+        s3["Amazon S3<br/>Catálogo e imagens"]
     end
 
     subgraph platform["Segurança e observabilidade"]
-        identity["Microsoft Entra ID<br/>Managed Identity"]
-        vault["Azure Key Vault<br/>Segredos e chaves"]
-        monitor["Azure Monitor<br/>Logs, métricas e alertas"]
+        identity["IAM + Cognito<br/>Roles e identidade"]
+        vault["AWS Secrets Manager<br/>Segredos e chaves"]
+        monitor["Amazon CloudWatch<br/>Logs, métricas e alertas"]
     end
 
-    users --> frontDoor --> web --> api
+    users --> cloudFront --> web --> api
     api --> sql
-    api --> cosmos
+    api --> dynamo
     api --> bus --> functions
-    functions --> blob
-    api --> openai
-    openai <--> search
-    search --> blob
+    functions --> s3
+    api --> bedrock
+    bedrock <--> search
+    search --> s3
     api --> cognitive
     identity -. autentica .-> api
     identity -. autentica .-> functions
@@ -45,7 +45,7 @@ flowchart LR
     vault -. configura .-> functions
     api -. telemetria .-> monitor
     functions -. telemetria .-> monitor
-    openai -. telemetria .-> monitor
+    bedrock -. telemetria .-> monitor
 
     classDef edgeNode fill:#dbeafe,stroke:#2563eb,color:#172554;
     classDef computeNode fill:#dcfce7,stroke:#16a34a,color:#052e16;
@@ -53,8 +53,8 @@ flowchart LR
     classDef dataNode fill:#fef3c7,stroke:#d97706,color:#451a03;
     classDef platformNode fill:#f1f5f9,stroke:#475569,color:#0f172a;
 
-    class frontDoor,web edgeNode;
+    class cloudFront,web edgeNode;
     class api,functions,bus computeNode;
-    class openai,search,cognitive aiNode;
-    class sql,cosmos,blob dataNode;
+    class bedrock,search,cognitive aiNode;
+    class sql,dynamo,s3 dataNode;
     class identity,vault,monitor platformNode;

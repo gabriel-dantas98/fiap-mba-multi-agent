@@ -1,12 +1,16 @@
 #!/usr/bin/env python3
-"""Confere os cálculos publicados em entrega-grupo-aula01.md."""
+"""Confere os cálculos publicados em entrega-grupo-aula01.md.
+
+Prova determinística (Decimal, sem float solto) para SLA 1.3, custos 2.2,
+egress 3.3 e contagem de linhas Terraform/Bicep.
+"""
 
 from __future__ import annotations
 
-from dataclasses import dataclass
-from decimal import Decimal, ROUND_HALF_UP
-from pathlib import Path
 import sys
+from dataclasses import dataclass
+from decimal import ROUND_HALF_UP, Decimal
+from pathlib import Path
 
 AULA01 = Path(__file__).resolve().parents[1]
 ENTREGA = AULA01 / "entrega-grupo-aula01.md"
@@ -37,9 +41,13 @@ class Check:
 
 
 def check_sla() -> None:
-    hours_year = Decimal("8760")
+    """Prova determinística do Exercício 1.3 (ano comercial 8760 h)."""
+    hours_year = Decimal("8760")  # 365 * 24
     sla_999 = Decimal("0.999")
     hourly_loss = Decimal("50000")
+
+    print("=== prova SLA 1.3 (Decimal) ===")
+    print(f"premissa: hours_year = 365 * 24 = {hours_year}")
 
     downtime_h = hours_year * (Decimal("1") - sla_999)
     almost("1.3a downtime horas", downtime_h, Decimal("8.76"))
@@ -61,6 +69,7 @@ def check_sla() -> None:
     almost("1.3 99.99% horas", sla_9999_downtime_h, Decimal("0.876"))
     almost("1.3 99.99% minutos", sla_9999_downtime_h * 60, Decimal("52.56"))
     almost("1.3 99.99% impacto", sla_9999_downtime_h * hourly_loss, Decimal("43800"))
+    print("=== fim prova SLA ===")
 
 
 def check_costs() -> None:

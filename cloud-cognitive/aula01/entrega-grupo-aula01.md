@@ -167,10 +167,10 @@ Código em [`terraform/`](terraform/).
 
 - destroy → 9 recursos fora; RG sumiu.
 - plan/apply limpos → 9 criados.
-- SSH + Nginx (`scripts/validate-nginx.sh`) → HTTP 200.
+- SSH + Nginx (`scripts/validate-nginx.sh`) → HTTP 200 na página Group One.
 - plan final → `No changes`.
 
-Evidências: [`evidencias/provisionamento.md`](evidencias/provisionamento.md).
+Print: [`evidencias/nginx-group-one.png`](evidencias/nginx-group-one.png). Evidências: [`evidencias/provisionamento.md`](evidencias/provisionamento.md).
 
 ### Exercício 3.2 — Bicep equivalente
 
@@ -249,6 +249,8 @@ Se recomeçássemos a QC: Private Endpoints + Key Vault no dia 1, Bastion no lug
 - Fonte Mermaid multi-cloud: `diagramas/arquitetura-qc-multicloud.mmd`
 - Código Terraform: `terraform/`
 - Código Bicep: `bicep/`
+- Página Nginx (brand Group One): `nginx/index.html`
+- Print Nginx: `evidencias/nginx-group-one.png`
 - Validação SSH/HTTP: `scripts/validate-nginx.sh`
 - Evidências Terraform: `evidencias/provisionamento.md`
 - Evidências Bicep: `evidencias/bicep.md`

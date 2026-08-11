@@ -11,6 +11,7 @@ aula01/
 │   └── arquitetura-qc-multicloud.mmd|.png
 ├── terraform/
 ├── bicep/
+├── nginx/index.html
 ├── scripts/
 │   ├── validate-nginx.sh
 │   ├── check_calcs.py

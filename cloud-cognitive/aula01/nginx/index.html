@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Cloud Cognitive · Group One</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+      :root {
+        --blue: #0066ff;
+        --cyan: #33ccff;
+        --navy: #0a0f1e;
+        --white: #ffffff;
+        --panel: #0c1426;
+        --line: rgba(51, 204, 255, 0.16);
+        --line-strong: rgba(51, 204, 255, 0.32);
+        --txt-dim: #9fb2d6;
+        --r: 18px;
+        --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+      }
+      * { box-sizing: border-box; }
+      html, body { margin: 0; height: 100%; }
+      body {
+        min-height: 100vh;
+        font-family: Sora, system-ui, sans-serif;
+        background:
+          radial-gradient(900px 520px at 78% -10%, rgba(0, 102, 255, 0.34), transparent 60%),
+          radial-gradient(700px 480px at 10% 110%, rgba(51, 204, 255, 0.1), transparent 60%),
+          var(--navy);
+        color: var(--white);
+        -webkit-font-smoothing: antialiased;
+        line-height: 1.5;
+      }
+      .grid {
+        position: fixed;
+        inset: 0;
+        opacity: 0.45;
+        pointer-events: none;
+        background-image:
+          linear-gradient(var(--line) 1px, transparent 1px),
+          linear-gradient(90deg, var(--line) 1px, transparent 1px);
+        background-size: 64px 64px;
+        mask-image: radial-gradient(720px 540px at 70% 30%, #000, transparent 75%);
+      }
+      .wrap {
+        position: relative;
+        min-height: 100vh;
+        max-width: 1080px;
+        margin: 0 auto;
+        padding: 28px 32px 48px;
+        display: flex;
+        flex-direction: column;
+      }
+      main { margin-top: auto; margin-bottom: auto; }
+      header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding-bottom: 22px;
+        border-bottom: 1px solid var(--line);
+      }
+      .mark {
+        width: 36px;
+        height: 36px;
+        border-radius: 12px;
+        background: radial-gradient(circle at 50% 30%, #2a7bff, var(--blue));
+        display: grid;
+        place-items: center;
+      }
+      .brand { font-weight: 700; letter-spacing: 0.02em; }
+      .tag {
+        margin-left: auto;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--cyan);
+        border: 1px solid var(--line-strong);
+        border-radius: 100px;
+        padding: 7px 14px;
+      }
+      .eyebrow {
+        margin: 48px 0 18px;
+        font-size: 13px;
+        font-weight: 600;
+        letter-spacing: 0.28em;
+        text-transform: uppercase;
+        color: var(--cyan);
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      }
+      .eyebrow::before { content: ""; width: 34px; height: 1px; background: var(--cyan); opacity: 0.6; }
+      h1 {
+        margin: 0 0 14px;
+        font-size: clamp(36px, 6vw, 64px);
+        line-height: 1.02;
+        letter-spacing: -0.02em;
+        font-weight: 800;
+      }
+      h1 span { color: var(--cyan); }
+      .lead { margin: 0 0 36px; max-width: 620px; color: var(--txt-dim); font-size: 17px; }
+      .cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+      .card {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: var(--r);
+        padding: 18px 18px 16px;
+        box-shadow: inset 3px 0 0 var(--blue);
+      }
+      .card strong { display: block; font-size: 14px; margin-bottom: 4px; }
+      .card span { color: var(--txt-dim); font-size: 13px; }
+      @media (max-width: 820px) {
+        .cards { grid-template-columns: 1fr 1fr; }
+        .tag { display: none; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="grid"></div>
+    <div class="wrap">
+      <header>
+        <div class="mark" aria-hidden="true">
+          <svg viewBox="0 0 240 240" width="26" height="26" xmlns="http://www.w3.org/2000/svg">
+            <rect x="44" y="58" width="152" height="128" rx="46" fill="#fff"/>
+            <rect x="62" y="82" width="116" height="84" rx="38" fill="#0A0F1E"/>
+            <path d="M90 128 q12 -17 24 0" stroke="#33CCFF" stroke-width="10" fill="none" stroke-linecap="round"/>
+            <path d="M126 128 q12 -17 24 0" stroke="#33CCFF" stroke-width="10" fill="none" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="brand">Group One</div>
+        <div class="tag">HTTP 200</div>
+      </header>
+      <main>
+      <p class="eyebrow">Aula 01 · Cloud Cognitive</p>
+      <h1>Cloud Cognitive <span>funcionando</span></h1>
+      <p class="lead">Terraform, SSH, NSG e Nginx validados. Lab do Grupo 01 na identidade Group One.</p>
+      <div class="cards">
+        <div class="card"><strong>Terraform</strong><span>Infra versionada</span></div>
+        <div class="card"><strong>SSH /32</strong><span>NSG least privilege</span></div>
+        <div class="card"><strong>Ubuntu 24.04</strong><span>Trusted Launch</span></div>
+        <div class="card"><strong>Nginx</strong><span>Página de fumaça</span></div>
+      </div>
+      </main>
+    </div>
+  </body>
+</html>

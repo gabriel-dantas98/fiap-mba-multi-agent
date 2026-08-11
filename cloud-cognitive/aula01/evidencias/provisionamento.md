@@ -60,25 +60,11 @@ http=200
 url=http://57.156.58.166/
 ```
 
-HTTP:
+HTTP 200 na página Group One (`nginx/index.html`):
 
-```http
-HTTP/1.1 200 OK
-Server: nginx/1.24.0 (Ubuntu)
-Content-Type: text/html
+![Página Nginx Group One](nginx-group-one.png)
 
-<!doctype html>
-<html lang="pt-BR">
-  <head>
-    <meta charset="utf-8">
-    <title>Cloud Cognitive Aula 1</title>
-  </head>
-  <body>
-    <h1>Cloud Cognitive funcionando</h1>
-    <p>Terraform, SSH, NSG e Nginx validados.</p>
-  </body>
-</html>
-```
+Fonte: [`nginx/index.html`](../nginx/index.html).
 
 ## Alteração isolada da regra SSH
 

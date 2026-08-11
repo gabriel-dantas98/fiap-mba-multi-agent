@@ -28,15 +28,17 @@
 
 | Serviço | Modelo | Justificativa |
 |---------|--------|---------------|
-| Gmail | SaaS | Mesma prateleira do Outlook 365 / Google Workspace: app pronta, ninguém abre SSH. |
-| Azure Virtual Machines | IaaS | O EC2 / Compute Engine da Microsoft: você herda o SO e o patch. |
-| Azure App Service (hospedar uma API) | PaaS | Primo do Elastic Beanstalk e do Cloud Run: sobe o código, some o servidor. |
-| AWS Lambda | FaaS | Irmão do Azure Functions / Cloud Functions: paga invocação, não VM ociosa. |
-| Azure SQL Database | PaaS | RDS e Cloud SQL com sotaque Microsoft: motor gerenciado, schema é seu. |
-| Salesforce CRM | SaaS | Mesmo jogo do Dynamics 365 / HubSpot: CRM alugado, zero rack. |
-| Google Kubernetes Engine (GKE) | PaaS/IaaS híbrido | Como AKS e EKS: control plane do provedor, pods e YAML do time. |
-| Azure Blob Storage | PaaS | S3 / GCS com outro nome: objeto gerenciado, ACL e lifecycle no cliente. |
-| Azure OpenAI Service | SaaS / API-as-a-Service | Bedrock e Vertex AI sem você comprar GPU: chama modelo, não opera cluster. |
+| Gmail | SaaS | Mesma prateleira do Outlook 365 / Google Workspace: app pronta, ninguém abre SSH. Dados, identidades e config do tenant continuam seus. |
+| Azure Virtual Machines | IaaS | O EC2 / Compute Engine da Microsoft. No [Shared Responsibility Model](https://aws.amazon.com/compliance/shared-responsibility-model/) da AWS isso é o caso-canônico de IaaS: provedor cuida da *security of the cloud* (hardware, hipervisor, rede física, datacenter); cliente fica com a *security in the cloud* — guest OS (update + patch), apps/utilities e firewall (NSG / security group). "Herda o SO e o patch" = herda a *responsabilidade*, não o patching feito pelo provedor. |
+| Azure App Service (hospedar uma API) | PaaS | Primo do Elastic Beanstalk e do Cloud Run: sobe o código, some o servidor. Provedor sobe a fatia do OS/runtime; você ainda responde por código, config e IAM. |
+| AWS Lambda | FaaS | Irmão do Azure Functions / Cloud Functions: paga invocação, não VM ociosa. Ainda mais abstraído que PaaS clássico — patch do host some, mas permissão da function, segredos e o que roda no handler são seus. |
+| Azure SQL Database | PaaS | RDS e Cloud SQL com sotaque Microsoft: motor gerenciado, schema é seu. Tipo S3/DynamoDB no discurso AWS: infra + plataforma do provedor; dados, criptografia e permissões do cliente. |
+| Salesforce CRM | SaaS | Mesmo jogo do Dynamics 365 / HubSpot: CRM alugado, zero rack. Stack quase toda no provedor; você ainda manda em quem entra e no que faz com o dado. |
+| Google Kubernetes Engine (GKE) | PaaS/IaaS híbrido | Como AKS e EKS: control plane do provedor, pods e YAML do time. Fronteira típica "of/in the cloud" no meio do stack. |
+| Azure Blob Storage | PaaS | S3 / GCS com outro nome: objeto gerenciado, ACL e lifecycle no cliente. AWS chama isso de serviço abstraído — *of the cloud* no storage engine; *in the cloud* em classificação, encryption e IAM. |
+| Azure OpenAI Service | SaaS / API-as-a-Service | Bedrock e Vertex AI sem você comprar GPU: chama modelo, não opera cluster. Patch de GPU some; prompt, PII no payload e keys/Managed Identity continuam no seu lado. |
+
+**Responsabilidade compartilhada (lente AWS, válido nos três):** a AWS formaliza o split como *Security of the Cloud* (provedor) vs *Security in the Cloud* (cliente). O quanto você "herda" de tarefa sobe ou desce conforme o modelo — IaaS (VM/EC2) exige quase tudo acima do hipervisor; PaaS/FaaS/serviços abstraídos (S3, DynamoDB, Blob, SQL gerenciado) empurram OS/plataforma pro provedor; SaaS deixa só dados, identidades e config. Azure e GCP desenham a mesma escada; a AWS só batizou o meme. Em qualquer modelo, **dado e identidade não saem do cliente**.
 
 ### Exercício 1.2 — Os 6 Rs
 

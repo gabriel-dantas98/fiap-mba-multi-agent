@@ -55,7 +55,7 @@ Ano comercial: 8.760 horas (`365 × 24`).
 
 a) Downtime anual com SLA 99,9%:
 
-`8.760 × (1 − 0,999) = 8,76 horas/ano` (~525,6 minutos).
+`8.760 × (1 − 0,999) = 8,76 horas/ano` (~525,60 minutos).
 
 b) Impacto financeiro máximo:
 
@@ -65,9 +65,9 @@ c) Para impacto < R$ 50.000/ano:
 
 Downtime máximo = `50.000 / 50.000 = 1 hora/ano`.
 
-`1 / 8.760 ≈ 0,0114%` de downtime → disponibilidade mínima `99,9886%`.
+`1 / 8.760 ≈ 0,01%` de downtime → disponibilidade mínima `99,99%`.
 
-Na prática o SLA que fecha a conta no mercado é 99,99% (`8.760 × 0,0001 = 0,876 h` ≈ 52,56 min/ano; impacto = `0,876 × 50.000 = R$ 43.800`).
+Na prática o SLA que fecha a conta no mercado é 99,99% (`8.760 × 0,0001 = 0,88 h` ≈ 52,56 min/ano; impacto ≈ R$ 43.800).
 
 ### Exercício 1.4 — RBAC
 

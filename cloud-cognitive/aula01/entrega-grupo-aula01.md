@@ -51,7 +51,7 @@ Fonte: estratégias de migração da AWS ([6/7 Rs](https://docs.aws.amazon.com/p
 
 ### Exercício 1.3 — SLA
 
-Ano comercial: 8.760 horas (`365 × 24`). A gente conferiu com o script [`scripts/check_calcs.py`](scripts/check_calcs.py) (`python3 scripts/check_calcs.py`), usando `Decimal` pra não errar com float.
+Ano comercial: 8.760 horas (`365 × 24`).
 
 a) Downtime anual com SLA 99,9%:
 
@@ -65,26 +65,9 @@ c) Para impacto < R$ 50.000/ano:
 
 Downtime máximo = `50.000 / 50.000 = 1 hora/ano`.
 
-`1 / 8.760 ≈ 0,011415525114%` de downtime → disponibilidade mínima `99,988584474886%`.
+`1 / 8.760 ≈ 0,0114%` de downtime → disponibilidade mínima `99,9886%`.
 
 Na prática o SLA que fecha a conta no mercado é 99,99% (`8.760 × 0,0001 = 0,876 h` ≈ 52,56 min/ano; impacto = `0,876 × 50.000 = R$ 43.800`).
-
-Saída do script (trecho SLA):
-
-```text
-=== prova SLA 1.3 (Decimal) ===
-premissa: hours_year = 365 * 24 = 8760
-ok  1.3a downtime horas: 8.760
-ok  1.3a downtime minutos: 525.600
-ok  1.3b impacto anual: 438000.000
-ok  1.3c downtime máximo: 1
-ok  1.3c % downtime: 0.01141552511415525114155251142
-ok  1.3c disponibilidade: 99.98858447488584474885844749
-ok  1.3 99.99% horas: 0.8760
-ok  1.3 99.99% minutos: 52.5600
-ok  1.3 99.99% impacto: 43800.0000
-=== fim prova SLA ===
-```
 
 ### Exercício 1.4 — RBAC
 
@@ -296,6 +279,5 @@ Se a gente recomeçasse a QC: AWS-first (Bedrock + OpenSearch) com cases iFood/R
 - Página Nginx (brand Group One): `nginx/index.html`
 - Print Nginx: `evidencias/nginx-group-one.png`
 - Validação SSH/HTTP: `scripts/validate-nginx.sh`
-- Prova SLA/custos/egress: `scripts/check_calcs.py`
 - Evidências Terraform: `evidencias/provisionamento.md`
 - Evidências Bicep: `evidencias/bicep.md`

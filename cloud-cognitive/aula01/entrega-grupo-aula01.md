@@ -15,7 +15,7 @@
 
 ## Distribuição do trabalho
 
-Daniel, Gabriel, Henrique e João contribuíram juntos em tudo (N1, N2 e N3): modelos de serviço, 6 Rs, SLA, RBAC, arquitetura QC, custos, migração, Terraform, Bicep e multi-cloud.
+Todos contribuiram no trabalho e colocaram coisas diferentes (N1, N2 e N3): modelos de serviço, 6 Rs, SLA, RBAC, arquitetura QC, custos, migração, Terraform, Bicep e multi-cloud. Fizemos uma revisão em grupo.
 
 ## Nível 1 — Respostas
 
@@ -87,7 +87,7 @@ Regra: menor privilégio possível. Escopo no RG (ou na storage account), não n
 
 ### Exercício 2.1 — Arquitetura da Quantum Commerce
 
-Provedor principal: AWS. Não porque "a disciplina é Azure". A gente defendeu com cases reais:
+Provedor principal: AWS. Apesar da disciplina usar Azure, o know-how da nossa equipe é em AWS e também usamos cases reais:
 
 1. [iFood × Bedrock/SageMaker](https://aws.amazon.com/solutions/case-studies/ifood-bedrock/) — marketplace BR com mais de 80M pedidos/mês, personalização e antifraude em 100+ modelos, e o PoC do garçom virtual Garçon (RAG + Claude/Titan no Bedrock). Mostra que e-commerce conversacional já roda sério na AWS LatAm.
 2. [Amazon Rufus × Bedrock](https://aws.amazon.com/blogs/machine-learning/how-rufus-scales-conversational-shopping-experiences-to-millions-of-amazon-customers-with-amazon-bedrock/) — assistente de compra em escala, com tool calling e RAG sobre catálogo/pedido. Quase um molde pra QC.
@@ -104,7 +104,7 @@ Camadas (AWS):
 4. Dados — RDS (transacional), DynamoDB (sessões/conversas), S3 (catálogo/imagens).
 5. Plataforma — IAM/Cognito, Secrets Manager, CloudWatch.
 
-Diagrama: [`diagramas/arquitetura-qc-aula01.png`](diagramas/arquitetura-qc-aula01.png) (fonte Mermaid: [`diagramas/arquitetura-qc-aula01.mmd`](diagramas/arquitetura-qc-aula01.mmd)).
+Diagramas: [`diagramas/arquitetura-qc-aula01.png`](diagramas/arquitetura-qc-aula01.png) (fonte Mermaid: [`diagramas/arquitetura-qc-aula01.mmd`](diagramas/arquitetura-qc-aula01.mmd)).
 
 | Categoria | Escolha AWS (primário) | Alternativa Azure | Alternativa GCP |
 |-----------|------------------------|-------------------|-----------------|

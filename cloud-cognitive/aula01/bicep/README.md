@@ -33,7 +33,7 @@ az deployment group show \
   --query properties.outputs
 ```
 
-## Limpeza
+## Remoção do ambiente
 
 ```bash
 az group delete --name rg-bicep-aula01 --yes --no-wait

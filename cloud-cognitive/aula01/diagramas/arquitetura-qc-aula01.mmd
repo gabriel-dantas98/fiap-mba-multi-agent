@@ -1,0 +1,60 @@
+flowchart LR
+    users["Clientes<br/>Web e Mobile"]
+
+    subgraph edge["Edge e entrega"]
+        cloudFront["Amazon CloudFront<br/>CDN + WAF"]
+        web["Frontend<br/>S3 + Amplify Hosting"]
+    end
+
+    subgraph compute["APIs e processamento"]
+        api["Backend<br/>ECS Fargate / ALB"]
+        functions["Workers<br/>AWS Lambda"]
+        bus["SQS + SNS<br/>Filas e eventos"]
+    end
+
+    subgraph ai["IA cognitiva e RAG"]
+        bedrock["Amazon Bedrock<br/>LLM e embeddings"]
+        search["OpenSearch Serverless<br/>Índice vetorial"]
+        cognitive["Comprehend / Rekognition<br/>Visão, fala e linguagem"]
+    end
+
+    subgraph data["Dados"]
+        sql["Amazon RDS<br/>Pedidos e pagamentos"]
+        dynamo["DynamoDB<br/>Sessões e conversas"]
+        s3["Amazon S3<br/>Catálogo e imagens"]
+    end
+
+    subgraph platform["Segurança e observabilidade"]
+        identity["IAM + Cognito<br/>Roles e identidade"]
+        vault["AWS Secrets Manager<br/>Segredos e chaves"]
+        monitor["Amazon CloudWatch<br/>Logs, métricas e alertas"]
+    end
+
+    users --> cloudFront --> web --> api
+    api --> sql
+    api --> dynamo
+    api --> bus --> functions
+    functions --> s3
+    api --> bedrock
+    bedrock <--> search
+    search --> s3
+    api --> cognitive
+    identity -. autentica .-> api
+    identity -. autentica .-> functions
+    vault -. configura .-> api
+    vault -. configura .-> functions
+    api -. telemetria .-> monitor
+    functions -. telemetria .-> monitor
+    bedrock -. telemetria .-> monitor
+
+    classDef edgeNode fill:#dbeafe,stroke:#2563eb,color:#172554;
+    classDef computeNode fill:#dcfce7,stroke:#16a34a,color:#052e16;
+    classDef aiNode fill:#f3e8ff,stroke:#9333ea,color:#3b0764;
+    classDef dataNode fill:#fef3c7,stroke:#d97706,color:#451a03;
+    classDef platformNode fill:#f1f5f9,stroke:#475569,color:#0f172a;
+
+    class cloudFront,web edgeNode;
+    class api,functions,bus computeNode;
+    class bedrock,search,cognitive aiNode;
+    class sql,dynamo,s3 dataNode;
+    class identity,vault,monitor platformNode;

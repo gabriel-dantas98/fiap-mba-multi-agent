@@ -1,0 +1,38 @@
+flowchart TB
+    users["Clientes Web e Mobile"]
+
+    subgraph awsPrimary ["AWS primário — agentes, APIs e RAG"]
+        cloudFront["CloudFront + WAF"]
+        api["ECS Fargate / Lambda"]
+        bedrock["Amazon Bedrock"]
+        search["OpenSearch Serverless"]
+        sql["RDS + DynamoDB"]
+        identity["IAM + Cognito + Secrets Manager"]
+    end
+
+    subgraph azureSecondary ["Azure secundário — analytics e DR"]
+        frontDoor["Azure Front Door"]
+        blob["Blob Storage espelho"]
+        sqlDr["Azure SQL / Blob backup"]
+    end
+
+    subgraph challenges ["Desafios multi-cloud"]
+        latency["Latência cross-cloud"]
+        idFed["Identidade federada OIDC"]
+        egress["Egress 10 TB/mês"]
+        obs["Observabilidade unificada"]
+    end
+
+    users --> cloudFront --> api
+    api --> bedrock
+    bedrock --> search
+    api --> sql
+    identity --> api
+    api -->|"espelho frio / analytics"| blob
+    blob --> frontDoor
+    sql -->|"DR / backup"| sqlDr
+    api -.-> latency
+    identity -.-> idFed
+    blob -.-> egress
+    api -.-> obs
+    sqlDr -.-> obs

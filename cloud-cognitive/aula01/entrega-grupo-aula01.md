@@ -37,15 +37,17 @@ Daniel, Gabriel, Henrique e João contribuíram juntos em tudo (N1, N2 e N3): mo
 
 ### Exercício 1.2 — Os 6 Rs
 
-**Cenário A — Rehost (Lift & Shift).** Sistema de frota em servidor físico, código de 2008, uma pessoa no time. Empurra a VM pro IaaS (EC2 / Azure VM / GCE) e ganha elasticidade sem reescrever. Um bom exemplo é o início da logística tipo Loggi: primeiro tira a máquina do DC, depois moderniza. Reescrever sem documentação é o jeito mais caro de falhar.
+Fonte: estratégias de migração da AWS ([6/7 Rs](https://docs.aws.amazon.com/prescriptive-guidance/latest/large-migration-guide/migration-strategies.html)) — Rehost, Replatform, Refactor, Repurchase, Retire, Retain (Relocate entra no modelo ampliado).
 
-**Cenário B — Retire.** ERP de RH com menos de 5 usuários/mês. Arquiva em S3 Glacier / Blob frio / Coldline e desliga. Tipo startup matando módulo morto (Nubank / Creditas cortando o que não puxa métrica). Migrar o que ninguém abre só gera fatura e risco.
+**Cenário A — Rehost (Lift & Shift):** código legado sem doc e urgência de elasticidade pedem lift and shift da VM pro IaaS, sem reescrever.
 
-**Cenário C — Refactor.** API de pagamentos monolítica vira microserviços + K8s + eventos. Aqui o negócio pediu reescrita de verdade. Pensa iFood / Stone saindo do monolito por domínio (pedido, antifraude, settlement) com eventos. É caro, mas é o R certo quando o monolito trava o roadmap.
+**Cenário B — Retire:** com <5 usuários/mês e dado quase morto, não vale migrar: arquiva e desliga o ERP.
 
-**Cenário D — Repurchase.** CRM interno de 15 anos; SaaS cobre uns 90% com TCO menor → Salesforce / Dynamics / HubSpot. Founders trocando CRM caseiro por Pipedrive / Salesforce (comum em QuintoAndar, Loft, SaaS B2B): compra o produto, não o fardo de manter o fork pra sempre.
+**Cenário C — Refactor:** a própria fintech pediu microserviços + K8s + eventos, então é re-arquitetura de verdade.
 
-**Cenário E — Retain.** Mainframe on-prem por exigência do BACEN. Nuvem só onde a auditoria deixar. Core bancário tradicional vs Nubank cloud-native: regulação manda. Retain não é covardia, é restrição externa.
+**Cenário D — Repurchase:** SaaS cobre ~90% do CRM por menos custo, então drop and shop (troca o interno por produto de mercado).
+
+**Cenário E — Retain:** exigência do Banco Central segura o mainframe on-prem; Retain é restrição de compliance, não escolha técnica.
 
 ### Exercício 1.3 — SLA
 
@@ -277,6 +279,7 @@ Se a gente recomeçasse a QC: AWS-first (Bedrock + OpenSearch) com cases iFood/R
 ## Referências
 
 - AWS — [Shared Responsibility Model](https://aws.amazon.com/compliance/shared-responsibility-model/)
+- AWS — [Migration strategies (6/7 Rs)](https://docs.aws.amazon.com/prescriptive-guidance/latest/large-migration-guide/migration-strategies.html)
 - Microsoft — [Azure built-in roles](https://learn.microsoft.com/en-us/azure/role-based-access-control/built-in-roles)
 - Sam Newman — [Monolith Decomposition Patterns](https://samnewman.io/talks/monolith-decomposition-patterns/) · [InfoQ](https://www.infoq.com/presentations/microservices-principles-patterns/)
 - AWS Cases — [iFood](https://aws.amazon.com/solutions/case-studies/ifood-bedrock/) · [Rufus/Bedrock](https://aws.amazon.com/blogs/machine-learning/how-rufus-scales-conversational-shopping-experiences-to-millions-of-amazon-customers-with-amazon-bedrock/) · [Natura](https://aws.amazon.com/solutions/case-studies/natura-ia-generativa/) · [Mercado Libre](https://aws.amazon.com/solutions/case-studies/mercado-libre-mutt-data/)

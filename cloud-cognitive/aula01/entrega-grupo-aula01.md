@@ -6,21 +6,16 @@
 
 ## Grupo
 
-| # | Nome completo | GitHub | E-mail FIAP |
-|---|---------------|--------|-------------|
-| 1 | Daniel Isola Massari | não informado | RM373240@fiap.com.br |
-| 2 | Gabriel Dantas Gomes | gabriel-dantas98 | RM371144@fiap.com.br |
-| 3 | Henrique Maireno Inácio | não informado | RM370889@fiap.com.br |
-| 4 | João Victor Placidio | não informado | RM373340@fiap.com.br |
+| # | Nome completo | E-mail FIAP |
+|---|---------------|-------------|
+| 1 | Daniel Isola Massari | RM373240@fiap.com.br |
+| 2 | Gabriel Dantas Gomes | RM371144@fiap.com.br |
+| 3 | Henrique Maireno Inácio | RM370889@fiap.com.br |
+| 4 | João Victor Placidio | RM373340@fiap.com.br |
 
 ## Distribuição do trabalho
 
-| Membro | Nível assumido | Item específico |
-|--------|----------------|-----------------|
-| Daniel Isola Massari | N1 | Exercícios 1.1, 1.2, 1.3 e 1.4 |
-| Henrique Maireno Inácio | N2 | Exercício 2.1 — arquitetura QC + diagrama |
-| João Victor Placidio | N2 | Exercícios 2.2 e 2.3 — custos e migração |
-| Gabriel Dantas Gomes | N3 | Exercícios 3.1, 3.2 e 3.3 — Terraform, Bicep e multi-cloud |
+Daniel, Gabriel, Henrique e João contribuíram juntos em tudo (N1, N2 e N3): modelos de serviço, 6 Rs, SLA, RBAC, arquitetura QC, custos, migração, Terraform, Bicep e multi-cloud.
 
 ## Nível 1 — Respostas
 
@@ -28,22 +23,21 @@
 
 | Serviço | Modelo | Justificativa |
 |---------|--------|---------------|
-| Gmail | SaaS | Igual Outlook 365 / Google Workspace: app pronta, ninguém abre SSH. Dado, identidade e config do tenant ainda são seus. |
-| Azure Virtual Machines | IaaS | É o EC2 / Compute Engine da Microsoft. No [Shared Responsibility Model](https://aws.amazon.com/compliance/shared-responsibility-model/) da AWS, IaaS (Infra as a Service) funciona como: a cloud/vendor cuida do hardware, hipervisor, rede física e datacenter (*security of the cloud*). Você cuida do SO da VM (update e patch), das apps e do firewall (NSG / security group). Isso é *security in the cloud*.  |
-| Azure App Service (hospedar uma API) | PaaS | Parecido com Elastic Beanstalk e Cloud Run: sobe o código e some o servidor. O provedor segura SO/runtime; código, config e permissões ficam com você. |
-| AWS Lambda | FaaS | (Function as a Service) Irmão do Azure Functions / Cloud Functions. Você paga invocação × duração × memória, não VM parada. Host e SO somem. Ainda sobra runtime, cold start, concurrency, IAM da function, segredos e o código do handler, um nivel a mais de abstração que o PaaS. |
-| Azure SQL Database | PaaS | Tipo App Service, mas de banco: sobe schema/query, some o patch do motor (RDS / Cloud SQL do outro lado). Infra e plataforma com o provedor; dados, criptografia e permissões com o cliente. SKU muda o preço. Oracle gerenciado (Azure Database for Oracle / RDS Oracle) costuma sair bem mais caro que SQL Server/PostgreSQL na mesma faixa. Você simplesmente conecta e utiliza o banco de dados e a cloud cuida da maioria das outras coisas. |
+| Gmail | SaaS | Assim como Outlook, Google Drive, Google Photos: é um serviço totalmente pronto para uso, o usuário não precisa se preocupar com nada sobre como ele funciona por baixo dos panos (Software as a Service). Ninguém abre SSH nem se preocupa com consumo e espaço de dados. Dado, identidade e config do usuário ainda são seus. |
+| Azure Virtual Machines | IaaS | É o EC2 / Compute Engine da Microsoft. No [Shared Responsibility Model](https://aws.amazon.com/compliance/shared-responsibility-model/) da AWS, IaaS (Infra as a Service) funciona assim: a cloud/vendor cuida do hardware, hipervisor, rede física e datacenter (*security of the cloud*). Você cuida do SO da VM (update e patch), das apps e do firewall (NSG / security group). Isso é *security in the cloud*. |
+| Azure App Service (hospedar uma API) | PaaS | (Platform as a Service) Parecido com Elastic Beanstalk e Cloud Run: sobe o código e some o servidor. O provedor segura/abstrai o SO/runtime; código, config e permissões ficam com você. Você foca só no que vai ser executado e não se preocupa em onde e como vai rodar. Modelo bem legal e conhecido por quem cria projeto sozinho. |
+| AWS Lambda | FaaS | (Function as a Service) Irmão do Azure Functions / Cloud Functions. Você paga invocação × duração × memória, não VM parada. Host e SO somem. Ainda sobra runtime, cold start, concurrency, IAM da function, segredos e o código do handler: um nível a mais de abstração que o PaaS. |
+| Azure SQL Database | PaaS | Tipo App Service, mas de banco: sobe schema/query, some o patch do motor (RDS / Cloud SQL do outro lado). Infra e plataforma com o provedor; dados, criptografia e permissões com o cliente. SKU muda o preço. Oracle gerenciado (Azure Database for Oracle / RDS Oracle) costuma sair bem mais caro que SQL Server/PostgreSQL na mesma faixa. Você simplesmente conecta e usa o banco; a cloud cuida da maior parte do resto. |
 | Salesforce CRM | SaaS | Mesma ideia do Dynamics 365 / HubSpot: serviço gerenciado de ponta a ponta. Você não opera infra. Paga licença/seat, acessos e add-ons. Continua mandando em quem entra e no que faz com o dado. |
 | Google Kubernetes Engine (GKE) | PaaS/IaaS híbrido | Kubernetes gerenciado (AKS/EKS também). O time mexe em pods, Deployments e YAML sem cuidar do baixo nível: control plane, etcd e update do master ficam com o provedor. Ainda sobra workload, RBAC do cluster, network policy e o que roda dentro do pod. |
-| Azure Blob Storage | PaaS | Pensa Google Drive / OneDrive pra guardar arquivo, só que com API de objeto, lifecycle, versioning, SAS/ACL e encaixe com CDN/IA. É o S3/GCS da Microsoft: motor gerenciado (*of the cloud*); classificação, encryption e IAM (*in the cloud*) no cliente. Fonte: [Shared Responsibility Model](https://aws.amazon.com/compliance/shared-responsibility-model/) (serviços abstraídos). |
-| Azure OpenAI Service | SaaS / API-as-a-Service | Bedrock e Vertex AI sem comprar GPU: chama o modelo, não opera cluster. Não precisa se preocupar com processamento, gasto de recursos nem nada do tipo. Prompt, PII no payload e keys/Managed Identity continuam do lado de quem desenvolve as soluções. |
+| Azure Blob Storage | PaaS | Como se fosse um Google Drive / OneDrive pra guardar arquivos, só que usando uma API pra lidar com objetos, lifecycle, versioning, SAS/ACL e encaixe com CDN/IA. É o S3/GCS da Microsoft: motor gerenciado (*of the cloud*); classificação, encryption e IAM (*in the cloud*) no cliente. Fonte: [Shared Responsibility Model](https://aws.amazon.com/compliance/shared-responsibility-model/) (serviços abstraídos). |
+| Azure OpenAI Service | SaaS / API-as-a-Service | Bedrock e Vertex AI sem comprar GPU: chama o modelo, não opera cluster. Não precisa se preocupar com processamento, gasto de recurso nem nada do tipo. Prompt, PII no payload e keys/Managed Identity continuam do lado de quem desenvolve as soluções. |
 
-**Responsabilidade compartilhada.** A AWS chama isso de *Security of the Cloud* (provedor) vs *Security in the Cloud* (cliente) no [Shared Responsibility Model](https://aws.amazon.com/compliance/shared-responsibility-model/). Quanto mais abstraído o serviço, menos patch você faz. Em IaaS (VM/EC2) quase tudo acima do hipervisor é seu. Em PaaS/FaaS e serviços tipo S3, DynamoDB, Blob ou SQL gerenciado, o provedor segura SO/plataforma. Em SaaS sobra dado, identidade e config. Azure e GCP usam a mesma lógica; a AWS só deu o nome famoso. Em qualquer modelo, dado e identidade não saem do cliente.
+**Conceito legal de Responsabilidade compartilhada.** A AWS chama isso de *Security of the Cloud* (provedor) vs *Security in the Cloud* (cliente) no [Shared Responsibility Model](https://aws.amazon.com/compliance/shared-responsibility-model/). Quanto mais abstraído o serviço, menos patch você faz. Em IaaS (VM/EC2) quase tudo acima do hipervisor é seu. Em PaaS/FaaS e serviços tipo S3, DynamoDB, Blob ou SQL gerenciado, o provedor segura SO/plataforma. Em SaaS sobra dado, identidade e config. Azure e GCP usam a mesma lógica; a AWS só deu o nome conhecido. Em qualquer modelo, dado e identidade não saem do cliente.
 
 ### Exercício 1.2 — Os 6 Rs
 
-
-**Cenário A — Rehost (Lift & Shift).** Sistema de frota em servidor físico, código de 2008, uma pessoa no time. Empurra a VM pro IaaS (EC2 / Azure VM / GCE) e ganha elasticidade sem reescrever. Um bom exemplo é o inicio da logística tipo Loggi: primeiro tira a máquina do DC, depois moderniza. Reescrever sem documentação é o jeito mais caro de falhar.
+**Cenário A — Rehost (Lift & Shift).** Sistema de frota em servidor físico, código de 2008, uma pessoa no time. Empurra a VM pro IaaS (EC2 / Azure VM / GCE) e ganha elasticidade sem reescrever. Um bom exemplo é o início da logística tipo Loggi: primeiro tira a máquina do DC, depois moderniza. Reescrever sem documentação é o jeito mais caro de falhar.
 
 **Cenário B — Retire.** ERP de RH com menos de 5 usuários/mês. Arquiva em S3 Glacier / Blob frio / Coldline e desliga. Tipo startup matando módulo morto (Nubank / Creditas cortando o que não puxa métrica). Migrar o que ninguém abre só gera fatura e risco.
 
@@ -143,7 +137,7 @@ Diagrama: [`diagramas/arquitetura-qc-aula01.png`](diagramas/arquitetura-qc-aula0
 
 Premissas:
 
-- Região equivalente: Azure East US, AWS `us-east-1`, GCP `us-central1`.
+- Região parecida: Azure East US, AWS `us-east-1`, GCP `us-central1`.
 - On-demand / pay-as-you-go, Linux, 730 h/mês.
 - USD puro. Sem câmbio inventado.
 - Fontes em 10/08/2026: Azure Retail Prices API, Bandwidth/EC2 oficiais, docs públicos GCP/AWS.
@@ -185,7 +179,7 @@ Plano com patterns do Newman:
 | Busca / indexação interna | Branch by Abstraction ou CDC | Abstrai `SearchIndexer`; se o código for intocável, CDC na tabela `products` alimenta OpenSearch |
 | Assistente conversacional | UI Composition (chat widget) + Decorating Collaborator | Chat novo chama Bedrock/RAG; no sucesso do checkout, o decorator dispara follow-up sem reescrever o monolito |
 
-c) Serviços AWS: CloudFront, ECS Fargate (ou App Runner), Lambda, SQS/SNS, RDS, S3, OpenSearch Serverless, Bedrock, Cognito/IAM, Secrets Manager, CloudWatch. Dev/homolog enxuto: US$ 250–450/mês. RDS e tokens Bedrock mandam no ticket. Azure/GCP equivalentes na tabela do 2.1.
+c) Serviços AWS: CloudFront, ECS Fargate (ou App Runner), Lambda, SQS/SNS, RDS, S3, OpenSearch Serverless, Bedrock, Cognito/IAM, Secrets Manager, CloudWatch. Dev/homolog enxuto: US$ 250–450/mês. RDS e tokens Bedrock mandam no ticket. Azure/GCP na mesma ideia aparecem na tabela do 2.1.
 
 d) Obstáculo real: PII/pagamento + medo de mexer no monolito. Resposta alinhada ao Newman: deploy ≠ release (feature flags / dark launch), Parallel Run no pricing/checkout, PrivateLink/VPC endpoints, tokenization, catálogo primeiro via Strangler.
 
@@ -211,16 +205,16 @@ Validação:
 
 Print: [`evidencias/nginx-group-one.png`](evidencias/nginx-group-one.png). Evidências: [`evidencias/provisionamento.md`](evidencias/provisionamento.md).
 
-### Exercício 3.2 — Bicep equivalente
+### Exercício 3.2 — Bicep (seguindo a mesma ideia)
 
 Código em [`bicep/main.bicep`](bicep/main.bicep).
 
-Mesma stack do Terraform: VNet, `subnet-vm`, `subnet-app`, NSG com SSH restrito, Public IP, NIC, Ubuntu 24.04 (`Standard_B2als_v2` / `chilecentral`). Deploy em RG já criado (padrão Students).
+Seguindo a mesma ideia do Terraform: VNet, `subnet-vm`, `subnet-app`, NSG com SSH restrito, Public IP, NIC, Ubuntu 24.04 (`Standard_B2als_v2` / `chilecentral`). Deploy em RG já criado (padrão Students).
 
 | Artefato | Linhas | Observação |
 |----------|--------|------------|
 | ARM gerado (`bicep build` → `main.json`) | 237 | JSON verboso exportado do Bicep |
-| Terraform (`main.tf`+`variables.tf`+`outputs.tf`+`versions.tf`) | 216 | HCL; mesmo papel do CloudFormation / Deployment Manager multi-cloud |
+| Terraform (`main.tf`+`variables.tf`+`outputs.tf`+`versions.tf`) | 216 | HCL; faz o mesmo papel do CloudFormation / Deployment Manager multi-cloud |
 | Bicep `main.bicep` | 191 | DSL nativa Azure; o CDK/CFN "curto" da Microsoft |
 
 Legibilidade: Bicep ganha se o time só vive em Azure (tipo CloudFormation puro na AWS). Terraform ganha quando aparece o segundo provedor ou o state remoto já é padrão do time.

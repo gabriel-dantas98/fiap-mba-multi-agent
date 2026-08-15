@@ -44,7 +44,7 @@
 
 Respostas do grupo (não colamos o gabarito). Em cada R a gente puxa uma analogia com produto/serviço de founders brasileiros.
 
-**Cenário A — Rehost (Lift & Shift).** Sistema de frota em servidor físico, código de 2008, uma pessoa no time. Empurra a VM pro IaaS (EC2 / Azure VM / GCE) e ganha elasticidade sem reescrever. No BR, lembra fase cedo de logística tipo Loggi / 99: primeiro tira a máquina do DC, depois moderniza. Reescrever sem documentação é o jeito mais caro de falhar.
+**Cenário A — Rehost (Lift & Shift).** Sistema de frota em servidor físico, código de 2008, uma pessoa no time. Empurra a VM pro IaaS (EC2 / Azure VM / GCE) e ganha elasticidade sem reescrever. Um bom exemplo é o inicio da logística tipo Loggi: primeiro tira a máquina do DC, depois moderniza. Reescrever sem documentação é o jeito mais caro de falhar.
 
 **Cenário B — Retire.** ERP de RH com menos de 5 usuários/mês. Arquiva em S3 Glacier / Blob frio / Coldline e desliga. Tipo startup matando módulo morto (Nubank / Creditas cortando o que não puxa métrica). Migrar o que ninguém abre só gera fatura e risco.
 

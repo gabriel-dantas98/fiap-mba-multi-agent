@@ -67,7 +67,7 @@ Downtime máximo = `50.000 / 50.000 = 1 hora/ano`.
 
 `1 / 8.760 ≈ 0,01%` de downtime → disponibilidade mínima `99,99%`.
 
-Na prática o SLA que fecha a conta no mercado é 99,99% (`8.760 × 0,0001 = 0,88 h` ≈ 52,56 min/ano; impacto ≈ R$ 43.800).
+Na prática o SLA que fecha a conta no mercado é 99,99% (~52,56 min/ano; impacto ≈ R$ 43.800).
 
 ### Exercício 1.4 — RBAC
 

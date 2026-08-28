@@ -1,0 +1,81 @@
+name: Deploy Function — QC Catálogo (Aula 3)
+
+# Exercício 3.3 (bônus). Roda só quando o código da Function da Aula 3 muda —
+# lint (ruff) + testes (pytest) sempre; publish só em push direto na main,
+# usando OIDC (sem client secret salvo no repo).
+on:
+  push:
+    branches: [main]
+    paths:
+      - "cloud-cognitive/aula03/function/**"
+  pull_request:
+    branches: [main]
+    paths:
+      - "cloud-cognitive/aula03/function/**"
+
+permissions:
+  id-token: write # obrigatório para o login OIDC (az login --federated-token)
+  contents: read
+
+env:
+  FUNCTION_CODE_PATH: cloud-cognitive/aula03/function/v2-full
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Instalar dependências
+        run: |
+          pip install ruff pytest
+          pip install -r "$FUNCTION_CODE_PATH/requirements.txt"
+
+      - name: Lint (ruff)
+        run: ruff check cloud-cognitive/aula03/function/
+
+      - name: Testes (pytest)
+        run: pytest cloud-cognitive/aula03/function/tests/ -v
+
+  publish:
+    needs: lint-and-test
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment: production # exige aprovação/segredos só neste ambiente
+    steps:
+      - uses: actions/checkout@v4
+
+      # OIDC — sem AZURE_CLIENT_SECRET no repo. O Service Principal do Azure
+      # precisa de uma "federated credential" apontando para este repo+branch.
+      - name: Login no Azure via OIDC
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      # Bônus — desce num slot de staging antes de trocar para produção,
+      # em vez de publicar direto no slot de produção.
+      - name: Deploy no slot de staging
+        uses: Azure/functions-action@v1
+        with:
+          app-name: ${{ secrets.AZURE_FUNCTIONAPP_NAME }}
+          slot-name: staging
+          package: ${{ env.FUNCTION_CODE_PATH }}
+
+      - name: Smoke test no slot de staging
+        run: |
+          STAGING_URL="https://${{ secrets.AZURE_FUNCTIONAPP_NAME }}-staging.azurewebsites.net"
+          curl --fail --silent --show-error "$STAGING_URL/api/health"
+
+      - name: Swap staging -> produção
+        run: |
+          az functionapp deployment slot swap \
+            --resource-group "${{ secrets.AZURE_RESOURCE_GROUP }}" \
+            --name "${{ secrets.AZURE_FUNCTIONAPP_NAME }}" \
+            --slot staging \
+            --target-slot production

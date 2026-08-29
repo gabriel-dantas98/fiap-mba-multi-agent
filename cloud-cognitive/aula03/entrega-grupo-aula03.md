@@ -30,6 +30,12 @@ não só o código).
 > (ex.: `func` core tools ausente localmente), documentamos o replacement
 > equivalente abaixo.
 
+## Arquitetura provisionada
+
+![Arquitetura da Aula 3 — Function App, Application Insights, ACR e 3 variantes de ACI](diagramas/arquitetura-qc-aula03.png)
+
+Fonte Mermaid: [`diagramas/arquitetura-qc-aula03.mmd`](diagramas/arquitetura-qc-aula03.mmd).
+
 ---
 
 ## Nível 1 — Respostas
@@ -659,5 +665,5 @@ Achar esse limite é trabalho de design de prompt/tool spec, não de infra — e
 - Testes unitários (Exercício 3.3): `function/tests/test_frete.py`
 - Código do container FastAPI (referência — a imagem em si vem do GHCR do professor): `docker/`
 - Workflow CI/CD (Exercício 3.3): `../../.github/workflows/deploy-function.yml`
-- Diagrama de arquitetura: `diagramas/arquitetura-qc-aula03.mmd`
+- Diagrama de arquitetura: `diagramas/arquitetura-qc-aula03.png` (fonte Mermaid: `diagramas/arquitetura-qc-aula03.mmd`)
 - Evidências (App Insights, ACI, custo, benchmark): `evidencias/`

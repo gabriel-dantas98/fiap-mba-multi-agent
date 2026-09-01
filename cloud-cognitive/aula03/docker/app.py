@@ -4,6 +4,7 @@ Versão FastAPI da API de produtos QC — mesmo comportamento da Function v2-ful
 Empacotada num container Docker para rodar no Azure Container Instances (ACI),
 autenticando no Blob via Managed Identity user-assigned do ACI.
 """
+
 import csv
 import logging
 import os
@@ -15,8 +16,8 @@ from fastapi import FastAPI, HTTPException
 app = FastAPI(title="Quantum Commerce — Catálogo API", version="1.0")
 
 STORAGE_ACCOUNT = os.environ["STORAGE_ACCOUNT_CATALOGO"]
-CONTAINER       = "catalogo"
-BLOB_NAME       = "produtos.csv"
+CONTAINER = "catalogo"
+BLOB_NAME = "produtos.csv"
 
 _credential = DefaultAzureCredential()
 _blob_service = BlobServiceClient(
@@ -30,8 +31,8 @@ def carregar_produtos() -> list[dict]:
     csv_content = blob_client.download_blob().readall().decode("utf-8")
     rows = list(csv.DictReader(csv_content.splitlines()))
     for r in rows:
-        r["id"]      = int(r["id"])
-        r["preco"]   = float(r["preco"])
+        r["id"] = int(r["id"])
+        r["preco"] = float(r["preco"])
         r["estoque"] = int(r["estoque"])
     return rows
 
@@ -55,7 +56,7 @@ def listar_produtos(categoria: str | None = None, nome: str | None = None):
         raise HTTPException(500, detail="falha ao acessar storage") from e
 
     cat = (categoria or "").lower().strip()
-    nm  = (nome or "").lower().strip()
+    nm = (nome or "").lower().strip()
 
     resultado = produtos
     if cat:

@@ -6,6 +6,7 @@ Precisa de STORAGE_ACCOUNT_CATALOGO no ambiente porque o módulo instancia o
 BlobServiceClient no import — a instanciação não bate na rede, só monta a URL,
 então um valor fake é suficiente para o teste rodar sem credenciais reais.
 """
+
 import os
 import sys
 from pathlib import Path

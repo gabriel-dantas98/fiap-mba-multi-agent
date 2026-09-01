@@ -58,7 +58,7 @@ Fonte Mermaid: [`diagramas/arquitetura-qc-aula03.mmd`](diagramas/arquitetura-qc-
 |------------|------------------|---------|
 | Connection string hardcoded no `function_app.py` | **Alta** | Vai para o Git em texto plano. Qualquer clone do repo (inclusive fork acidentalmente público) expõe a credencial pra sempre — trocar a senha não apaga do histórico do Git. |
 | Connection string em variável de ambiente do Function App | **Média** | Não vai pro Git, mas ainda é uma credencial de longa duração. Quem tiver permissão para listar as configurações do App Service consegue recuperá-la; a role `Reader` sozinha não concede essa operação. Rotação continua manual. |
-| Connection string em Key Vault, acessada com segredo de Service Principal | **Média** | O Key Vault não usa uma "API key do cofre". Se a aplicação autenticar com `client_secret`, esse segredo estático vira a credencial que precisa ser guardada e rotacionada. O cofre centraliza a connection string, mas não elimina o segredo de bootstrap. |
+| Connection string em Key Vault, lida via "API key" | **Média** | Mantendo o nome usado no enunciado: o Key Vault não oferece uma API key própria. Na prática, isso seria um segredo de aplicação, como o `client_secret` de um Service Principal, que ainda precisa ser guardado e rotacionado. O cofre centraliza a connection string, mas não elimina o segredo de bootstrap. |
 | Connection string em Key Vault, lida via Managed Identity | **Baixa** | A MI troca o token por acesso ao Vault sem nenhum segredo estático em lugar nenhum — token de curta duração emitido pelo Entra ID. Ainda existe uma connection string "de verdade" guardada em algum lugar, mas nada que precise ser copiado/colado por humano. |
 | Sem connection string — Managed Identity diretamente no recurso (Storage) | **Baixa** (a mais baixa) | É o que fizemos no acesso ao catálogo pela Function v2 e pelo ACI: nenhum segredo estático nesse caminho, e `DefaultAzureCredential` obtém um token curto via IMDS. A role assignment (`Storage Blob Data Reader`) pode ser revogada sem rotacionar chave. |
 
@@ -529,7 +529,7 @@ sessão.
 | p99 | 3,875 s | 0,775 s |
 | Throughput | 129,2 req/s | 157,6 req/s |
 | Taxa de erro | 0% (1000/1000 OK) | 0% (1000/1000 OK) |
-| Custo aprox./1M req | O `hey` não mede unidades faturadas. FC1 cobra execuções e tempo ativo das instâncias em GB-s, com mínimo faturável de 1 s; seria preciso consultar os billing meters para calcular sem inventar. | ACI cobra pelo tempo ligado. A 157,6 req/s, 1M req levaria ~1h46min; com a tarifa medida de US$ 0,0247/h, o compute ficaria em **≈ US$ 0,044**, sem contar ACR, rede e Storage. |
+| Custo aprox./1M req | Pela fórmula pedida no exercício e assumindo 20 ms × 2 GB: `0,20 + (1M × 0,02 × 2 × 0,000016)` = **US$ 0,84**. No FC1 real, o `hey` não mede unidades faturadas e existe período mínimo faturável; o valor correto precisa dos billing meters. | ACI cobra pelo tempo ligado. A 157,6 req/s, 1M req levaria ~1h46min; com a tarifa medida de US$ 0,0247/h, o compute ficaria em **≈ US$ 0,044**, sem contar ACR, rede e Storage. |
 
 Os dois testes rodaram de verdade, back-to-back, contra os recursos vivos
 desta sessão (`hey -n 1000 -c 50`). Curioso: **o `hey` foi o primeiro tráfego

@@ -19,9 +19,10 @@ resource "azurerm_user_assigned_identity" "aci_id" {
 # Permissão para a UAI do ACI ler blobs do Storage do catálogo
 # (já podemos conceder antes do ACI existir — a role pertence à identidade, não ao ACI)
 resource "azurerm_role_assignment" "aci_blob_reader" {
-  scope                = azurerm_storage_account.catalogo.id
-  role_definition_name = "Storage Blob Data Reader"
-  principal_id         = azurerm_user_assigned_identity.aci_id.principal_id
+  scope                            = azurerm_storage_account.catalogo.id
+  role_definition_name             = "Storage Blob Data Reader"
+  principal_id                     = azurerm_user_assigned_identity.aci_id.principal_id
+  skip_service_principal_aad_check = true
 }
 
 locals {

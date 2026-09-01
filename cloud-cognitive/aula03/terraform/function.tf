@@ -37,7 +37,8 @@ resource "azurerm_function_app_flex_consumption" "fn" {
 # É o que permite a versão v2-full (e o frete, que não toca storage) operar sem
 # credenciais no código.
 resource "azurerm_role_assignment" "fn_blob_reader" {
-  scope                = azurerm_storage_account.catalogo.id
-  role_definition_name = "Storage Blob Data Reader"
-  principal_id         = azurerm_function_app_flex_consumption.fn.identity[0].principal_id
+  scope                            = azurerm_storage_account.catalogo.id
+  role_definition_name             = "Storage Blob Data Reader"
+  principal_id                     = azurerm_function_app_flex_consumption.fn.identity[0].principal_id
+  skip_service_principal_aad_check = true
 }

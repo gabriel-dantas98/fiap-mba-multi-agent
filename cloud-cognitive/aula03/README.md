@@ -7,7 +7,8 @@ aula03/
 ├── entrega-grupo-aula03.md
 ├── README.md
 ├── diagramas/
-│   └── arquitetura-qc-aula03.mmd
+│   ├── arquitetura-qc-aula03.mmd
+│   └── arquitetura-qc-aula03.png
 ├── terraform/
 │   ├── main.tf           # RG, Service Plan (FC1)
 │   ├── storage.tf         # Storage da Function + Storage do catálogo (produtos.csv)
@@ -24,6 +25,10 @@ aula03/
 ├── docker/                 # Código de referência do container (a imagem em si
 │                            # vem pronta do GHCR do professor, via az acr import)
 └── evidencias/
+    ├── provisionamento.md
+    ├── app-insights.md
+    ├── aci-hardening.md
+    └── benchmark.md
 ```
 
 ## Pré-requisitos
@@ -92,6 +97,50 @@ curl -s "$HOSTNAME/api/health"
 curl -s "$HOSTNAME/api/produtos?categoria=moveis"
 curl -s "$HOSTNAME/api/frete?cep_origem=01310930&cep_destino=20040020&peso=2.5"
 ```
+
+Os endpoints usam `AuthLevel.ANONYMOUS` apenas para o lab. Fora desse
+contexto, colocaríamos APIM/autenticação na frente da Function.
+
+## Configuração do CI/CD com OIDC
+
+O workflow usa o GitHub Environment `production`, então a credencial federada
+precisa usar o subject desse environment:
+
+```bash
+RG=$(terraform output -raw resource_group_name)
+FUNC_NAME=$(terraform output -raw function_app_name)
+RG_ID=$(az group show --name "$RG" --query id --output tsv)
+
+CLIENT_ID=$(az ad app create \
+  --display-name "github-fiap-aula03" \
+  --query appId --output tsv)
+APP_OBJECT_ID=$(az ad app show --id "$CLIENT_ID" --query id --output tsv)
+SP_OBJECT_ID=$(az ad sp create --id "$CLIENT_ID" --query id --output tsv)
+
+az role assignment create \
+  --assignee-object-id "$SP_OBJECT_ID" \
+  --assignee-principal-type ServicePrincipal \
+  --role "Website Contributor" \
+  --scope "$RG_ID"
+
+cat >/tmp/github-oidc.json <<'JSON'
+{
+  "name": "github-production",
+  "issuer": "https://token.actions.githubusercontent.com",
+  "subject": "repo:gabriel-dantas98/fiap-mba-multi-agent:environment:production",
+  "audiences": ["api://AzureADTokenExchange"]
+}
+JSON
+
+az ad app federated-credential create \
+  --id "$APP_OBJECT_ID" \
+  --parameters @/tmp/github-oidc.json
+```
+
+Depois, cadastrar no GitHub Environment `production`:
+`AZURE_CLIENT_ID=$CLIENT_ID`, `AZURE_TENANT_ID`, `AZURE_SUBSCRIPTION_ID`,
+`AZURE_FUNCTIONAPP_NAME=$FUNC_NAME` e `AZURE_RESOURCE_GROUP=$RG`. Nenhum
+`AZURE_CLIENT_SECRET` é necessário.
 
 ## Container — import do GHCR + Phase 2 (ACI)
 

@@ -39,6 +39,7 @@ flowchart TB
     Fn -.-> StFunc
 
     ACI -->|Storage Blob Data Reader<br/>via Managed Identity| StCat
+    ACISized -.->|mesma Managed Identity| StCat
     ACI -->|pull via credencial<br/>admin do ACR no lab| ACR
     ACISized -.->|credencial admin| ACR
     ACIJob -.->|credencial admin| ACR

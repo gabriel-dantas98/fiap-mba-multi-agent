@@ -5,14 +5,9 @@ conectado à Function via `application_insights_connection_string`.
 
 ## Por que não tem print do portal
 
-A automação de browser usada nesta sessão (extensão Chrome MCP) não tinha
-permissão de site liberada para `portal.azure.com` — retornou
-`Permission denied for this action on this domain` ao tentar tirar
-screenshot. Não é uma limitação do Azure nem dos dados; é uma limitação da
-ferramenta de automação desta sessão específica, que exige liberação manual
-por domínio e não pode ser concedida programaticamente. Optamos por
-documentar via `az monitor app-insights query` (KQL real, contra o recurso
-provisionado de verdade) em vez de simular ou pular o exercício.
+Não conseguimos acessar o `portal.azure.com` a partir do ambiente usado na
+atividade, então o print obrigatório do Live Metrics não foi produzido. As
+consultas KQL abaixo são reais, mas não substituem esse item do enunciado.
 
 ## Tráfego preservado na consulta (66 requisições)
 
@@ -26,6 +21,19 @@ não aparecem no resultado preservado da tabela `requests`; por isso não entram
 na soma de 66.
 
 ## Query 1 — latência por endpoint
+
+Forma reproduzível da consulta preservada:
+
+```bash
+RG="rg-qc-aula03-grupo01-ro6i2l"
+APP_INSIGHTS="appi-qc-aula03-ro6i2l"
+
+az monitor app-insights query \
+  --resource-group "$RG" \
+  --app "$APP_INSIGHTS" \
+  --analytics-query "requests | summarize total=count(), p50=percentile(duration,50), p95=percentile(duration,95), p99=percentile(duration,99) by name" \
+  --offset 1h
+```
 
 ```kql
 requests

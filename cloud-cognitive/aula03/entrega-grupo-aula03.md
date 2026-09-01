@@ -86,7 +86,12 @@ Function usada: `func-qc-ro6i2l` (Flex Consumption, FC1, `eastus`), endpoint
 | 2 (tentativa quente, +5 s) | 02:15:18 | **2.746 s** | Praticamente igual à chamada 1 — não vimos o "salto" clássico de cold→warm. |
 | 3 (após ~20 min sem tráfego) | 12:13:20 | **3.006 s** | Igual às duas primeiras; o teste não informa se a plataforma reutilizou uma instância. |
 
-> **Achado real (não estava no roteiro, mas apareceu na medição):** isolamos
+> O roteiro pedia 30 minutos antes da terceira chamada. A medição preservada
+> esperou cerca de 20 minutos, então esse ponto não foi cumprido literalmente.
+> A saída bruta do terminal também não foi salva; a tabela registra os valores
+> anotados durante a execução, não uma evidência reproduzível.
+
+> Detalhe que apareceu nas medições: isolamos
 > `time_appconnect` (handshake TLS) de `time_starttransfer` (TTFB) chamando
 > `/api/health`, que **não toca o Storage**. Resultado: TLS ~0.40 s, TTFB ~2.4 s,
 > mesmo em chamadas consecutivas de 5 em 5 segundos. Isso descarta o Blob como
@@ -100,7 +105,7 @@ Com uma chamada por hora, planejaríamos as **24 como sujeitas a cold start**.
 O Flex Consumption pode escalar a zero e não documenta garantia de afinidade
 ou de retenção de instância quente por uma hora; por isso não dá para prometer
 quantas serão frias só olhando a frequência.
-Mitigação real, em ordem de custo crescente:
+Pra chegar perto de <500 ms, na prática:
 
 1. **`always_ready_instances` > 0** no Flex Consumption — mantém N instâncias
    sempre provisionadas, elimina cold start ao custo de pagar por elas mesmo
@@ -252,19 +257,17 @@ cria `azurerm_log_analytics_workspace` + `azurerm_application_insights`
 "classic" está em depreciação) e conecta na Function via
 `site_config.application_insights_connection_string` em
 [`function.tf`](terraform/function.tf). Aplicado de verdade — os recursos
-existiram no Azure, não é só código.
+existiram no Azure, não é só código. Depois da execução, a revisão adicionou
+limite de ingestão de 1 GB/dia para evitar custo acidental; essa mudança não
+foi reaplicada porque o Resource Group já tinha sido removido.
 
 **b) Live Metrics — limitação de ambiente documentada com transparência**
 
 Geramos tráfego real (66 requisições variadas: `/produtos`, `/frete`,
-`/health`, incluindo erros propositais) direto na Function via `curl`. **Não
-conseguimos anexar o print do portal**: a extensão de automação de browser
-usada nesta sessão não tinha permissão liberada para `portal.azure.com` (é
-um domínio que precisa de allow-list manual por site, e não temos como
-conceder isso programaticamente). Em vez de simular ou pular o exercício,
-extraímos dados históricos equivalentes para a análise, via KQL real contra
-o Application Insights provisionado (`az monitor app-insights query`). Isso
-não substitui a captura da experiência em tempo real do Live Metrics:
+`/health`, incluindo erros propositais) direto na Function via `curl`. Não
+rolou o print porque este ambiente não tinha acesso ao `portal.azure.com`.
+Em vez de pular a análise, extraímos os dados históricos com KQL real via
+`az monitor app-insights query`. Isso não substitui a captura do Live Metrics:
 
 ```kql
 requests
@@ -296,7 +299,7 @@ requests | summarize total=count() by resultCode | order by resultCode asc
 
 - **% de falha:** neste conjunto, `success == false` retornou 0 mesmo com cinco
   respostas `400` controladas pelo nosso código (parâmetro faltando no
-  `/frete`). **Achado interessante**: se você quer
+  `/frete`). Só que, se você quer
   medir taxa de erro por status HTTP (o que o negócio geralmente quer saber),
   o `success` padrão do App Insights **não é a métrica certa** — é preciso
   filtrar por `resultCode` explicitamente. Por status HTTP, a taxa de "erro
@@ -310,9 +313,8 @@ requests | summarize total=count() by resultCode | order by resultCode asc
   Functions sem instrumentação explícita (OpenTelemetry/OpenCensus). Ou
   seja: o download do CSV simplesmente **não aparece separado** nos dados.
   Não dá para atribuir o tempo extra a dispatch, cold start ou I/O só com
-  essa consulta. Isso por si só é uma lição de observabilidade: sem
-  instrumentar explicitamente as dependências, você pode culpar a camada
-  errada.
+  essa consulta. Sem instrumentar as dependências, a telemetria pode levar a
+  gente a culpar a camada errada.
 
 **d) Estratégia de logs/métricas/traces para sistema multi-agente**
 
@@ -328,8 +330,8 @@ um coletor comum. Pra um sistema multi-agente da QC isso importa porque:
   ilha de log correlacionada só por horário (o que já nos mordeu no
   Exercício 2.2c: não dava pra saber quanto do tempo era Blob sem
   instrumentar).
-- **Vendor-neutral de propósito** — QC pode trocar Azure Monitor por outro
-  backend sem reescrever toda instrumentação, só trocar o exporter do SDK.
+- Dá pra trocar Azure Monitor por outro backend sem reescrever toda a
+  instrumentação, só trocando o exporter do SDK.
 - **Semantic conventions para LLM/agentes** — a comunidade OTel já tem
   convenções emergentes para spans de chamada de modelo (tokens, custo,
   latência de LLM) que se encaixam melhor num sistema de agentes do que
@@ -505,7 +507,7 @@ agente — reaproveitada aqui, não repetida.)
 
 **d) Reflexão — manter a descrição sincronizada com o endpoint**
 
-A estratégia que a gente aplicaria, em camadas: (1) **OpenAPI/JSON Schema
+O que faríamos pra manter tool e endpoint alinhados: (1) **OpenAPI/JSON Schema
 como fonte única de verdade** — gerar o `input_schema` da tool a partir do
 mesmo schema Pydantic/OpenAPI que valida a API (se o endpoint mudar o schema,
 a tool spec muda junto, sem edição manual duplicada); (2) **contract testing**
@@ -535,7 +537,7 @@ Os dois testes rodaram de verdade, back-to-back, contra os recursos vivos
 desta sessão (`hey -n 1000 -c 50`). Curioso: **o `hey` foi o primeiro tráfego
 concorrente que a Function viu na sessão** — diferente do Exercício 1.3 (uma
 requisição isolada por vez). O histograma separou 946 respostas abaixo de
-0,61s de uma cauda de ~50 respostas entre 3s e 4,9s. Isso é compatível com
+0,61s de uma cauda de 48 respostas entre 3s e 4,9s. Isso é compatível com
 scale-out/cold start, mas o `hey` sozinho não identifica a causa; faltaram
 spans e métricas de instância para provar essa atribuição.
 
@@ -580,8 +582,8 @@ neste mesmo repositório (é o "repo privado do grupo" da disciplina):
 - `ruff check` — validamos localmente: **0 problemas** no código de produção
   (`cloud-cognitive/aula03/function/`).
 - `pytest` sobre [`function/tests/test_frete.py`](function/tests/test_frete.py)
-  — 12 casos da lógica de frete, incluindo CEP com exatamente oito dígitos e
-  rejeição de pesos não positivos, `NaN` e infinitos.
+  — 18 casos da lógica e do contrato HTTP, incluindo formato de CEP, resposta
+  JSON e rejeição de pesos não positivos, `NaN` e infinitos.
 - Job `publish` separado, condicionado a push direto em `main` e a um
   **environment `production`** do GitHub (permite exigir aprovação/segredos
   isolados) — usa **OIDC** (`azure/login@v2` com `id-token: write`, sem
@@ -601,51 +603,33 @@ localmente com os mesmos comandos que o workflow executa.
 
 ## Reflexão coletiva
 
-O achado mais forte desta aula não estava em nenhum item da lista de
-exercícios: o cold start "clássico" que o roteiro pressupõe (fria/quente/fria
-de novo com queda óbvia de tempo) não apareceu do jeito didático esperado no
-nosso ambiente — as três chamadas ficaram parecidas, e isolar `/health` (sem
-tocar Storage) mostrou que a demora também existia fora da leitura do Blob.
-Sem telemetria adicional, não dá para separar rede, front-end do serviço,
-host e worker. Isso é exatamente o tipo de coisa que
-só aparece medindo de verdade: o roteiro dizia "espere ver X", nós medimos e
-vimos Y, e o Y ensinou mais sobre observabilidade (Exercício 2.2c) do que o X
-teria ensinado.
+**1. O que aprendemos de mais importante?** O que mais chamou atenção foi o
+cold start não aparecer do jeito didático esperado. As três chamadas ficaram
+parecidas, e o `/health` mostrou que a demora também existia sem leitura do
+Blob. Sem mais telemetria, não dá para separar rede, front-end do serviço,
+host e worker. Medir de verdade foi mais útil do que forçar a conclusão que o
+roteiro sugeria.
 
-A mesma lição se repetiu no Application Insights: o campo `success` da
-telemetria de request não é "o request deu erro HTTP", é "a função lançou
-exceção não tratada" — dois conceitos que parecem a mesma coisa até você
-medir 5 respostas `400` de verdade e ver `success=true` em todas. Para um
-agente de produção que decide o que fazer com base em métricas, confiar no
-campo errado significa nunca perceber que 7,6% dos seus clientes estão
-recebendo erro de parâmetro. E a ausência total de telemetria de
-`dependencies` (o SDK do Blob não instrumenta sozinho) reforça por que
-OpenTelemetry explícito — e não só "ligar o App Insights e esperar" — é
-necessário pra um sistema com múltiplos agentes trocando chamadas entre si:
-sem instrumentação deliberada, a única coisa que você mede é o que o SDK
-decidiu medir por padrão, que pode não incluir a camada que está realmente
-lenta.
+O Application Insights reforçou isso: cinco respostas `400` controladas
+apareceram com `success=true`. Para medir erro HTTP, precisamos olhar
+`resultCode`, não confiar só no campo `success`. A tabela `dependencies`
+também veio vazia, então faltaram spans para separar o tempo gasto no Blob.
 
-Managed Identity continua sendo o ponto mais sólido da aula, e ficou mais
-claro ainda comparando os dois sabores: a Function usa **system-assigned**
-(uma identidade, resolução automática via IMDS) e o ACI usa **user-assigned**
-(identidade é recurso separado, precisa de `AZURE_CLIENT_ID` explícito).
-Essa diferença é o tipo de detalhe que só aparece ao depurar um
-`/health` verde com `/produtos` em 500 por confundir `client_id` com
-`principal_id`. E o `secure_environment_variables` do Exercício 2.3c mostrou
-na prática (não só na doc) que o valor deixa de aparecer nas propriedades do
-ACI. Isso não elimina a cópia no state do Terraform; quando o recurso aceita
-Managed Identity, evitar o segredo continua sendo melhor do que apenas
-ocultá-lo na API.
+**2. Como isso se conecta a uma plataforma agentic?** As tools
+`buscar_produtos_qc` e `calcular_frete_qc` precisam de contrato estável,
+latência previsível e observabilidade ponta a ponta. Um `trace_id` deve
+atravessar agente, Function e dependências. A descrição também precisa ensinar
+quando não chamar a tool; consultar catálogo para responder "cadê meu pedido"
+produziria uma resposta confiante e errada.
 
-Para a arquitetura de agentes da QC daqui pra frente (Aula 4+): as duas tools
-que subimos aqui (`buscar_produtos_qc`, `calcular_frete_qc`) só valem alguma
-coisa pro agente se a *descrição* delas ensinar quando (não) chamar — os 2
-casos de "não chamar" do Exercício 3.1c deixam isso concreto. Um agente que
-chama `buscar_produtos_qc` pra responder "cadê meu pedido" é pior que um
-agente sem tool nenhuma, porque devolve uma resposta confiante e errada.
-Achar esse limite é trabalho de design de prompt/tool spec, não de infra — e
-é exatamente onde a disciplina está nos levando na Aula 4.
+**3. O que faríamos diferente se começássemos hoje?** Configuraríamos
+OpenTelemetry e testes de contrato antes do primeiro benchmark, guardaríamos a
+saída bruta das medições e usaríamos `always_ready_instances` quando o p95
+precisasse ficar abaixo de 500 ms. Manteríamos Managed Identity como padrão:
+a Function usa identidade system-assigned e o ACI, user-assigned. Já
+`secure_environment_variables` só esconde o valor na API; o segredo ainda pode
+ficar no state do Terraform. Decidir quando chamar ou não a tool é design de
+prompt/spec — não Terraform.
 
 ## Referências
 

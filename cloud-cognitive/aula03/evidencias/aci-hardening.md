@@ -65,7 +65,7 @@ $ az container show -g rg-qc-aula03-grupo01-ro6i2l -n aci-qc-ro6i2l \
     --query "containers[0].environmentVariables" -o json
 [
   {"name": "STORAGE_ACCOUNT_CATALOGO", "secureValue": null, "value": "stcatqcro6i2l"},
-  {"name": "AZURE_CLIENT_ID",          "secureValue": null, "value": "75bdaf82-7df9-4fcf-9329-b6209b2e4c24"},
+  {"name": "AZURE_CLIENT_ID",          "secureValue": null, "value": "75bdaf82-..."},
   {"name": "APPINSIGHTS_CONNECTION_STRING", "secureValue": null, "value": null}
 ]
 ```

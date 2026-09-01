@@ -112,4 +112,8 @@ para o detalhamento completo do 2.3).
 
 ## Destroy final (regra de ouro — custo zero)
 
-Ver `evidencias/destroy.md`.
+O `terraform destroy` foi executado ao final da atividade, mas a saída do
+terminal e a consulta `az group exists` não foram preservadas neste
+repositório. Portanto, este pacote não contém evidência independente para
+auditar a remoção do Resource Group; contém apenas o procedimento reproduzível
+em [`../README.md`](../README.md).

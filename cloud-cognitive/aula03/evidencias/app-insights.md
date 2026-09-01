@@ -14,16 +14,16 @@ por domínio e não pode ser concedida programaticamente. Optamos por
 documentar via `az monitor app-insights query` (KQL real, contra o recurso
 provisionado de verdade) em vez de simular ou pular o exercício.
 
-## Tráfego gerado (66 requisições, mix real de sucesso e erro)
+## Tráfego preservado na consulta (66 requisições)
 
-- 44 requisições válidas a `/produtos` (categorias variadas, incluindo uma
-  categoria inexistente para gerar lista vazia sem erro)
-- 15 requisições válidas a `/frete`
+- 34 requisições válidas a `/produtos`
+- 25 requisições válidas a `/frete`
 - 5 requisições propositalmente malformadas a `/frete` (sem `peso`) → `400`
-- 3 requisições a rota inexistente `/api/naoexiste` → `404` (nem chegou a
-  gerar telemetria de `request`, pois o Function host responde antes de
-  invocar qualquer função)
 - 2 requisições a `/health`
+
+Também fizemos três chamadas a `/api/naoexiste` que retornaram `404`, mas elas
+não aparecem no resultado preservado da tabela `requests`; por isso não entram
+na soma de 66.
 
 ## Query 1 — latência por endpoint
 

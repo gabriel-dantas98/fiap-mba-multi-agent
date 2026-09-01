@@ -1,7 +1,7 @@
 # Exercício 2.2 — Application Insights e observabilidade.
 # A Function do lab veio SEM App Insights (desativado para custo). Aqui religamos:
-# workspace-based (padrão atual do Azure Monitor) + Application Insights clássico
-# conectado via connection string na Function.
+# workspace-based (padrão atual do Azure Monitor), conectado via connection
+# string na Function.
 resource "azurerm_log_analytics_workspace" "law" {
   name                = "law-qc-aula03-${random_string.sufixo.result}"
   resource_group_name = azurerm_resource_group.rg.name

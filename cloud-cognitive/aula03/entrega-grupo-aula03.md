@@ -57,18 +57,18 @@ Fonte Mermaid: [`diagramas/arquitetura-qc-aula03.mmd`](diagramas/arquitetura-qc-
 | Estratégia | Vulnerabilidade | Por quê |
 |------------|------------------|---------|
 | Connection string hardcoded no `function_app.py` | **Alta** | Vai para o Git em texto plano. Qualquer clone do repo (inclusive fork acidentalmente público) expõe a credencial pra sempre — trocar a senha não apaga do histórico do Git. |
-| Connection string em variável de ambiente do Function App | **Média** | Não vai pro Git, mas ainda é uma credencial de longa duração: quem tiver `Contributor`/`Reader` no App Service consegue ler em `az functionapp config appsettings list` ou no portal. Rotação é manual. |
-| Connection string em Key Vault, lida via API key do Vault | **Média** | Só troca "onde" o segredo mora — a API key do Vault vira o novo segredo que pode vazar. Reduz superfície (um lugar só pra proteger) mas não elimina credencial de longa duração. |
+| Connection string em variável de ambiente do Function App | **Média** | Não vai pro Git, mas ainda é uma credencial de longa duração. Quem tiver permissão para listar as configurações do App Service consegue recuperá-la; a role `Reader` sozinha não concede essa operação. Rotação continua manual. |
+| Connection string em Key Vault, acessada com segredo de Service Principal | **Média** | O Key Vault não usa uma "API key do cofre". Se a aplicação autenticar com `client_secret`, esse segredo estático vira a credencial que precisa ser guardada e rotacionada. O cofre centraliza a connection string, mas não elimina o segredo de bootstrap. |
 | Connection string em Key Vault, lida via Managed Identity | **Baixa** | A MI troca o token por acesso ao Vault sem nenhum segredo estático em lugar nenhum — token de curta duração emitido pelo Entra ID. Ainda existe uma connection string "de verdade" guardada em algum lugar, mas nada que precise ser copiado/colado por humano. |
-| Sem connection string — Managed Identity diretamente no recurso (Storage) | **Baixa** (a mais baixa) | É o que fizemos na Function v2 e no ACI desta aula: zero segredo em qualquer lugar, `DefaultAzureCredential` troca identidade por token via IMDS local. Só existe uma role assignment (`Storage Blob Data Reader`) — revogável instantaneamente sem rotacionar nada. |
+| Sem connection string — Managed Identity diretamente no recurso (Storage) | **Baixa** (a mais baixa) | É o que fizemos no acesso ao catálogo pela Function v2 e pelo ACI: nenhum segredo estático nesse caminho, e `DefaultAzureCredential` obtém um token curto via IMDS. A role assignment (`Storage Blob Data Reader`) pode ser revogada sem rotacionar chave. |
 
 **Pergunta adicional — vazamento no GitHub continua sendo problema?**
 
 Nas duas primeiras estratégias, sim, e grave: o segredo *é* a credencial de acesso,
 então vazar o código (ou só o histórico de commits) equivale a vazar a chave do
-cofre. Nas estratégias com Key Vault via API key, o vazamento do código sozinho
-não expõe o dado (falta a API key, que não está no repo) — mas se a API key também
-vazar (ex.: em outro commit, ou em log), o efeito é o mesmo das duas primeiras. Só
+cofre. Com Key Vault + segredo de Service Principal, o vazamento do código sozinho
+não expõe o dado se o `client_secret` estiver fora do repositório — mas, se ele
+também vazar em outro commit ou log, o problema reaparece. Só
 nas estratégias com Managed Identity o vazamento do *código* deixa de importar:
 não há segredo nenhum embutido pra vazar. O que ainda pode vazar é a *lista de quem
 tem acesso* (role assignments), mas isso não sai do código — é auditável e
@@ -82,42 +82,41 @@ Function usada: `func-qc-ro6i2l` (Flex Consumption, FC1, `eastus`), endpoint
 
 | Chamada | Horário (UTC) | Tempo decorrido (`time_total`) | Observação |
 |---------|----------------|-------------------------------|-------------|
-| 1 (fria, ~12 min sem tráfego HTTP antes) | 02:15:03 | **2.823 s** | TTFB (`time_starttransfer`) domina o tempo total. |
-| 2 (quente, +5 s) | 02:15:18 | **2.746 s** | Praticamente igual à chamada 1 — não vimos o "salto" clássico de cold→warm. |
-| 3 (fria de novo, idle real de ~20 min sem tráfego, medição ao vivo) | 12:13:20 | **3.006 s** | Igual às duas primeiras. Confirma o achado abaixo: não é ausência de warm-up pontual, é um patamar consistente. |
+| 1 (após ~12 min sem tráfego HTTP) | 02:15:03 | **2.823 s** | TTFB (`time_starttransfer`) domina o tempo total. |
+| 2 (tentativa quente, +5 s) | 02:15:18 | **2.746 s** | Praticamente igual à chamada 1 — não vimos o "salto" clássico de cold→warm. |
+| 3 (após ~20 min sem tráfego) | 12:13:20 | **3.006 s** | Igual às duas primeiras; o teste não informa se a plataforma reutilizou uma instância. |
 
 > **Achado real (não estava no roteiro, mas apareceu na medição):** isolamos
 > `time_appconnect` (handshake TLS) de `time_starttransfer` (TTFB) chamando
 > `/api/health`, que **não toca o Storage**. Resultado: TLS ~0.40 s, TTFB ~2.4 s,
-> mesmo em chamadas consecutivas de 5 em 5 segundos. Ou seja, o gargalo não é
-> "cold start clássico" (worker subindo do zero) nem é o download do blob — é
-> alguma camada de dispatch do Flex Consumption que não estabilizou como
-> "quente" na nossa janela de teste, possivelmente por `always_ready_instances`
-> não configurado (fica em 0 por padrão) e o SKU FC1 escalando instância nova a
-> cada gap de poucos segundos entre chamadas isoladas. Isso é justamente o tipo
-> de comportamento que uma UX de <500ms **não pode tolerar sem mitigação**.
+> mesmo em chamadas consecutivas de 5 em 5 segundos. Isso descarta o Blob como
+> causa necessária, mas não separa rede, front-end do serviço, host e cold
+> start. A medição prova um patamar incompatível com UX de <500 ms; atribuir a
+> causa exigiria métricas de instância ou tracing adicional.
 
 **Pergunta — 24 chamadas/hora, quantas seriam "frias"? Como mitigar para <500ms?**
 
-Com uma chamada por hora, **todas as 24 seriam frias** — não existe intervalo
-curto o bastante pra manter uma instância viva entre execuções tão espaçadas
-(o timeout de idle do Flex Consumption é da ordem de minutos, não de uma hora).
+Com uma chamada por hora, planejaríamos as **24 como sujeitas a cold start**.
+O Flex Consumption pode escalar a zero e não documenta garantia de afinidade
+ou de retenção de instância quente por uma hora; por isso não dá para prometer
+quantas serão frias só olhando a frequência.
 Mitigação real, em ordem de custo crescente:
 
 1. **`always_ready_instances` > 0** no Flex Consumption — mantém N instâncias
    sempre provisionadas, elimina cold start ao custo de pagar por elas mesmo
    ociosas (deixa de ser "serverless puro", vira meio-caminho pro Container Apps).
-2. **Timer trigger de keep-alive** — uma segunda Function com `TimerTrigger` a
-   cada 5-10 min batendo no `/health` só pra manter o worker quente. Gambiarra
-   conhecida, mas funciona e é bem mais barata que `always_ready_instances`.
-3. **Migrar para Container Apps ou o próprio ACI** para esse endpoint
-   específico — sem cold start por definição, mas perde o "paga só quando usa".
+2. **Container Apps com `minReplicas >= 1` ou ACI sempre ligado** — mantém
+   capacidade quente, com cobrança durante o tempo ocioso. Container Apps com
+   `minReplicas = 0` também pode ter cold start.
+3. **Keep-alive por timer** — pode reduzir a incidência, mas não oferece
+   garantia de reutilizar a mesma instância e gera tráfego artificial; não deve
+   ser tratado como solução de SLA.
 4. **Aceitar o cold start e mudar a UX** — spinner/loading otimista no primeiro
    request da sessão, cache client-side da última resposta.
 
-Para a QC, com volume baixo (24/dia) mas SLA de UX rígido, a opção 2 (timer de
-keep-alive) é o melhor custo-benefício: mantém o modelo serverless e o custo
-baixo, só "engana" o scale-to-zero.
+Para a QC, com volume baixo (24/dia) e SLA rígido de UX, usaríamos
+`always_ready_instances = 1` e validaríamos o p95. É a opção do próprio plano
+com garantia operacional clara; o timer ficaria apenas como experimento.
 
 ### Exercício 1.4 — Dockerfile review
 
@@ -144,13 +143,14 @@ CMD ["python", "app.py"]
 3. **`pip install` sem `--no-cache-dir`.** O cache do pip fica dentro da
    camada da imagem — infla o tamanho final sem nenhum benefício em build
    (a imagem não vai rodar `pip install` de novo).
-4. **Sem multi-stage build.** Mesmo com `-slim`, ferramentas de build usadas
-   só durante `pip install` (compiladores para pacotes com extensão C) ficam
-   na imagem final. Nosso `docker/Dockerfile` separa `builder` (instala com
-   `--target=/install`) da imagem final (só copia o resultado).
+4. **Sem multi-stage build.** Mesmo com `-slim`, dependências e artefatos
+   temporários de instalação podem ficar na imagem final. Nosso
+   `docker/Dockerfile` separa `builder` (instala com `--target=/install`) da
+   imagem final (só copia o resultado).
 5. **Roda como root.** Sem `USER appuser`, um RCE na aplicação já nasce com
    privilégio de root dentro do container — que em ACI ainda não é isolamento
-   de VM completo. `USER` não-root é a defesa mais barata que existe.
+   de VM completo. Nosso Dockerfile cria um usuário sem privilégio e troca para
+   ele antes de iniciar o servidor.
 6. **`CMD ["python", "app.py"]` para servir HTTP.** Um script Python chamado
    direto não é um servidor de produção (sem worker pool, sem graceful
    shutdown, sem HTTP/1.1 keep-alive decente). Deveria invocar
@@ -221,11 +221,12 @@ Application Insights (`insights.tf`) e as 3 variantes de ACI (`containers.tf`).
   "input_schema": {
     "type": "object",
     "properties": {
-      "cep_origem": {"type": "string", "description": "CEP de origem do envio (ex: centro de distribuição da QC), formato 00000-000 ou 8 dígitos"},
-      "cep_destino": {"type": "string", "description": "CEP de destino informado pelo cliente"},
-      "peso_kg": {"type": "number", "description": "Peso total do pedido em quilos (soma dos itens do carrinho)"}
+      "cep_origem": {"type": "string", "pattern": "^\\d{5}-?\\d{3}$", "description": "CEP de origem do envio (ex: centro de distribuição da QC), formato 00000-000 ou 8 dígitos"},
+      "cep_destino": {"type": "string", "pattern": "^\\d{5}-?\\d{3}$", "description": "CEP de destino informado pelo cliente"},
+      "peso": {"type": "number", "exclusiveMinimum": 0, "description": "Peso total do pedido em quilos (soma dos itens do carrinho)"}
     },
-    "required": ["cep_origem", "cep_destino", "peso_kg"]
+    "required": ["cep_origem", "cep_destino", "peso"],
+    "additionalProperties": false
   }
 }
 ```
@@ -261,8 +262,9 @@ conseguimos anexar o print do portal**: a extensão de automação de browser
 usada nesta sessão não tinha permissão liberada para `portal.azure.com` (é
 um domínio que precisa de allow-list manual por site, e não temos como
 conceder isso programaticamente). Em vez de simular ou pular o exercício,
-extraímos os **mesmos dados que o Live Metrics mostraria**, via KQL real
-contra o Application Insights provisionado (`az monitor app-insights query`):
+extraímos dados históricos equivalentes para a análise, via KQL real contra
+o Application Insights provisionado (`az monitor app-insights query`). Isso
+não substitui a captura da experiência em tempo real do Live Metrics:
 
 ```kql
 requests
@@ -277,11 +279,9 @@ requests
 | `frete` | 30 | 687.3 | 1203.0 | 1330.9 |
 | `health` | 2 | 12.3 | 15.6 | 15.6 |
 
-> Quem quiser o print do portal: os recursos ficaram provisionados durante a
-> sessão (`appi-qc-aula03-ro6i2l`) — Live Metrics e o Failures blade mostram
-> exatamente os números acima em tempo real. Destruímos tudo ao final (regra
-> de custo zero), então o print teria que ser tirado durante a janela de
-> execução; documentamos aqui a limitação de tooling, não do Azure.
+> Os recursos foram destruídos ao final da sessão (regra de custo zero), então
+> não é possível reconstruir agora a captura do Live Metrics. Os resultados
+> abaixo são a evidência preservada das consultas KQL.
 
 **c) Failures blade — respostas via KQL**
 
@@ -294,28 +294,25 @@ requests | summarize total=count() by resultCode | order by resultCode asc
 | 200 | 61 |
 | 400 | 5 |
 
-- **% de falha:** 0% na métrica `success` do Application Insights (que mede
-  *exceção não tratada*, não status HTTP) — os 5 retornos `400` foram
-  respostas válidas do nosso próprio código (parâmetro faltando no `/frete`),
-  então a Function nunca "quebrou". **Achado interessante**: se você quer
+- **% de falha:** neste conjunto, `success == false` retornou 0 mesmo com cinco
+  respostas `400` controladas pelo nosso código (parâmetro faltando no
+  `/frete`). **Achado interessante**: se você quer
   medir taxa de erro por status HTTP (o que o negócio geralmente quer saber),
   o `success` padrão do App Insights **não é a métrica certa** — é preciso
   filtrar por `resultCode` explicitamente. Por status HTTP, a taxa de "erro
   de cliente" foi 5/66 ≈ 7,6%.
 - **p95 de latência:** ~1,55s no `/produtos`, ~1,20s no `/frete` (tabela
-  acima). Mais alto do que os poucos ms que a lógica de negócio de fato
-  consome (o log da própria Function reporta `FunctionExecutionTimeMs` de
-  10-20ms) — o "gargalo" não está no código, está em outra camada.
+  acima). Sem spans da dependência de Storage, esses números não permitem
+  separar tempo de host, execução Python e I/O do Blob.
 - **Onde está o gargalo:** rodamos `dependencies | summarize ... by type,
   target` e **veio vazio** — o SDK do Blob Storage (`azure-storage-blob`)
   não gera telemetria de `dependency` automaticamente no worker Python de
   Functions sem instrumentação explícita (OpenTelemetry/OpenCensus). Ou
-  seja: não é o download do CSV que aparece como lento nos dados — porque
-  ele simplesmente **não é medido** por padrão. O tempo "extra" que vemos no
-  `duration` da requisição (centenas de ms a >1s) provavelmente é dispatch/
-  cold start do Flex Consumption (mesmo achado do Exercício 1.3), não I/O de
-  aplicação. Isso por si só é uma lição de observabilidade: sem instrumentar
-  explicitamente as dependências, você pode culpar o código errado.
+  seja: o download do CSV simplesmente **não aparece separado** nos dados.
+  Não dá para atribuir o tempo extra a dispatch, cold start ou I/O só com
+  essa consulta. Isso por si só é uma lição de observabilidade: sem
+  instrumentar explicitamente as dependências, você pode culpar a camada
+  errada.
 
 **d) Estratégia de logs/métricas/traces para sistema multi-agente**
 
@@ -378,7 +375,7 @@ Consumption`, 27/08/2026): `Standard vCPU Duration` = US$ 0,0405/vCPU-hora,
 |----------|---------|-----------|-------------------|
 | A (lab/padrão) | 0.5 / 1.0 | US$ 0,0247 | **≈ US$ 18,03/mês** |
 | B (right-sized) | 1 / 2 | US$ 0,0494 | **≈ US$ 36,06/mês** |
-| Function equivalente | — | US$ 0,20/1M exec + US$ 0,000016/GB-s | **US$ 0 quando ocioso** (escala a zero) |
+| Function equivalente | 2 GB, FC1 on-demand | Cobra execuções + tempo ativo em GB-s, com mínimo faturável de 1 s | Compute pode escalar a zero; Storage e observabilidade continuam cobrando |
 
 Um único ACI 24/7 já custa mais que a Function em qualquer cenário de tráfego
 baixo/médio — a Function só perde pra ACI quando o volume de execuções é alto
@@ -405,9 +402,10 @@ inspecionar com `az container show`:
 
 As duas primeiras aparecem em texto plano; a `secure_environment_variable`
 some completamente do output da CLI (`value: null`, `secureValue: null` —
-nem retorna mascarado, simplesmente não retorna) e some igual no portal. É
-literalmente a diferença entre "qualquer um com `Reader` no RG lê" e
-"ninguém lê depois que o container foi criado, nem quem provisionou".
+nem retorna mascarado, simplesmente não retorna) e some igual no portal. Isso
+protege a leitura pelas propriedades do ACI, mas **não torna o valor invisível
+ao Terraform**: o state pode conter segredos em texto plano e precisa ficar em
+backend protegido, com acesso restrito e sem commit no Git.
 
 **d) Limite de réplica única**
 
@@ -416,8 +414,9 @@ group (isso é feature de Container Apps/AKS, não de ACI). Num pico de Black
 Friday, a QC ficaria travada na capacidade de 1 container: acima disso é fila
 crescendo/timeout, sem nenhum mecanismo automático de absorver a carga (a não
 ser aumentar CPU/memória do container manualmente, o que não é elástico em
-tempo real). Para esse cenário levaríamos **Function** (autoscale 0-200
-nativo, sem operação manual) para tráfego HTTP tipicamente elástico, ou
+tempo real). Para esse cenário levaríamos **Function** (autoscale de 0 até
+as 40 instâncias configuradas neste Terraform, sem operação manual) para
+tráfego HTTP tipicamente elástico, ou
 **Container Apps** se o requisito for "mesma imagem Docker do ACI, mas
 elástico" — troca o mínimo de código, ganha KEDA/HTTP scale-out. AKS só
 entraria se já existisse cluster compartilhado com outros serviços da QC.
@@ -530,24 +529,23 @@ sessão.
 | p99 | 3,875 s | 0,775 s |
 | Throughput | 129,2 req/s | 157,6 req/s |
 | Taxa de erro | 0% (1000/1000 OK) | 0% (1000/1000 OK) |
-| Custo aprox./1M req | US$ 0,20 (exec) + ≈ US$ 0,64 (GB-s, ~20ms×2GB/exec) ≈ **US$ 0,84** | ACI não cobra por requisição — cobra pelo tempo ligado. A 157,6 req/s, processar 1M req leva ~1h46min: **≈ US$ 0,044** de CPU/mem *adicional* (só faz sentido comparar assim se o ACI já estivesse ligado por outro motivo — sozinho, 1M req força o ACI a ficar ligado ~1h46min, custando US$ 0,044 só de compute, MUITO mais barato que a Function nesse volume concentrado). |
+| Custo aprox./1M req | O `hey` não mede unidades faturadas. FC1 cobra execuções e tempo ativo das instâncias em GB-s, com mínimo faturável de 1 s; seria preciso consultar os billing meters para calcular sem inventar. | ACI cobra pelo tempo ligado. A 157,6 req/s, 1M req levaria ~1h46min; com a tarifa medida de US$ 0,0247/h, o compute ficaria em **≈ US$ 0,044**, sem contar ACR, rede e Storage. |
 
 Os dois testes rodaram de verdade, back-to-back, contra os recursos vivos
 desta sessão (`hey -n 1000 -c 50`). Curioso: **o `hey` foi o primeiro tráfego
 concorrente que a Function viu na sessão** — diferente do Exercício 1.3 (uma
-requisição isolada por vez), aqui o autoscale do Flex Consumption teve motivo
-real pra subir instância nova, e o histograma mostra exatamente essa divisão:
-946 das 1000 respostas ficaram abaixo de 0,61s (instâncias já ativas
-absorvendo a rajada), e uma cauda de ~50 respostas entre 3s e 4,9s — quase
-certamente as primeiras requisições atendidas por instâncias novas subindo.
+requisição isolada por vez). O histograma separou 946 respostas abaixo de
+0,61s de uma cauda de ~50 respostas entre 3s e 4,9s. Isso é compatível com
+scale-out/cold start, mas o `hey` sozinho não identifica a causa; faltaram
+spans e métricas de instância para provar essa atribuição.
 
 **a) Quem aguentou melhor a carga?**
 
 Depende da métrica: no **p50 a Function venceu** (0,144s vs 0,243s do ACI) —
-uma vez com instâncias suficientes de pé, o runtime da Function é mais rápido
-nesse endpoint simples. Mas no **p95/p99 o ACI venceu com folga** (0,65s/0,78s
-vs 2,95s/3,88s da Function) porque não tem cauda de cold start — é sempre a
-mesma réplica já quente. Pra throughput agregado os dois ficaram parecidos
+o caminho da Function respondeu mais rápido no caso mediano deste teste. Mas
+no **p95/p99 o ACI venceu com folga** (0,65s/0,78s vs 2,95s/3,88s da
+Function); sua réplica permaneceu ativa durante o teste e não apresentou a
+mesma cauda. Pra throughput agregado os dois ficaram parecidos
 (129 vs 158 req/s) com o ACI um pouco à frente. Resumindo: Function é mais
 rápida "no caso comum" sob carga, mas com uma cauda de latência pior; ACI é
 mais previsível (menor variância), o que costuma pesar mais numa SLA de
@@ -564,8 +562,8 @@ pagando pra manter 1 réplica ligada, processar mais requisições nela é
 **c) Como arquitetar a API da QC para 10x tráfego de Black Friday?**
 
 Não escalaria nenhuma das duas sozinha até o limite: (1) **Function com
-`always_ready_instances`** configurado antes do evento (elimina cold start
-sob rajada, é a causa raiz do gap medido acima); (2) **Front Door/CDN** na
+`always_ready_instances`** configurado antes do evento (reduz cold start sob
+rajada, uma hipótese para o gap medido acima); (2) **Front Door/CDN** na
 frente pra cachear `/produtos` (catálogo muda pouco durante o evento, cache
 de alguns segundos já corta a maior parte do tráfego repetido); (3) se o
 padrão de tráfego for **sustentado e alto por horas** (não só picos de
@@ -582,20 +580,20 @@ neste mesmo repositório (é o "repo privado do grupo" da disciplina):
 - `ruff check` — validamos localmente: **0 problemas** no código de produção
   (`cloud-cognitive/aula03/function/`).
 - `pytest` sobre [`function/tests/test_frete.py`](function/tests/test_frete.py)
-  — 4 testes unitários da lógica de frete (piso mínimo, cresce com peso,
-  cresce com distância, CEP inválido levanta erro). Rodamos localmente: **4
-  passed**.
+  — 12 casos da lógica de frete, incluindo CEP com exatamente oito dígitos e
+  rejeição de pesos não positivos, `NaN` e infinitos.
 - Job `publish` separado, condicionado a push direto em `main` e a um
   **environment `production`** do GitHub (permite exigir aprovação/segredos
   isolados) — usa **OIDC** (`azure/login@v2` com `id-token: write`, sem
-  `AZURE_CLIENT_SECRET` salvo no repo) e faz **slot deployment**: publica em
-  slot `staging`, roda smoke test no `/health` do staging, só então faz
-  `az functionapp deployment slot swap` pra produção.
+  `AZURE_CLIENT_SECRET` salvo no repo). Como Flex Consumption **não suporta
+  deployment slots**, o pipeline configura `RollingUpdate`, publica e roda
+  smoke test no `/health`. O deploy usa `remote-build: true` para o Oryx
+  instalar as dependências Python no pacote FC1. Essa é a estratégia de
+  atualização gradual indicada para Flex Consumption.
 
 Não rodamos esse workflow de ponta a ponta em produção real (exigiria criar
-a federated credential do Service Principal apontando pra este repo, e um
-slot de staging pago a mais na Function App — fora do escopo de "criar
-recursos reais" desta entrega, já que o RG inteiro foi destruído ao final).
+a federated credential do Service Principal apontando pra este repo e manter
+a Function App disponível para o deploy — fora do escopo depois do destroy).
 O `lint-and-test` job, porém, **roda de verdade** em qualquer push — validado
 localmente com os mesmos comandos que o workflow executa.
 
@@ -607,8 +605,9 @@ O achado mais forte desta aula não estava em nenhum item da lista de
 exercícios: o cold start "clássico" que o roteiro pressupõe (fria/quente/fria
 de novo com queda óbvia de tempo) não apareceu do jeito didático esperado no
 nosso ambiente — as três chamadas ficaram parecidas, e isolar `/health` (sem
-tocar Storage) mostrou que o gargalo real estava em outra camada do Flex
-Consumption, não no código nem no Blob. Isso é exatamente o tipo de coisa que
+tocar Storage) mostrou que a demora também existia fora da leitura do Blob.
+Sem telemetria adicional, não dá para separar rede, front-end do serviço,
+host e worker. Isso é exatamente o tipo de coisa que
 só aparece medindo de verdade: o roteiro dizia "espere ver X", nós medimos e
 vimos Y, e o Y ensinou mais sobre observabilidade (Exercício 2.2c) do que o X
 teria ensinado.
@@ -630,14 +629,14 @@ lenta.
 Managed Identity continua sendo o ponto mais sólido da aula, e ficou mais
 claro ainda comparando os dois sabores: a Function usa **system-assigned**
 (uma identidade, resolução automática via IMDS) e o ACI usa **user-assigned**
-(identidade é recurso separado, precisa de `AZURE_CLIENT_ID` explícito) —
-[[fn-vs-aci-identity]] é o tipo de detalhe que só morde quem nunca debugou um
+(identidade é recurso separado, precisa de `AZURE_CLIENT_ID` explícito).
+Essa diferença é o tipo de detalhe que só aparece ao depurar um
 `/health` verde com `/produtos` em 500 por confundir `client_id` com
 `principal_id`. E o `secure_environment_variables` do Exercício 2.3c mostrou
-na prática (não só na doc) a diferença entre "ninguém vê no portal" e
-"realmente não existe token nenhum pra vazar" — o segundo é sempre melhor
-quando disponível, e a QC deveria adotar isso como padrão em todo recurso
-que tiver alternativa de Managed Identity.
+na prática (não só na doc) que o valor deixa de aparecer nas propriedades do
+ACI. Isso não elimina a cópia no state do Terraform; quando o recurso aceita
+Managed Identity, evitar o segredo continua sendo melhor do que apenas
+ocultá-lo na API.
 
 Para a arquitetura de agentes da QC daqui pra frente (Aula 4+): as duas tools
 que subimos aqui (`buscar_produtos_qc`, `calcular_frete_qc`) só valem alguma
@@ -651,9 +650,12 @@ Achar esse limite é trabalho de design de prompt/tool spec, não de infra — e
 ## Referências
 
 - Microsoft — [Flex Consumption plan](https://learn.microsoft.com/azure/azure-functions/flex-consumption-plan)
+- Microsoft — [Deployment slots](https://learn.microsoft.com/azure/azure-functions/functions-deployment-slots)
+- Microsoft — [Custos do Flex Consumption](https://learn.microsoft.com/azure/azure-functions/functions-consumption-costs)
 - Microsoft — [Container Apps vs ACI vs Functions](https://learn.microsoft.com/azure/container-apps/compare-options)
 - Microsoft — [Managed Identity overview](https://learn.microsoft.com/entra/identity/managed-identities-azure-resources/overview)
 - Microsoft — [Azure Container Instances — restart policies](https://learn.microsoft.com/azure/container-instances/container-instances-restart-policy)
+- Microsoft — [Proteção do state do Terraform](https://learn.microsoft.com/azure/developer/terraform/get-started/store-state-in-azure-storage)
 - Microsoft — [Application Insights — data model](https://learn.microsoft.com/azure/azure-monitor/app/data-model-complete)
 - OpenTelemetry — [Observability primer](https://opentelemetry.io/docs/concepts/observability-primer/)
 - Azure Retail Prices API — [docs](https://learn.microsoft.com/en-us/rest/api/cost-management/retail-prices/azure-retail-prices) (consultada ao vivo em 27/08/2026 para os preços do Exercício 2.3b)

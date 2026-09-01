@@ -14,7 +14,6 @@ on:
       - "cloud-cognitive/aula03/function/**"
 
 permissions:
-  id-token: write # obrigatório para o login OIDC (az login --federated-token)
   contents: read
 
 env:
@@ -24,15 +23,15 @@ jobs:
   lint-and-test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.12"
 
       - name: Instalar dependências
         run: |
-          pip install ruff pytest
+          pip install ruff pytest pytest-asyncio
           pip install -r "$FUNCTION_CODE_PATH/requirements.txt"
 
       - name: Lint (ruff)
@@ -46,8 +45,11 @@ jobs:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     environment: production # exige aprovação/segredos só neste ambiente
+    permissions:
+      id-token: write # obrigatório para o login OIDC (az login --federated-token)
+      contents: read
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       # OIDC — sem AZURE_CLIENT_SECRET no repo. O Service Principal do Azure
       # precisa de uma "federated credential" apontando para este repo+branch.
@@ -58,24 +60,24 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-      # Bônus — desce num slot de staging antes de trocar para produção,
-      # em vez de publicar direto no slot de produção.
-      - name: Deploy no slot de staging
+      # Flex Consumption não suporta deployment slots. RollingUpdate substitui
+      # instâncias em lotes e preserva execuções em andamento.
+      - name: Configurar atualização gradual
+        run: |
+          az functionapp update-strategy config set \
+            --resource-group "${{ secrets.AZURE_RESOURCE_GROUP }}" \
+            --name "${{ secrets.AZURE_FUNCTIONAPP_NAME }}" \
+            --type RollingUpdate
+
+      - name: Deploy com RollingUpdate
         uses: Azure/functions-action@v1
         with:
           app-name: ${{ secrets.AZURE_FUNCTIONAPP_NAME }}
-          slot-name: staging
           package: ${{ env.FUNCTION_CODE_PATH }}
+          remote-build: true
 
-      - name: Smoke test no slot de staging
+      - name: Smoke test
         run: |
-          STAGING_URL="https://${{ secrets.AZURE_FUNCTIONAPP_NAME }}-staging.azurewebsites.net"
-          curl --fail --silent --show-error "$STAGING_URL/api/health"
-
-      - name: Swap staging -> produção
-        run: |
-          az functionapp deployment slot swap \
-            --resource-group "${{ secrets.AZURE_RESOURCE_GROUP }}" \
-            --name "${{ secrets.AZURE_FUNCTIONAPP_NAME }}" \
-            --slot staging \
-            --target-slot production
+          FUNCTION_URL="https://${{ secrets.AZURE_FUNCTIONAPP_NAME }}.azurewebsites.net"
+          curl --fail --retry 5 --retry-all-errors --retry-delay 10 \
+            --silent --show-error "$FUNCTION_URL/api/health"

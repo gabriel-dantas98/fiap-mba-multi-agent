@@ -1,10 +1,11 @@
 """
-Versão FastAPI da API de produtos QC — mesmo comportamento da Function v2-blob.
+Versão FastAPI da API de produtos QC — mesmo comportamento da Function v2-full.
 
 Empacotada num container Docker para rodar no Azure Container Instances (ACI),
 autenticando no Blob via Managed Identity user-assigned do ACI.
 """
 import csv
+import logging
 import os
 
 from azure.identity import DefaultAzureCredential
@@ -50,7 +51,8 @@ def listar_produtos(categoria: str | None = None, nome: str | None = None):
     try:
         produtos = carregar_produtos()
     except Exception as e:
-        raise HTTPException(500, detail=f"falha ao acessar storage: {e!s}")
+        logging.exception("Falha ao carregar produtos do Blob")
+        raise HTTPException(500, detail="falha ao acessar storage") from e
 
     cat = (categoria or "").lower().strip()
     nm  = (nome or "").lower().strip()

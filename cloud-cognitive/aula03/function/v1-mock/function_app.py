@@ -2,7 +2,8 @@
 Function HTTP da Quantum Commerce — versão L₁ (mock data).
 Sem dependências externas, sem credenciais. Bom para validar que o deploy funciona.
 
-No L₂ vamos plugar no Blob do catálogo (criado nesta aula) via Managed Identity (versão em ../v2-blob/).
+No L₂ vamos plugar no Blob do catálogo (criado nesta aula) via Managed Identity
+(versão em ../v2-full/).
 """
 import json
 import logging
@@ -11,7 +12,7 @@ import azure.functions as func
 
 app = func.FunctionApp(http_auth_level=func.AuthLevel.ANONYMOUS)
 
-# Mock inicial — depois substituído pelo Blob na v2-blob/
+# Mock inicial — depois substituído pelo Blob na v2-full/
 PRODUTOS_MOCK = [
     {"id": 1, "nome": "Cadeira Ergonômica DXRacer", "categoria": "moveis",          "preco": 1499.90},
     {"id": 2, "nome": "Notebook Dell Inspiron 15",  "categoria": "eletronicos",     "preco": 4299.00},

@@ -34,7 +34,7 @@ resource "azurerm_function_app_flex_consumption" "fn" {
 }
 
 # Permissão para a Managed Identity da Function ler blobs do Storage do catálogo.
-# É o que permite a versão v2-blob (e o frete, que não toca storage) operar sem
+# É o que permite a versão v2-full (e o frete, que não toca storage) operar sem
 # credenciais no código.
 resource "azurerm_role_assignment" "fn_blob_reader" {
   scope                = azurerm_storage_account.catalogo.id

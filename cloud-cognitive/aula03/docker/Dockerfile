@@ -9,8 +9,11 @@ RUN pip install --no-cache-dir --target=/install -r requirements.txt
 FROM python:3.11-slim
 
 WORKDIR /app
+RUN useradd --create-home --uid 10001 appuser
 COPY --from=builder /install /usr/local/lib/python3.11/site-packages
 COPY app.py .
+
+USER appuser
 
 EXPOSE 8080
 

@@ -10,6 +10,8 @@ import os
 import sys
 from pathlib import Path
 
+import pytest
+
 os.environ.setdefault("STORAGE_ACCOUNT_CATALOGO", "fakestorageaccount")
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "v2-full"))
 
@@ -36,7 +38,17 @@ def test_frete_cresce_com_distancia():
 
 
 def test_frete_cep_invalido_levanta_erro():
-    import pytest
-
     with pytest.raises(ValueError):
         calcular_frete("abc", "01311000", 1.0)
+
+
+@pytest.mark.parametrize("cep", ["01310", "013109300", "01310-93", "abc01310930", "01310.930"])
+def test_frete_rejeita_cep_fora_do_formato(cep):
+    with pytest.raises(ValueError):
+        calcular_frete(cep, "01311000", 1.0)
+
+
+@pytest.mark.parametrize("peso", [0, -1, float("nan"), float("inf"), float("-inf")])
+def test_frete_rejeita_peso_invalido(peso):
+    with pytest.raises(ValueError):
+        calcular_frete("01310930", "01311000", peso)

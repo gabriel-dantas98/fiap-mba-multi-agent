@@ -21,7 +21,9 @@ Variável de ambiente esperada (configurada pelo Terraform):
 import csv
 import json
 import logging
+import math
 import os
+import re
 
 import azure.functions as func
 from azure.identity import DefaultAzureCredential
@@ -59,10 +61,10 @@ def listar_produtos(req: func.HttpRequest) -> func.HttpResponse:
 
     try:
         produtos = carregar_produtos()
-    except Exception as e:
+    except Exception:
         logging.exception("Falha ao carregar produtos do Blob")
         return func.HttpResponse(
-            json.dumps({"erro": f"falha ao acessar storage: {e!s}"}),
+            json.dumps({"erro": "falha ao acessar storage"}),
             mimetype="application/json",
             status_code=500,
         )
@@ -102,13 +104,16 @@ KM_POR_DIA_EXTRA = 800     # a cada N "km" aproximados, +1 dia útil
 
 
 def _normaliza_cep(cep: str) -> int:
-    digitos = "".join(c for c in cep if c.isdigit())
-    if len(digitos) < 5:
+    if re.fullmatch(r"\d{8}|\d{5}-\d{3}", cep) is None:
         raise ValueError(f"CEP inválido: {cep!r}")
+    digitos = cep.replace("-", "")
     return int(digitos[:5])
 
 
 def calcular_frete(cep_origem: str, cep_destino: str, peso_kg: float) -> dict:
+    if not math.isfinite(peso_kg) or peso_kg <= 0:
+        raise ValueError("peso deve ser um número positivo e finito")
+
     origem  = _normaliza_cep(cep_origem)
     destino = _normaliza_cep(cep_destino)
 
@@ -147,8 +152,6 @@ def frete(req: func.HttpRequest) -> func.HttpResponse:
 
     try:
         peso_kg = float(peso_raw)
-        if peso_kg <= 0:
-            raise ValueError("peso deve ser positivo")
         resultado = calcular_frete(cep_origem, cep_destino, peso_kg)
     except ValueError as e:
         return func.HttpResponse(

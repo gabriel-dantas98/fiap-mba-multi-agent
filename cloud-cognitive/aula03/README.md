@@ -121,7 +121,7 @@ curl "http://$ACI_FQDN:8080/produtos?categoria=moveis"
 
 ```bash
 cd ../function
-pip install ruff pytest -r v2-full/requirements.txt
+pip install ruff pytest pytest-asyncio -r v2-full/requirements.txt
 ruff check .
 pytest tests/ -v
 ```
@@ -153,15 +153,19 @@ terraform destroy -auto-approve \
 ## Gerar o ZIP para envio ao Portal FIAP
 
 ```bash
-git archive \
-  --format=zip \
-  --prefix=qc-grupo-01-aula03/ \
-  --output=entrega-grupo-01-aula03.zip \
-  HEAD:cloud-cognitive/aula03
+REPO_ROOT=$(git rev-parse --show-toplevel)
+STAGING_DIR=$(mktemp -d)
+PACKAGE_DIR="$STAGING_DIR/qc-grupo-01-aula03"
 
-# adicionar o workflow de CI/CD, que fica fora desta pasta:
-mkdir -p /tmp/entrega-extra/.github/workflows
-cp ../../.github/workflows/deploy-function.yml /tmp/entrega-extra/.github/workflows/
+mkdir -p "$PACKAGE_DIR/.github/workflows"
+git archive HEAD:cloud-cognitive/aula03 | tar -x -C "$PACKAGE_DIR"
+git show HEAD:.github/workflows/deploy-function.yml \
+  > "$PACKAGE_DIR/.github/workflows/deploy-function.yml"
+
+(cd "$STAGING_DIR" && zip -qr \
+  "$REPO_ROOT/entrega-grupo-01-aula03.zip" \
+  qc-grupo-01-aula03)
+rm -rf "$STAGING_DIR"
 ```
 
 Não incluir `.terraform/`, `*.tfstate*`, `*.tfplan`.

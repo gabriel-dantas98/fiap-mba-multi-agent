@@ -79,6 +79,7 @@ revogável no Azure, não versionado no Git.
 Function usada: `func-qc-ro6i2l` (Flex Consumption, FC1, `eastus`), endpoint
 `/api/produtos?categoria=vestuario`. Medido com máquina local + `time curl`
 (latência de rede real embutida na medição, não é só tempo de execução da Function).
+Output bruto de cada chamada em [`evidencias/cold-start.md`](evidencias/cold-start.md).
 
 | Chamada | Horário (UTC) | Tempo decorrido (`time_total`) | Observação |
 |---------|----------------|-------------------------------|-------------|
@@ -88,8 +89,8 @@ Function usada: `func-qc-ro6i2l` (Flex Consumption, FC1, `eastus`), endpoint
 
 > O roteiro pedia 30 minutos antes da terceira chamada. A medição preservada
 > esperou cerca de 20 minutos, então esse ponto não foi cumprido literalmente.
-> A saída bruta do terminal também não foi salva; a tabela registra os valores
-> anotados durante a execução, não uma evidência reproduzível.
+> A saída bruta de cada `curl -w` está preservada em
+> [`evidencias/cold-start.md`](evidencias/cold-start.md).
 
 > Detalhe que apareceu nas medições: isolamos
 > `time_appconnect` (handshake TLS) de `time_starttransfer` (TTFB) chamando

@@ -20,6 +20,39 @@ Também fizemos três chamadas a `/api/naoexiste` que retornaram `404`, mas elas
 não aparecem no resultado preservado da tabela `requests`; por isso não entram
 na soma de 66.
 
+### Comandos que geraram a maior parte desse tráfego
+
+```
+$ for i in $(seq 1 20); do
+    cat=("moveis" "eletronicos" "calcados" "vestuario" "eletrodomesticos" "acessorios" "naoexiste")
+    c=${cat[$((RANDOM % ${#cat[@]}))]}
+    curl -s -o /dev/null -w "%{http_code} " "$HOSTNAME/api/produtos?categoria=$c"
+    curl -s -o /dev/null -w "%{http_code} " "$HOSTNAME/api/frete?cep_origem=0131093$((RANDOM%10))&cep_destino=2004002$((RANDOM%10))&peso=$((RANDOM%10+1))"
+  done
+200 200 200 200 200 200 200 200 200 200 200 200 200 200 200 200 200 200 200 200 200 200 200 200 200 200 200 200 200 200 200 200 200 200 200 200 200 200 200 200
+
+$ for i in $(seq 1 10); do curl -s -o /dev/null -w "%{http_code} " "$HOSTNAME/api/produtos?nome=cadeira"; done
+200 200 200 200 200 200 200 200 200 200
+
+$ for i in $(seq 1 5); do curl -s -o /dev/null -w "%{http_code} " "$HOSTNAME/api/frete?cep_origem=01310930&cep_destino=20040020"; done
+400 400 400 400 400
+
+$ for i in $(seq 1 3); do curl -s -o /dev/null -w "%{http_code} " "$HOSTNAME/api/naoexiste"; done
+404 404 404
+```
+
+→ 30 requisições a `/produtos` (categoria aleatória, incluindo o valor
+`"naoexiste"` como *valor de categoria inexistente* — retorna lista vazia com
+`200`, não confundir com a rota inexistente abaixo) + 20 a `/frete` válidas +
+5 a `/frete` malformadas (`400`) + 3 à rota `/api/naoexiste` (`404`, sem
+telemetria de `request`). O restante — 4 requisições a `/produtos`, 5 a
+`/frete` e 2 a `/health` — veio de chamadas avulsas de outros exercícios
+(Exercício 1.3, ver `evidencias/cold-start.md`, e testes manuais do 2.1/2.3
+em `evidencias/provisionamento.md`) que caíram na mesma janela de telemetria.
+A Query 1 abaixo — direto contra o recurso real via `az monitor
+app-insights query` — é a fonte de verdade para os totais usados no
+relatório, não a soma manual dos comandos de geração de tráfego.
+
 ## Query 1 — latência por endpoint
 
 Forma reproduzível da consulta preservada:

@@ -1,22 +1,30 @@
-"""
-Teste unitário da lógica de frete (Exercício 3.3 — pytest no pipeline CI/CD).
+"""Testes da lógica e do contrato HTTP de frete (Exercício 3.3).
 
-Só exercita `calcular_frete`, que é puro/determinístico (sem chamar Blob/Azure).
-Precisa de STORAGE_ACCOUNT_CATALOGO no ambiente porque o módulo instancia o
-BlobServiceClient no import — a instanciação não bate na rede, só monta a URL,
-então um valor fake é suficiente para o teste rodar sem credenciais reais.
+Não chamam Blob/Azure. `STORAGE_ACCOUNT_CATALOGO` é necessário porque o módulo
+instancia o BlobServiceClient no import; um valor fake basta, sem acesso à rede.
 """
 
+import json
 import os
 import sys
 from pathlib import Path
 
+import azure.functions as func
 import pytest
 
 os.environ.setdefault("STORAGE_ACCOUNT_CATALOGO", "fakestorageaccount")
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "v2-full"))
 
-from function_app import calcular_frete
+from function_app import calcular_frete, frete
+
+
+def _http_request(params: dict[str, str]) -> func.HttpRequest:
+    return func.HttpRequest(
+        method="GET",
+        url="http://localhost/api/frete",
+        params=params,
+        body=None,
+    )
 
 
 def test_frete_mesmo_cep_tem_piso_minimo():
@@ -53,3 +61,41 @@ def test_frete_rejeita_cep_fora_do_formato(cep):
 def test_frete_rejeita_peso_invalido(peso):
     with pytest.raises(ValueError):
         calcular_frete("01310930", "01311000", peso)
+
+
+def test_endpoint_frete_retorna_contrato_json():
+    response = frete(
+        _http_request(
+            {
+                "cep_origem": "01310930",
+                "cep_destino": "20040020",
+                "peso": "2.5",
+            }
+        )
+    )
+
+    assert response.status_code == 200
+    assert json.loads(response.get_body()) == {
+        "cep_origem": "01310930",
+        "cep_destino": "20040020",
+        "peso_kg": 2.5,
+        "distancia_aproximada_km": 842.9,
+        "valor_reais": 30.86,
+        "prazo_dias_uteis": 3,
+    }
+
+
+@pytest.mark.parametrize("peso", ["nan", "inf", "1e309"])
+def test_endpoint_frete_rejeita_peso_nao_finito(peso):
+    response = frete(
+        _http_request(
+            {
+                "cep_origem": "01310930",
+                "cep_destino": "20040020",
+                "peso": peso,
+            }
+        )
+    )
+
+    assert response.status_code == 400
+    assert json.loads(response.get_body()) == {"erro": "peso deve ser um número positivo e finito"}

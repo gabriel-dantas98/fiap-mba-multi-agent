@@ -16,19 +16,15 @@
 
 ## Distribuição do trabalho
 
-Rodízio em relação à Aula 1 (Critério 4): quem tinha ficado mais em N1/N2 na
-entrega anterior assumiu N2/N3 aqui. Todos revisaram o pacote completo antes
-do envio — N1 (fundamentos + Dockerfile), N2 (segunda tool + observabilidade +
-ACI hardening) e N3 bônus (tool de agente + benchmark + CI/CD) foram feitos e
-validados em grupo, com execução real no Azure (Terraform aplicado de verdade,
-não só o código).
+O trabalho foi feito de forma colaborativa. Todos contribuíram com os níveis
+N1, N2 e N3: fundamentos de Serverless e Containers, revisão do Dockerfile,
+segunda tool, observabilidade, configuração do ACI, benchmark e CI/CD. Ao
+final, fizemos uma revisão em grupo.
 
 > **Nota de ambiente:** a política "no install" da disciplina pressupõe Azure
 > Cloud Shell. Rodamos a partir de máquina local com Azure CLI + Terraform
-> (mesma CLI, mesmos comandos) porque o Cloud Shell não tinha os pacotes de
-> automação do nosso ambiente de trabalho; onde algo do Cloud Shell diverge
-> (ex.: `func` core tools ausente localmente), documentamos o replacement
-> equivalente abaixo.
+> (mesma CLI e mesmos comandos) porque fica mais fácil depurar o código
+> localmente no VS Code.
 
 ## Arquitetura provisionada
 
@@ -46,7 +42,7 @@ Fonte Mermaid: [`diagramas/arquitetura-qc-aula03.mmd`](diagramas/arquitetura-qc-
 |---------|---------|----------------|
 | API de busca de produtos (1M chamadas/mês, picos na Black Friday) | **Function** (Flex Consumption) | Pay-per-execução, escala automática 0→N sem operação manual; Flex Consumption endereça o pico de BF melhor que o antigo Consumption Y1 porque não zera concorrência entre invocações "pending" — [docs Flex Consumption](https://learn.microsoft.com/azure/azure-functions/flex-consumption-plan). |
 | Worker que processa pedidos da fila (1000 pedidos/dia, picos noturnos) | **Function com Queue trigger** | Event-driven nativo (Storage Queue/Service Bus trigger), scale-to-zero fora do pico noturno; 1000/dia é bem abaixo do limiar que justificaria Container Apps+KEDA. |
-| API legado em Java Spring Boot (não pode reescrever, time conhece) | **Container Apps** | Empacota o WAR/JAR como está (container custom), autoscale via KEDA/HTTP, sem reescrever para o modelo de function handler. AKS seria overkill para 1 serviço só. |
+| API legado em Java Spring Boot (não pode reescrever, time conhece) | **Container Apps** | Empacota o WAR/JAR como está (container custom), autoscale via KEDA/HTTP, sem reescrever para o modelo de function handler. O AKS traria uma complexidade desnecessária para apenas um serviço. |
 | Pipeline de processamento de imagens de produtos (chega 1 hora por noite) | **ACI** | Sobe, processa, morre — pay-per-second sem manter infra ligada o resto do dia. Exatamente o padrão que testamos no `aci-qc-job-*` desta aula (restart_policy=OnFailure). |
 | Microserviço de pagamentos (regulado, precisa logs detalhados, 100 req/s constante) | **Container Apps** (ou AKS se já houver cluster) | Tráfego constante não se beneficia de scale-to-zero; precisa de controle fino de logs/rede/auditoria que Function não dá tão bem, e não precisa da complexidade operacional de um cluster K8s dedicado se não há mais nada rodando nele. |
 | Plataforma com 25 microserviços + service mesh (Itaú-like) | **AKS** | É o único que comporta service mesh maduro (Istio/Linkerd), políticas de rede por namespace e esse volume de serviços coordenados. Function/ACI não têm esse nível de orquestração entre si. |
@@ -56,10 +52,10 @@ Fonte Mermaid: [`diagramas/arquitetura-qc-aula03.mmd`](diagramas/arquitetura-qc-
 
 | Estratégia | Vulnerabilidade | Por quê |
 |------------|------------------|---------|
-| Connection string hardcoded no `function_app.py` | **Alta** | Vai para o Git em texto plano. Qualquer clone do repo (inclusive fork acidentalmente público) expõe a credencial pra sempre — trocar a senha não apaga do histórico do Git. |
-| Connection string em variável de ambiente do Function App | **Média** | Não vai pro Git, mas ainda é uma credencial de longa duração. Quem tiver permissão para listar as configurações do App Service consegue recuperá-la; a role `Reader` sozinha não concede essa operação. Rotação continua manual. |
+| Connection string hardcoded no `function_app.py` | **Alta** | Vai para o Git em texto plano. Qualquer clone do repositório (inclusive um fork acidentalmente público) expõe a credencial permanentemente, pois trocar a senha não apaga o histórico do Git. |
+| Connection string em variável de ambiente do Function App | **Média** | Não vai para o Git, mas ainda é uma credencial de longa duração. Quem tiver permissão para listar as configurações do App Service consegue recuperá-la; a role `Reader` sozinha não concede essa operação. A rotação continua manual. |
 | Connection string em Key Vault, lida via "API key" | **Média** | Mantendo o nome usado no enunciado: o Key Vault não oferece uma API key própria. Na prática, isso seria um segredo de aplicação, como o `client_secret` de um Service Principal, que ainda precisa ser guardado e rotacionado. O cofre centraliza a connection string, mas não elimina o segredo de bootstrap. |
-| Connection string em Key Vault, lida via Managed Identity | **Baixa** | A MI troca o token por acesso ao Vault sem nenhum segredo estático em lugar nenhum — token de curta duração emitido pelo Entra ID. Ainda existe uma connection string "de verdade" guardada em algum lugar, mas nada que precise ser copiado/colado por humano. |
+| Connection string em Key Vault, lida via Managed Identity | **Baixa** | A MI obtém acesso ao Vault sem usar segredo estático — o Entra ID emite um token de curta duração. A connection string continua armazenada no cofre, mas não precisa ser copiada manualmente. |
 | Sem connection string — Managed Identity diretamente no recurso (Storage) | **Baixa** (a mais baixa) | É o que fizemos no acesso ao catálogo pela Function v2 e pelo ACI: nenhum segredo estático nesse caminho, e `DefaultAzureCredential` obtém um token curto via IMDS. A role assignment (`Storage Blob Data Reader`) pode ser revogada sem rotacionar chave. |
 
 **Pergunta adicional — vazamento no GitHub continua sendo problema?**
@@ -70,7 +66,7 @@ cofre. Com Key Vault + segredo de Service Principal, o vazamento do código sozi
 não expõe o dado se o `client_secret` estiver fora do repositório — mas, se ele
 também vazar em outro commit ou log, o problema reaparece. Só
 nas estratégias com Managed Identity o vazamento do *código* deixa de importar:
-não há segredo nenhum embutido pra vazar. O que ainda pode vazar é a *lista de quem
+não há segredo embutido para vazar. O que ainda pode vazar é a *lista de quem
 tem acesso* (role assignments), mas isso não sai do código — é auditável e
 revogável no Azure, não versionado no Git.
 
@@ -106,11 +102,11 @@ Com uma chamada por hora, planejaríamos as **24 como sujeitas a cold start**.
 O Flex Consumption pode escalar a zero e não documenta garantia de afinidade
 ou de retenção de instância quente por uma hora; por isso não dá para prometer
 quantas serão frias só olhando a frequência.
-Pra chegar perto de <500 ms, na prática:
+Para chegar perto de <500 ms, na prática:
 
 1. **`always_ready_instances` > 0** no Flex Consumption — mantém N instâncias
    sempre provisionadas, elimina cold start ao custo de pagar por elas mesmo
-   ociosas (deixa de ser "serverless puro", vira meio-caminho pro Container Apps).
+   ociosas (deixa de ser "serverless puro" e se aproxima do Container Apps).
 2. **Container Apps com `minReplicas >= 1` ou ACI sempre ligado** — mantém
    capacidade quente, com cobrança durante o tempo ocioso. Container Apps com
    `minReplicas = 0` também pode ter cold start.
@@ -126,7 +122,7 @@ com garantia operacional clara; o timer ficaria apenas como experimento.
 
 ### Exercício 1.4 — Dockerfile review
 
-Dockerfile da spec do exercício:
+Dockerfile apresentado no enunciado:
 
 ```dockerfile
 FROM python:3.11
@@ -139,13 +135,14 @@ CMD ["python", "app.py"]
 **5 problemas (achamos 6, documentamos todos):**
 
 1. **`python:3.11` completa (~1 GB) em vez de `python:3.11-slim` (~150 MB).**
-   Runtime não precisa de compilador C, headers de dev nem as libs gráficas
-   que a imagem completa carrega. Trocar pra `-slim` (ou multi-stage, como
+   O runtime não precisa de compilador C, cabeçalhos de desenvolvimento nem
+   das bibliotecas gráficas presentes na imagem completa. Trocar para `-slim`
+   (ou usar multi-stage, como
    fizemos no `docker/Dockerfile` desta aula) já derruba a imagem em ~85%.
 2. **`COPY . .` sem `.dockerignore`.** Copia `.git/`, `__pycache__/`,
    `.env`, notebooks de teste — tudo que estiver na pasta, inclusive segredo
-   se alguém deixou um `.env` local sem querer. Sem `.dockerignore`, o "raio
-   de vazamento" de um erro de dev vira parte da imagem publicada.
+   se alguém deixou um `.env` local sem querer. Sem `.dockerignore`, um erro
+   durante o desenvolvimento pode expor esses arquivos na imagem publicada.
 3. **`pip install` sem `--no-cache-dir`.** O cache do pip fica dentro da
    camada da imagem — infla o tamanho final sem nenhum benefício em build
    (a imagem não vai rodar `pip install` de novo).
@@ -163,8 +160,8 @@ CMD ["python", "app.py"]
    `uvicorn`/`gunicorn` explicitamente — é o que o nosso `Dockerfile` faz:
    `CMD ["python", "-m", "uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8080"]`.
 
-(Bônus fora dos 5: falta `EXPOSE` — não muda comportamento, mas documenta a
-porta pra quem lê o Dockerfile sem abrir o código; e falta `HEALTHCHECK`, que
+(Bônus fora dos 5: falta `EXPOSE` — não muda o comportamento, mas documenta a
+porta sem exigir a leitura do código; e falta `HEALTHCHECK`, que
 o ACI usa para decisões de restart mais informadas que só "o processo morreu".)
 
 ---
@@ -186,9 +183,9 @@ Ficou no **mesmo Function App** (`func-qc-ro6i2l`, rota `/api/frete` ao lado de
   reaproveitar o mesmo App não introduz nenhum acoplamento de permissão que
   não existisse já (a MI da Function continua só com `Storage Blob Data
   Reader`, que o frete nem usa).
-- Custo operacional de manter 2 Function Apps (2 planos FC1, 2 storages de
-  deploy, 2 conjuntos de app settings) não se paga pra separar 2 rotas HTTP do
-  mesmo bounded context.
+- O custo operacional de manter 2 Function Apps (2 planos FC1, 2 storages de
+  deploy e 2 conjuntos de configurações) não se justifica para separar duas
+  rotas HTTP do mesmo domínio.
 
 **b) Implementação** — código em
 [`function/v2-full/function_app.py`](function/v2-full/function_app.py),
@@ -196,9 +193,9 @@ endpoint `GET /api/frete?cep_origem=...&cep_destino=...&peso=...`. Lógica
 determinística (sem chamada externa a API de CEP): aproxima distância pelos 5
 primeiros dígitos do CEP × fator empírico, com piso de 5 km e teto de 4.000 km
 (maior distância plausível dentro do Brasil), e cobra `R$ base + km×tarifa +
-kg×tarifa`. Documentado no próprio docstring do arquivo por que a gente não
-usou ViaCEP/Correios (rede externa + custo + ponto de falha numa função que a
-spec pede "pode ser determinística").
+kg×tarifa`. O docstring do arquivo explica por que não usamos ViaCEP/Correios:
+isso adicionaria uma dependência de rede, custo e outro ponto de falha a uma
+função que, segundo o enunciado, pode ser determinística.
 
 Evidência real, rodando no Azure (não é mock):
 
@@ -216,7 +213,8 @@ GET /api/frete?cep_origem=01310930&cep_destino=70040010&peso=1.0  (SP -> Brasíl
 **c) Terraform** — não precisou mudar nada específico para o frete (mesma
 Function App, mesmo app setting). O Terraform desta aula já saiu diferente do
 lab em dois pontos, mas por causa dos Exercícios 2.2/2.3, não do frete:
-Application Insights (`insights.tf`) e as 3 variantes de ACI (`containers.tf`).
+Application Insights (`insights.tf`) e as três variantes de ACI
+(`containers.tf`).
 
 **d) JSON Schema da tool**
 
@@ -242,33 +240,35 @@ Application Insights (`insights.tf`) e as 3 variantes de ACI (`containers.tf`).
 Separaríamos em App diferente quando aparecer pelo menos um destes: (1) a nova
 função precisa de **runtime diferente** (ex.: Node/.NET ao lado de Python);
 (2) precisa de **permissões que a existente não deveria ter** — um Function
-App é o "raio" natural de uma Managed Identity, então misturar uma tool que
+App é o escopo natural de uma Managed Identity, então misturar uma tool que
 grava dado sensível com uma que só lê catálogo público quebra o princípio de
 menor privilégio; (3) **perfil de tráfego muito diferente** (uma tool com
 picos de 100x que arrastaria o autoscale/cold start da outra); (4) **ciclo de
-deploy diferente** — se um time quer publicar 5x/dia e outro só 1x/semana,
-Apps separados evitam que o deploy de um vire risco de regressão pro outro.
+deploy diferente** — se um time publica cinco vezes por dia e outro apenas uma
+vez por semana, Apps separados evitam que o deploy de um gere risco de
+regressão para o outro.
 Nenhum desses casos apareceu aqui — daí a decisão do item (a).
 
 ### Exercício 2.2 — Application Insights e observabilidade
 
 **a) Terraform estendido** — [`terraform/insights.tf`](terraform/insights.tf)
 cria `azurerm_log_analytics_workspace` + `azurerm_application_insights`
-(workspace-based, que é o modelo atual recomendado pela Microsoft — o
+(baseado em workspace, que é o modelo atual recomendado pela Microsoft — o
 "classic" está em depreciação) e conecta na Function via
 `site_config.application_insights_connection_string` em
-[`function.tf`](terraform/function.tf). Aplicado de verdade — os recursos
-existiram no Azure, não é só código. Depois da execução, a revisão adicionou
-limite de ingestão de 1 GB/dia para evitar custo acidental; essa mudança não
-foi reaplicada porque o Resource Group já tinha sido removido.
+[`function.tf`](terraform/function.tf). Confirmamos a criação dos recursos no
+Azure. Depois do teste, adicionamos um limite de ingestão de 1 GB/dia para
+evitar custos acidentais; essa alteração não foi reaplicada porque o Resource
+Group já tinha sido removido.
 
-**b) Live Metrics — limitação de ambiente documentada com transparência**
+**b) Live Metrics**
 
-Geramos tráfego real (66 requisições variadas: `/produtos`, `/frete`,
-`/health`, incluindo erros propositais) direto na Function via `curl`. Não
-rolou o print porque este ambiente não tinha acesso ao `portal.azure.com`.
-Em vez de pular a análise, extraímos os dados históricos com KQL real via
-`az monitor app-insights query`. Isso não substitui a captura do Live Metrics:
+Geramos 66 requisições variadas para `/produtos`, `/frete` e `/health`,
+incluindo erros propositais, diretamente na Function via `curl`. Não
+conseguimos registrar a tela porque o ambiente usado no exercício não tinha
+acesso ao `portal.azure.com`. Para completar a análise, extraímos os dados
+históricos com KQL por meio do comando `az monitor app-insights query`. Essa
+consulta não substitui a captura do Live Metrics:
 
 ```kql
 requests
@@ -308,30 +308,30 @@ requests | summarize total=count() by resultCode | order by resultCode asc
 - **p95 de latência:** ~1,55s no `/produtos`, ~1,20s no `/frete` (tabela
   acima). Sem spans da dependência de Storage, esses números não permitem
   separar tempo de host, execução Python e I/O do Blob.
-- **Onde está o gargalo:** rodamos `dependencies | summarize ... by type,
-  target` e **veio vazio** — o SDK do Blob Storage (`azure-storage-blob`)
+- **Onde está o gargalo:** a consulta `dependencies | summarize ... by type,
+  target` não retornou dados — o SDK do Blob Storage (`azure-storage-blob`)
   não gera telemetria de `dependency` automaticamente no worker Python de
   Functions sem instrumentação explícita (OpenTelemetry/OpenCensus). Ou
-  seja: o download do CSV simplesmente **não aparece separado** nos dados.
-  Não dá para atribuir o tempo extra a dispatch, cold start ou I/O só com
+  Portanto, o download do CSV **não aparece separado** nos dados.
+  Não é possível atribuir o tempo extra a dispatch, cold start ou I/O apenas com
   essa consulta. Sem instrumentar as dependências, a telemetria pode levar a
   gente a culpar a camada errada.
 
 **d) Estratégia de logs/métricas/traces para sistema multi-agente**
 
-Pesquisamos **OpenTelemetry**
+Estudamos o **OpenTelemetry**
 ([opentelemetry.io](https://opentelemetry.io/docs/concepts/observability-primer/)):
-é o padrão vendor-neutral (CNCF) que separa a instrumentação (código) do
+é um padrão aberto da CNCF que separa a instrumentação do código do
 backend de observabilidade (Azure Monitor, Datadog, Grafana, o que for) via
-um coletor comum. Pra um sistema multi-agente da QC isso importa porque:
+um coletor comum. Para um sistema multiagente da QC, isso importa porque:
 
 - **Trace distribuído com contexto propagado** — um agente que chama a
   Function de catálogo, que chama o Blob, que dispara outro agente, precisa
-  de um `trace_id` único atravessando tudo; sem isso, cada camada vira uma
-  ilha de log correlacionada só por horário (o que já nos mordeu no
-  Exercício 2.2c: não dava pra saber quanto do tempo era Blob sem
-  instrumentar).
-- Dá pra trocar Azure Monitor por outro backend sem reescrever toda a
+  de um `trace_id` único atravessando tudo; sem isso, cada camada gera logs
+  isolados, correlacionados apenas pelo horário. Foi o que observamos no
+  Exercício 2.2c, quando não conseguimos identificar quanto tempo foi gasto
+  no Blob sem instrumentação.
+- Permite trocar o Azure Monitor por outro backend sem reescrever toda a
   instrumentação, só trocando o exporter do SDK.
 - **Semantic conventions para LLM/agentes** — a comunidade OTel já tem
   convenções emergentes para spans de chamada de modelo (tokens, custo,
@@ -340,9 +340,10 @@ um coletor comum. Pra um sistema multi-agente da QC isso importa porque:
 
 ### Exercício 2.3 — Endurecer e dimensionar o ACI da QC
 
-Partimos do `containers.tf` do lab e criamos **3 variantes lado a lado**
-(todas aplicadas de verdade, evidências abaixo), controladas por variáveis
-Terraform (`aci_enabled`, `aci_sized_enabled`, `aci_job_enabled`) — ver
+Partimos do `containers.tf` do laboratório e criamos **três variantes lado a
+lado** (todas executadas no Azure, conforme as evidências abaixo), controladas
+por variáveis Terraform (`aci_enabled`, `aci_sized_enabled`,
+`aci_job_enabled`) — ver
 [`terraform/containers.tf`](terraform/containers.tf).
 
 **a) Restart policy — job batch**
@@ -363,9 +364,9 @@ Evidência real do `az container show`:
 Terminou sozinho, sem reiniciar (porque `OnFailure` só reinicia em exit ≠ 0).
 Regra de uso: **`Always`** para serviço sempre-on (catálogo/API, precisa estar
 lá 24/7); **`OnFailure`** para job que deve rodar até dar certo mas não deve
-ficar em loop se terminou bem (nosso caso); **`Never`** para job "melhor
-esforço" onde uma falha não deve gerar retry automático (ex.: notificação
-best-effort onde reenviar duplicaria efeito colateral).
+ficar em loop se terminou bem (nosso caso); **`Never`** para um job em que uma
+falha não deve gerar nova tentativa automática, como uma notificação cujo
+reenvio duplicaria um efeito colateral.
 
 **b) Right-sizing + custo**
 
@@ -381,7 +382,7 @@ Consumption`, 27/08/2026): `Standard vCPU Duration` = US$ 0,0405/vCPU-hora,
 | Function equivalente | 2 GB, FC1 on-demand | Cobra execuções + tempo ativo em GB-s, com mínimo faturável de 1 s | Compute pode escalar a zero; Storage e observabilidade continuam cobrando |
 
 Um único ACI 24/7 já custa mais que a Function em qualquer cenário de tráfego
-baixo/médio — a Function só perde pra ACI quando o volume de execuções é alto
+baixo ou médio — a Function só perde para o ACI quando o volume de execuções é alto
 o bastante para o custo por execução ultrapassar o custo fixo de manter o ACI
 ligado (breakeven depende do tráfego real; ver Exercício 3.2 para números de
 throughput medidos).
@@ -407,7 +408,7 @@ As duas primeiras aparecem em texto plano; a `secure_environment_variable`
 some completamente do output da CLI (`value: null`, `secureValue: null` —
 nem retorna mascarado, simplesmente não retorna) e some igual no portal. Isso
 protege a leitura pelas propriedades do ACI, mas **não torna o valor invisível
-ao Terraform**: o state pode conter segredos em texto plano e precisa ficar em
+ao Terraform**: o estado pode conter segredos em texto plano e precisa ficar em
 backend protegido, com acesso restrito e sem commit no Git.
 
 **d) Limite de réplica única**
@@ -427,15 +428,15 @@ entraria se já existisse cluster compartilhado com outros serviços da QC.
 **e) Reflexão — ACI vs Function para a QC**
 
 Levaríamos **ACI** para: jobs batch pontuais e previsíveis (ETL noturno,
-recálculo de recomendações — Exercício 2.3a), workloads que precisam de
-runtime/linguagem fora do que a Function suporta bem, ou protótipos rápidos
+recálculo de recomendações — Exercício 2.3a), cargas que precisam de
+runtime ou linguagem fora do que a Function suporta bem, ou protótipos rápidos
 onde HTTPS/autoscale não importam ainda. Levaríamos **Function** para:
 qualquer coisa exposta como API HTTP pública (TLS de graça, autoscale sem
-operação, e custo zero fora de uso — crítico pra QC que tem tráfego bem
-sazonal por causa de campanhas). O critério decisivo pra nós foi custo
+operação, e custo zero fora de uso — importante para a QC, que tem tráfego
+sazonal por causa de campanhas). O critério decisivo foi o custo
 idle: ACI cobra 24/7 mesmo picando 5 requisições por dia; Function não cobra
-nada nesse cenário. A única razão pra pagar o prêmio do ACI sempre-on é
-precisar de algo que a Function não entrega (runtime exótico, controle de
+nada nesse cenário. O ACI sempre ativo se justifica quando precisamos de algo
+que a Function não entrega (runtime exótico, controle de
 rede/porta específico, sem cold start nenhum).
 
 ---
@@ -469,10 +470,10 @@ agente — reaproveitada aqui, não repetida.)
    → `buscar_produtos_qc(categoria="moveis", nome="cadeira")`
    → retorno: Cadeira Ergonômica DXRacer, Cadeira Gamer Vermelha, Cadeira
    Home Office Confortável
-   → resposta do agente: "Temos 3 opções de cadeira pra home office: a
+   → resposta do agente: "Temos 3 opções de cadeira para home office: a
    Ergonômica DXRacer (R$ 1.499,90, com apoio lombar), a Home Office
    Confortável (R$ 799,00, mais em conta) e a Gamer Vermelha (R$ 1.299,00).
-   Quer que eu calcule o frete pra alguma delas?"
+   Quer que eu calcule o frete para alguma delas?"
 
 2. **"Quanto custa o Samsung S24?"**
    → `buscar_produtos_qc(nome="galaxy")` (o agente sabe que "S24" e "Galaxy
@@ -488,7 +489,7 @@ agente — reaproveitada aqui, não repetida.)
    → retorno: Cafeteira Nespresso Essenza Mini (R$ 499,00) e Cafeteira
    Italiana 6 Xícaras (R$ 89,90)
    → resposta: "Temos duas opções: a Nespresso Essenza Mini (R$ 499,00,
-   cápsulas, mais rápida) e uma Cafeteira Italiana de R$ 89,90 pro fogão.
+   cápsulas, mais rápida) e uma Cafeteira Italiana de R$ 89,90 para o fogão.
    Qual perfil você prefere?"
 
 **c) 2 casos onde o agente NÃO deve chamar a tool**
@@ -508,7 +509,7 @@ agente — reaproveitada aqui, não repetida.)
 
 **d) Reflexão — manter a descrição sincronizada com o endpoint**
 
-O que faríamos pra manter tool e endpoint alinhados: (1) **OpenAPI/JSON Schema
+Para manter a tool e o endpoint alinhados, usaríamos: (1) **OpenAPI/JSON Schema
 como fonte única de verdade** — gerar o `input_schema` da tool a partir do
 mesmo schema Pydantic/OpenAPI que valida a API (se o endpoint mudar o schema,
 a tool spec muda junto, sem edição manual duplicada); (2) **contract testing**
@@ -534,9 +535,9 @@ sessão.
 | Taxa de erro | 0% (1000/1000 OK) | 0% (1000/1000 OK) |
 | Custo aprox./1M req | Pela fórmula pedida no exercício e assumindo 20 ms × 2 GB: `0,20 + (1M × 0,02 × 2 × 0,000016)` = **US$ 0,84**. No FC1 real, o `hey` não mede unidades faturadas e existe período mínimo faturável; o valor correto precisa dos billing meters. | ACI cobra pelo tempo ligado. A 157,6 req/s, 1M req levaria ~1h46min; com a tarifa medida de US$ 0,0247/h, o compute ficaria em **≈ US$ 0,044**, sem contar ACR, rede e Storage. |
 
-Os dois testes rodaram de verdade, back-to-back, contra os recursos vivos
-desta sessão (`hey -n 1000 -c 50`). Curioso: **o `hey` foi o primeiro tráfego
-concorrente que a Function viu na sessão** — diferente do Exercício 1.3 (uma
+Os dois testes foram executados em sequência contra os recursos ativos
+(`hey -n 1000 -c 50`). **O `hey` foi o primeiro tráfego concorrente recebido
+pela Function na sessão**, diferente do Exercício 1.3 (uma
 requisição isolada por vez). O histograma separou 946 respostas abaixo de
 0,61s de uma cauda de 48 respostas entre 3s e 4,9s. Isso é compatível com
 scale-out/cold start, mas o `hey` sozinho não identifica a causa; faltaram
@@ -548,7 +549,7 @@ Depende da métrica: no **p50 a Function venceu** (0,144s vs 0,243s do ACI) —
 o caminho da Function respondeu mais rápido no caso mediano deste teste. Mas
 no **p95/p99 o ACI venceu com folga** (0,65s/0,78s vs 2,95s/3,88s da
 Function); sua réplica permaneceu ativa durante o teste e não apresentou a
-mesma cauda. Pra throughput agregado os dois ficaram parecidos
+mesma cauda. No throughput agregado, os dois ficaram próximos
 (129 vs 158 req/s) com o ACI um pouco à frente. Resumindo: Function é mais
 rápida "no caso comum" sob carga, mas com uma cauda de latência pior; ACI é
 mais previsível (menor variância), o que costuma pesar mais numa SLA de
@@ -559,7 +560,7 @@ produção do que a média.
 Function vence em **tráfego esparso e imprevisível** — 1000 req espalhadas ao
 longo de um dia custam perto de zero e nunca competem por capacidade fixa.
 ACI vence em **tráfego concentrado e sustentado** — uma vez que você já está
-pagando pra manter 1 réplica ligada, processar mais requisições nela é
+pagando para manter uma réplica ligada, processar mais requisições nela é
 "grátis" em termos de custo marginal, e sem penalidade de cold start.
 
 **c) Como arquitetar a API da QC para 10x tráfego de Black Friday?**
@@ -567,8 +568,9 @@ pagando pra manter 1 réplica ligada, processar mais requisições nela é
 Não escalaria nenhuma das duas sozinha até o limite: (1) **Function com
 `always_ready_instances`** configurado antes do evento (reduz cold start sob
 rajada, uma hipótese para o gap medido acima); (2) **Front Door/CDN** na
-frente pra cachear `/produtos` (catálogo muda pouco durante o evento, cache
-de alguns segundos já corta a maior parte do tráfego repetido); (3) se o
+frente para armazenar em cache `/produtos` (o catálogo muda pouco durante o
+evento, e um cache de alguns segundos já corta a maior parte do tráfego
+repetido); (3) se o
 padrão de tráfego for **sustentado e alto por horas** (não só picos de
 segundos), migrar para **Container Apps com autoscale HTTP/KEDA** — pega o
 "sempre quente" do ACI com elasticidade que o ACI não tem sozinho.
@@ -595,9 +597,9 @@ neste mesmo repositório (é o "repo privado do grupo" da disciplina):
   atualização gradual indicada para Flex Consumption.
 
 Não rodamos esse workflow de ponta a ponta em produção real (exigiria criar
-a federated credential do Service Principal apontando pra este repo e manter
+a federated credential do Service Principal apontando para este repositório e manter
 a Function App disponível para o deploy — fora do escopo depois do destroy).
-O `lint-and-test` job, porém, **roda de verdade** em qualquer push — validado
+O job `lint-and-test`, porém, **é executado** em qualquer push — validado
 localmente com os mesmos comandos que o workflow executa.
 
 ---
@@ -608,7 +610,7 @@ localmente com os mesmos comandos que o workflow executa.
 cold start não aparecer do jeito didático esperado. As três chamadas ficaram
 parecidas, e o `/health` mostrou que a demora também existia sem leitura do
 Blob. Sem mais telemetria, não dá para separar rede, front-end do serviço,
-host e worker. Medir de verdade foi mais útil do que forçar a conclusão que o
+host e worker. Fazer a medição foi mais útil do que forçar a conclusão que o
 roteiro sugeria.
 
 O Application Insights reforçou isso: cinco respostas `400` controladas
@@ -629,8 +631,8 @@ saída bruta das medições e usaríamos `always_ready_instances` quando o p95
 precisasse ficar abaixo de 500 ms. Manteríamos Managed Identity como padrão:
 a Function usa identidade system-assigned e o ACI, user-assigned. Já
 `secure_environment_variables` só esconde o valor na API; o segredo ainda pode
-ficar no state do Terraform. Decidir quando chamar ou não a tool é design de
-prompt/spec — não Terraform.
+ficar no estado do Terraform. Decidir quando chamar ou não a tool faz parte da
+definição do prompt e do contrato, não do Terraform.
 
 ## Referências
 

@@ -1,0 +1,54 @@
+flowchart TB
+    subgraph Cliente["Agente / Cliente HTTP"]
+        Agente["Agente QC (Aula 4+)"]
+    end
+
+    subgraph RG["Resource Group — rg-qc-aula03-grupo01-*"]
+        subgraph FnBox["Azure Function App (Flex Consumption FC1)"]
+            Fn["func-qc-*<br/>Managed Identity SystemAssigned"]
+            FnProdutos["/api/produtos"]
+            FnFrete["/api/frete"]
+            FnHealth["/api/health"]
+            Fn --- FnProdutos
+            Fn --- FnFrete
+            Fn --- FnHealth
+        end
+
+        AI["Application Insights<br/>+ Log Analytics Workspace"]
+
+        subgraph ACIBox["Azure Container Instances"]
+            ACI["aci-qc-* (0.5vCPU/1GB)<br/>restart_policy=Always<br/>Managed Identity UserAssigned"]
+            ACISized["aci-qc-sized-* (1vCPU/2GB)<br/>comparação de custo"]
+            ACIJob["aci-qc-job-*<br/>restart_policy=OnFailure<br/>roda e termina"]
+        end
+
+        ACR["Azure Container Registry<br/>(imagem produtos-api:v1<br/>importada do GHCR)"]
+
+        StCat["Storage Account — catálogo<br/>produtos.csv"]
+        StFunc["Storage Account — Function<br/>pacote de deploy"]
+    end
+
+    GHCR["GHCR (professor)<br/>ghcr.io/isaiasbritto/produtos-api:v1"]
+
+    Agente -->|HTTPS| FnProdutos
+    Agente -->|HTTPS| FnFrete
+    Agente -->|HTTP:8080| ACI
+
+    Fn -.->|telemetria| AI
+    Fn -->|Storage Blob Data Reader<br/>via Managed Identity| StCat
+    Fn -.-> StFunc
+
+    ACI -->|Storage Blob Data Reader<br/>via Managed Identity| StCat
+    ACISized -.->|mesma Managed Identity| StCat
+    ACI -->|pull via credencial<br/>admin do ACR no lab| ACR
+    ACISized -.->|credencial admin| ACR
+    ACIJob -.->|credencial admin| ACR
+
+    ACR -->|az acr import| GHCR
+
+    style Fn fill:#e8f4fd,stroke:#0078d4
+    style ACI fill:#fef3e0,stroke:#d97706
+    style ACISized fill:#fef3e0,stroke:#d97706,stroke-dasharray: 4 2
+    style ACIJob fill:#fef3e0,stroke:#d97706,stroke-dasharray: 4 2
+    style AI fill:#f0e8fd,stroke:#7c3aed
+    style ACR fill:#e6f7ee,stroke:#0a7a3d

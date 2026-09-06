@@ -23,10 +23,8 @@ final, fizemos uma revisão em grupo.
 
 > **Nota de ambiente:** a política "no install" da disciplina pressupõe Azure
 > Cloud Shell. Rodamos a partir de máquina local com Azure CLI + Terraform
-> (mesma CLI, mesmos comandos) porque o Cloud Shell não tinha os pacotes de
-> automação do nosso ambiente de trabalho; onde algo do Cloud Shell diverge
-> (ex.: `func` core tools ausente localmente), documentamos o replacement
-> equivalente abaixo.
+> (mesma CLI e mesmos comandos) porque fica mais fácil depurar o código
+> localmente no VS Code.
 
 ## Arquitetura provisionada
 

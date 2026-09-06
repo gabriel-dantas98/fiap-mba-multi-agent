@@ -16,12 +16,10 @@
 
 ## Distribuição do trabalho
 
-Rodízio em relação à Aula 1 (Critério 4): quem tinha ficado mais em N1/N2 na
-entrega anterior assumiu N2/N3 aqui. Todos revisaram o pacote completo antes
-do envio: N1 (fundamentos + Dockerfile), N2 (segunda tool + observabilidade +
-ACI hardening) e N3 bônus (tool de agente + benchmark + CI/CD) foram feitos e
-validados em grupo, com execução real no Azure (Terraform aplicado de verdade,
-não só o código).
+O trabalho foi feito de forma colaborativa. Todos contribuíram com os níveis
+N1, N2 e N3: fundamentos de Serverless e Containers, revisão do Dockerfile,
+segunda tool, observabilidade, configuração do ACI, benchmark e CI/CD. Ao
+final, fizemos uma revisão em grupo.
 
 > **Nota de ambiente:** a política "no install" da disciplina pressupõe Azure
 > Cloud Shell. Rodamos a partir de máquina local com Azure CLI + Terraform

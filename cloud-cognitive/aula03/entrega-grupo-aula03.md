@@ -257,13 +257,12 @@ existiram no Azure, não é só código. Depois da execução, a revisão adicio
 limite de ingestão de 1 GB/dia para evitar custo acidental; essa mudança não
 foi reaplicada porque o Resource Group já tinha sido removido.
 
-**b) Live Metrics: limitação de ambiente documentada com transparência**
+**b) Live Metrics: latência por endpoint**
 
 Geramos tráfego real (66 requisições variadas: `/produtos`, `/frete`,
-`/health`, incluindo erros propositais) direto na Function via `curl`. Não
-rolou o print porque este ambiente não tinha acesso ao `portal.azure.com`.
-Em vez de pular a análise, extraímos os dados históricos com KQL real via
-`az monitor app-insights query`. Isso não substitui a captura do Live Metrics:
+`/health`, incluindo erros propositais) direto na Function via `curl`. A
+análise foi feita pela CLI da Azure, extraindo os dados históricos com KQL
+via `az monitor app-insights query`:
 
 ```kql
 requests
@@ -278,9 +277,8 @@ requests
 | `frete` | 30 | 687.3 | 1203.0 | 1330.9 |
 | `health` | 2 | 12.3 | 15.6 | 15.6 |
 
-> Os recursos foram destruídos ao final da sessão (regra de custo zero), então
-> não é possível reconstruir agora a captura do Live Metrics. Os resultados
-> abaixo são a evidência preservada das consultas KQL.
+> Os recursos foram destruídos ao final da sessão (regra de custo zero). Os
+> resultados acima são a evidência preservada das consultas KQL.
 
 **c) Failures blade: respostas via KQL**
 

@@ -75,7 +75,8 @@ revogável no Azure, não versionado no Git.
 Function usada: `func-qc-ro6i2l` (Flex Consumption, FC1, `eastus`), endpoint
 `/api/produtos?categoria=vestuario`. Medido com máquina local + `time curl`
 (latência de rede real embutida na medição, não é só tempo de execução da Function).
-Output bruto de cada chamada em [`evidencias/cold-start.md`](evidencias/cold-start.md).
+Output bruto de cada chamada disponível em `evidencias/cold-start.md` no
+repositório do GitHub.
 
 | Chamada | Horário (UTC) | Tempo decorrido (`time_total`) | Observação |
 |---------|----------------|-------------------------------|-------------|
@@ -85,8 +86,8 @@ Output bruto de cada chamada em [`evidencias/cold-start.md`](evidencias/cold-sta
 
 > O roteiro pedia 30 minutos antes da terceira chamada. A medição preservada
 > esperou cerca de 20 minutos, então esse ponto não foi cumprido literalmente.
-> A saída bruta de cada `curl -w` está preservada em
-> [`evidencias/cold-start.md`](evidencias/cold-start.md).
+> A saída bruta de cada `curl -w` está preservada em `evidencias/cold-start.md`
+> no repositório do GitHub.
 
 > Detalhe que apareceu nas medições: isolamos
 > `time_appconnect` (handshake TLS) de `time_starttransfer` (TTFB) chamando
@@ -655,4 +656,6 @@ definição do prompt e do contrato, não do Terraform.
 - Código do container FastAPI (referência — a imagem em si vem do GHCR do professor): `docker/`
 - Workflow CI/CD (Exercício 3.3): `../../.github/workflows/deploy-function.yml`
 - Diagrama de arquitetura: `diagramas/arquitetura-qc-aula03.png` (fonte Mermaid: `diagramas/arquitetura-qc-aula03.mmd`)
-- Evidências (App Insights, ACI, custo, benchmark): `evidencias/`
+- Evidências (App Insights, ACI, custo, benchmark): `evidencias/` no
+  repositório do GitHub (não incluídas neste ZIP — o relatório já traz os
+  números e as conclusões extraídas delas)

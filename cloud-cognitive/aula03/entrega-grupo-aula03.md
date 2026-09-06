@@ -651,4 +651,4 @@ prompt/spec, não Terraform.
 - Código do container FastAPI (referência; a imagem em si vem do GHCR do professor): `docker/`
 - Workflow CI/CD (Exercício 3.3): `../../.github/workflows/deploy-function.yml`
 - Diagrama de arquitetura: `diagramas/arquitetura-qc-aula03.png` (fonte Mermaid: `diagramas/arquitetura-qc-aula03.mmd`)
-- Evidências (App Insights, ACI, custo, benchmark, destroy): `evidencias/evidencias.md`
+- Evidências (App Insights, ACI, custo, benchmark): `evidencias/evidencias.md`

@@ -93,19 +93,3 @@ Requests/sec: 129.16   p50: 0.144s   p95: 2.949s   p99: 3.875s
 
 946/1000 respostas da Function abaixo de 0,61s; cauda de ~48 entre 3s e
 4,9s, sob rajada de 50 conexões concorrentes.
-
-## Destroy final (custo zero)
-
-```
-$ az resource delete -g rg-qc-aula03-grupo01-ro6i2l \
-    -n "Application Insights Smart Detection" --resource-type "microsoft.insights/actiongroups"
-$ az group delete -n rg-qc-aula03-grupo01-ro6i2l --yes --no-wait
-
-$ az group list --query "[?starts_with(name, 'rg-qc-aula03')]" -o table
-Name    Location
-------  --------
-(vazio de recursos desta entrega)
-```
-
-`terraform state list` vazio após o destroy. Nenhum recurso gerenciado por
-este Terraform continuou provisionado.

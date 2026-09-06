@@ -1,8 +1,7 @@
 # Evidências (resumo)
 
 Saída bruta dos comandos que sustentam os números citados no relatório
-principal. Versão completa, com todos os comandos e o passo a passo,
-disponível em `evidencias/*.md` no repositório do GitHub.
+principal.
 
 ## Provisionamento (Terraform)
 

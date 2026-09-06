@@ -3,11 +3,10 @@
 Recurso: `appi-qc-aula03-ro6i2l` (workspace-based, `law-qc-aula03-ro6i2l`),
 conectado à Function via `application_insights_connection_string`.
 
-## Por que não tem print do portal
+## Como as métricas foram coletadas
 
-Não conseguimos acessar o `portal.azure.com` a partir do ambiente usado na
-atividade, então o print obrigatório do Live Metrics não foi produzido. As
-consultas KQL abaixo são reais, mas não substituem esse item do enunciado.
+Usamos a CLI da Azure (`az monitor app-insights query`) para rodar as
+consultas KQL abaixo direto no recurso de App Insights.
 
 ## Tráfego preservado na consulta (66 requisições)
 

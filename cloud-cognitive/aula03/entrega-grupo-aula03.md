@@ -570,8 +570,7 @@ segundos), migrar para **Container Apps com autoscale HTTP/KEDA**: pega o
 ### Exercício 3.3: pipeline CI/CD para a Function
 
 Workflow em
-[`.github/workflows/deploy-function.yml`](../../.github/workflows/deploy-function.yml)
-neste mesmo repositório (é o "repo privado do grupo" da disciplina):
+[`.github/workflows/deploy-function.yml`](.github/workflows/deploy-function.yml):
 
 - Dispara em push/PR para `main` que altere `cloud-cognitive/aula03/function/**`.
 - `ruff check`: validamos localmente, **0 problemas** no código de produção
@@ -645,6 +644,6 @@ prompt/spec, não Terraform.
 - Código da Function (mock, e blob+frete completo): `function/v1-mock/`, `function/v2-full/`
 - Testes unitários (Exercício 3.3): `function/tests/test_frete.py`
 - Código do container FastAPI (referência; a imagem em si vem do GHCR do professor): `docker/`
-- Workflow CI/CD (Exercício 3.3): `../../.github/workflows/deploy-function.yml`
+- Workflow CI/CD (Exercício 3.3): `.github/workflows/deploy-function.yml`
 - Diagrama de arquitetura: `diagramas/arquitetura-qc-aula03.png` (fonte Mermaid: `diagramas/arquitetura-qc-aula03.mmd`)
 - Evidências (App Insights, ACI, custo, benchmark): `evidencias/evidencias.md`

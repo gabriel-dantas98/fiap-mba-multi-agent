@@ -1,7 +1,7 @@
-# Entrega Aula 01 — Grupo 01
+# Entrega Aula 01 (Grupo 01)
 
-**Disciplina:** Cloud & Cognitive Environments — FIAP MBA AI Engineering & Multi-Agents  
-**Turma:** 1AIE  
+**Disciplina:** Cloud & Cognitive Environments (FIAP MBA AI Engineering & Multi-Agents)
+**Turma:** 1AIE
 **Data de entrega:** 10/08/2026
 
 ## Grupo
@@ -17,9 +17,9 @@
 
 Todos contribuiram no trabalho e colocaram coisas diferentes (N1, N2 e N3): modelos de serviço, 6 Rs, SLA, RBAC, arquitetura QC, custos, migração, Terraform, Bicep e multi-cloud. Fizemos uma revisão em grupo.
 
-## Nível 1 — Respostas
+## Nível 1: Respostas
 
-### Exercício 1.1 — Modelos de serviço
+### Exercício 1.1: Modelos de serviço
 
 | Serviço | Modelo | Justificativa |
 |---------|--------|---------------|
@@ -35,21 +35,21 @@ Todos contribuiram no trabalho e colocaram coisas diferentes (N1, N2 e N3): mode
 
 **Conceito legal de Responsabilidade compartilhada.** A AWS chama isso de *Security of the Cloud* (provedor) vs *Security in the Cloud* (cliente) no [Shared Responsibility Model](https://aws.amazon.com/compliance/shared-responsibility-model/). Quanto mais abstraído o serviço, menos patch você faz. Em IaaS (VM/EC2) quase tudo acima do hipervisor é seu. Em PaaS/FaaS e serviços tipo S3, DynamoDB, Blob ou SQL gerenciado, o provedor segura SO/plataforma. Em SaaS sobra dado, identidade e config. Azure e GCP usam a mesma lógica; a AWS só deu o nome conhecido. Em qualquer modelo, dado e identidade não saem do cliente.
 
-### Exercício 1.2 — Os 6 Rs
+### Exercício 1.2: Os 6 Rs
 
-Fonte: estratégias de migração da AWS ([6/7 Rs](https://docs.aws.amazon.com/prescriptive-guidance/latest/large-migration-guide/migration-strategies.html)) — Rehost, Replatform, Refactor, Repurchase, Retire, Retain (Relocate entra no modelo ampliado).
+Fonte: estratégias de migração da AWS ([6/7 Rs](https://docs.aws.amazon.com/prescriptive-guidance/latest/large-migration-guide/migration-strategies.html)): Rehost, Replatform, Refactor, Repurchase, Retire, Retain (Relocate entra no modelo ampliado).
 
-**Cenário A — Rehost (Lift & Shift):** código legado sem doc e urgência de elasticidade pedem lift and shift da VM pro IaaS, sem reescrever.
+**Cenário A (Rehost, Lift & Shift):** código legado sem doc e urgência de elasticidade pedem lift and shift da VM pro IaaS, sem reescrever.
 
-**Cenário B — Retire:** com <5 usuários/mês e dado quase morto, não vale migrar: arquiva e desliga o ERP.
+**Cenário B (Retire):** com <5 usuários/mês e dado quase morto, não vale migrar: arquiva e desliga o ERP.
 
-**Cenário C — Refactor:** a própria fintech pediu microserviços + K8s + eventos, então é re-arquitetura de verdade.
+**Cenário C (Refactor):** a própria fintech pediu microserviços + K8s + eventos, então é re-arquitetura de verdade.
 
-**Cenário D — Repurchase:** SaaS cobre ~90% do CRM por menos custo, então drop and shop (troca o interno por produto de mercado).
+**Cenário D (Repurchase):** SaaS cobre ~90% do CRM por menos custo, então drop and shop (troca o interno por produto de mercado).
 
-**Cenário E — Retain:** exigência do Banco Central segura o mainframe on-prem; Retain é restrição de compliance, não escolha técnica.
+**Cenário E (Retain):** exigência do Banco Central segura o mainframe on-prem; Retain é restrição de compliance, não escolha técnica.
 
-### Exercício 1.3 — SLA
+### Exercício 1.3: SLA
 
 Ano comercial: 8.760 horas (`365 × 24`).
 
@@ -69,7 +69,7 @@ Downtime máximo = `50.000 / 50.000 = 1 hora/ano`.
 
 Na prática o SLA que fecha a conta no mercado é 99,99% (~52,56 min/ano; impacto ≈ R$ 43.800).
 
-### Exercício 1.4 — RBAC
+### Exercício 1.4: RBAC
 
 Fonte: [Azure built-in roles](https://learn.microsoft.com/en-us/azure/role-based-access-control/built-in-roles) e o detalhe de storage em [built-in roles — Storage](https://learn.microsoft.com/en-us/azure/role-based-access-control/built-in-roles/storage). Analogias AWS/GCP só pra cruzar mentalmente.
 
@@ -83,26 +83,26 @@ Fonte: [Azure built-in roles](https://learn.microsoft.com/en-us/azure/role-based
 
 Regra: menor privilégio possível. Escopo no RG (ou na storage account), não na subscription inteira.
 
-## Nível 2 — Respostas + implementação
+## Nível 2: Respostas + implementação
 
-### Exercício 2.1 — Arquitetura da Quantum Commerce
+### Exercício 2.1: Arquitetura da Quantum Commerce
 
 Provedor principal: AWS. Apesar da disciplina usar Azure, o know-how da nossa equipe é em AWS e também usamos cases reais:
 
-1. [iFood × Bedrock/SageMaker](https://aws.amazon.com/solutions/case-studies/ifood-bedrock/) — marketplace BR com mais de 80M pedidos/mês, personalização e antifraude em 100+ modelos, e o PoC do garçom virtual Garçon (RAG + Claude/Titan no Bedrock). Mostra que e-commerce conversacional já roda sério na AWS LatAm.
-2. [Amazon Rufus × Bedrock](https://aws.amazon.com/blogs/machine-learning/how-rufus-scales-conversational-shopping-experiences-to-millions-of-amazon-customers-with-amazon-bedrock/) — assistente de compra em escala, com tool calling e RAG sobre catálogo/pedido. Quase um molde pra QC.
-3. [Natura × OpenSearch + Bedrock](https://aws.amazon.com/solutions/case-studies/natura-ia-generativa/) — busca semântica/vetorial de catálogo em produção no Brasil. É a camada de retrieval que o agente precisa antes de gerar resposta.
-4. [Mercado Libre × Bedrock](https://aws.amazon.com/solutions/case-studies/mercado-libre-mutt-data/) — gen AI no catálogo/retail media (S3 + DynamoDB + Bedrock). Escala LatAm de enriquecimento de SKU.
+1. [iFood × Bedrock/SageMaker](https://aws.amazon.com/solutions/case-studies/ifood-bedrock/): marketplace BR com mais de 80M pedidos/mês, personalização e antifraude em 100+ modelos, e o PoC do garçom virtual Garçon (RAG + Claude/Titan no Bedrock). Mostra que e-commerce conversacional já roda sério na AWS LatAm.
+2. [Amazon Rufus × Bedrock](https://aws.amazon.com/blogs/machine-learning/how-rufus-scales-conversational-shopping-experiences-to-millions-of-amazon-customers-with-amazon-bedrock/): assistente de compra em escala, com tool calling e RAG sobre catálogo/pedido. Quase um molde pra QC.
+3. [Natura × OpenSearch + Bedrock](https://aws.amazon.com/solutions/case-studies/natura-ia-generativa/): busca semântica/vetorial de catálogo em produção no Brasil. É a camada de retrieval que o agente precisa antes de gerar resposta.
+4. [Mercado Libre × Bedrock](https://aws.amazon.com/solutions/case-studies/mercado-libre-mutt-data/): gen AI no catálogo/retail media (S3 + DynamoDB + Bedrock). Escala LatAm de enriquecimento de SKU.
 
 Na AWS o pacote fecha sem muita cola: IAM Roles + Cognito, Bedrock + OpenSearch Serverless, ECS Fargate + Lambda + SQS/SNS, S3 + RDS + DynamoDB, CloudFront + WAF, CloudWatch + Secrets Manager. Azure/GCP entram como alternativa ou DR, não no caminho crítico do agente.
 
 Camadas (AWS):
 
-1. Edge/entrega — CloudFront + WAF + frontend estático (S3 / Amplify).
-2. APIs e processamento — ECS Fargate (API síncrona) + SQS/SNS + Lambda (assíncrono).
-3. IA cognitiva / RAG — Bedrock (LLM/embeddings), OpenSearch Serverless (vetorial), Comprehend/Rekognition.
-4. Dados — RDS (transacional), DynamoDB (sessões/conversas), S3 (catálogo/imagens).
-5. Plataforma — IAM/Cognito, Secrets Manager, CloudWatch.
+1. Edge/entrega: CloudFront + WAF + frontend estático (S3 / Amplify).
+2. APIs e processamento: ECS Fargate (API síncrona) + SQS/SNS + Lambda (assíncrono).
+3. IA cognitiva / RAG: Bedrock (LLM/embeddings), OpenSearch Serverless (vetorial), Comprehend/Rekognition.
+4. Dados: RDS (transacional), DynamoDB (sessões/conversas), S3 (catálogo/imagens).
+5. Plataforma: IAM/Cognito, Secrets Manager, CloudWatch.
 
 Diagramas: [`diagramas/arquitetura-qc-aula01.png`](diagramas/arquitetura-qc-aula01.png) (fonte Mermaid: [`diagramas/arquitetura-qc-aula01.mmd`](diagramas/arquitetura-qc-aula01.mmd)).
 
@@ -118,7 +118,7 @@ Diagramas: [`diagramas/arquitetura-qc-aula01.png`](diagramas/arquitetura-qc-aula
 | Mensageria/Filas | Amazon SQS/SNS | Azure Service Bus | Pub/Sub |
 | Observabilidade | Amazon CloudWatch | Azure Monitor | Cloud Monitoring/Logging |
 
-### Exercício 2.2 — Comparativo de custos
+### Exercício 2.2: Comparativo de custos
 
 Premissas:
 
@@ -147,7 +147,7 @@ b) RI / Savings Plans / CUDs de 1 ano no Azure cortam compute uns 30–40%. Apro
 
 c) Em projeto com agente, olhar só preço bruto sem FinOps de dados engana. O que decide: região do modelo (Bedrock vs Azure OpenAI vs Vertex), identidade (IAM Role vs Managed Identity vs Workload Identity), vetor (OpenSearch vs AI Search vs Vertex Vector), latência pro Brasil e egress. Com a QC em AWS, Savings Plans + Graviton no compute e RDS no tamanho certo seguram o meio do ranking sem pagar o premium do SQL GP Azure.
 
-### Exercício 2.3 — Estratégia de migração
+### Exercício 2.3: Estratégia de migração
 
 A gente embasou o plano nos patterns do Sam Newman ([Monolith Decomposition Patterns](https://samnewman.io/talks/monolith-decomposition-patterns/), [InfoQ](https://www.infoq.com/presentations/microservices-principles-patterns/), [Strangler Fig](https://samnewman.io/patterns/refactoring/strangler-fig-application/), [Branch by Abstraction](https://samnewman.io/patterns/architectural/branch-by-abstraction/)). Ideia central: não fazer rewrite big-bang.
 
@@ -168,9 +168,9 @@ c) Serviços AWS: CloudFront, ECS Fargate (ou App Runner), Lambda, SQS/SNS, RDS,
 
 d) Obstáculo real: PII/pagamento + medo de mexer no monolito. Resposta alinhada ao Newman: deploy ≠ release (feature flags / dark launch), Parallel Run no pricing/checkout, PrivateLink/VPC endpoints, tokenization, catálogo primeiro via Strangler.
 
-## Nível 3 — Bônus
+## Nível 3: Bônus
 
-### Exercício 3.1 — Terraform
+### Exercício 3.1: Terraform
 
 Código em [`terraform/`](terraform/).
 
@@ -188,9 +188,9 @@ Validação:
 - SSH + Nginx (`scripts/validate-nginx.sh`) → HTTP 200 na página Group One.
 - plan final → `No changes`.
 
-Print: [`evidencias/nginx-group-one.png`](evidencias/nginx-group-one.png). Evidências: [`evidencias/provisionamento.md`](evidencias/provisionamento.md).
+Print: [`evidencias/nginx-group-one.png`](evidencias/nginx-group-one.png). Evidências: `evidencias/evidencias.md` (resumo, incluído no ZIP) e `evidencias/provisionamento.md` (completo, no repositório do GitHub).
 
-### Exercício 3.2 — Bicep (seguindo a mesma ideia)
+### Exercício 3.2: Bicep (seguindo a mesma ideia)
 
 Código em [`bicep/main.bicep`](bicep/main.bicep).
 
@@ -206,11 +206,11 @@ Legibilidade: Bicep ganha se o time só vive em Azure (tipo CloudFormation puro 
 
 Quando Bicep? Só Azure, `az` no sangue, zero vontade de provider HashiCorp. Fora disso, Terraform (ou Pulumi se o time quer TypeScript de verdade).
 
-Docs: [`bicep/README.md`](bicep/README.md). Evidências: [`evidencias/bicep.md`](evidencias/bicep.md).
+Docs: [`bicep/README.md`](bicep/README.md). Evidências: `evidencias/evidencias.md` (resumo, incluído no ZIP) e `evidencias/bicep.md` (completo, no repositório do GitHub).
 
 10/08/2026: deploy `Succeeded`, VM `vm-cc-aula01-bicep` running, SSH Ubuntu 24.04 ok, subnets ok, RG apagado.
 
-### Exercício 3.3 — Multi-cloud para a Quantum Commerce
+### Exercício 3.3: Multi-cloud para a Quantum Commerce
 
 Diagrama: [`diagramas/arquitetura-qc-multicloud.png`](diagramas/arquitetura-qc-multicloud.png).
 
@@ -238,7 +238,7 @@ c) Terraform vs Pulumi:
 
 d) Egress 10 TB/mês Azure Brazil South → AWS us-east-1 (Internet):
 
-Fonte: [Azure Bandwidth](https://azure.microsoft.com/pricing/details/bandwidth/) — Premium Global Network, South America.
+Fonte: [Azure Bandwidth](https://azure.microsoft.com/pricing/details/bandwidth/), tier Premium Global Network, South America.
 
 - Free: 100 GB
 - Billable: `10.000 − 100 = 9.900 GB`
@@ -279,5 +279,4 @@ Se a gente recomeçasse a QC: AWS-first (Bedrock + OpenSearch) com cases iFood/R
 - Página Nginx (brand Group One): `nginx/index.html`
 - Print Nginx: `evidencias/nginx-group-one.png`
 - Validação SSH/HTTP: `scripts/validate-nginx.sh`
-- Evidências Terraform: `evidencias/provisionamento.md`
-- Evidências Bicep: `evidencias/bicep.md`
+- Evidências (Terraform + Bicep): `evidencias/evidencias.md` (resumo, incluído no ZIP); versão completa em `evidencias/` no repositório do GitHub

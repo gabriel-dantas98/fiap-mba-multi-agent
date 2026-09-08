@@ -29,3 +29,5 @@ Estados do Terraform, credenciais e chaves privadas nunca devem ser versionados.
 
 Ver [`aula01/README.md`](aula01/README.md) e [`aula03/README.md`](aula03/README.md)
 para provisionar, validar e empacotar.
+
+Cloud Agents (Terraform + Azure CLI): ver [`docs/cloud-agent-terraform.md`](../docs/cloud-agent-terraform.md).

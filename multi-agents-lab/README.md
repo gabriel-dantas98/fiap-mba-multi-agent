@@ -59,13 +59,17 @@ Armadilhas do YAML que estava no Drive. `validador: cpf_ok` nao aciona o motor.
 
 ## Rodar no Colab
 
-1. Upload de `dutos-do-q.zip` (ja esta na pasta FONTE do Drive) ou preencha `KIT_URL`.
-2. Copie os 4 YAML de `contratos/` para `dutos-do-q/contratos/` no painel de arquivos.
-3. Cole `system_message.txt` na celula do Passo 4.
-4. Rode o Construtor. Se falhar 2 vezes, use o plano B (`agentes.codigo_de_referencia()`).
-5. Descomente o Caos (Passo 10) e rode Bronze → Silver → Gold de novo.
-6. Rode o harness com `com_caos=True`.
-7. Preencha `ESQUADRAO`, cole as respostas da ficha, gere a entrega JSON.
+1. Abra `01_bloco1_batch_SOLUCAO.ipynb` (FONTE) ou o notebook do professor.
+2. Upload de `dutos-do-q.zip` (ja esta na FONTE) ou preencha `KIT_URL`.
+3. **Passo 1b** — `gdown` dos 4 YAML da FONTE (`anyoneWithLink`; sem auth). Fallback:
+   GitHub raw (`CONTRATOS_GIT_REF`) ou `CONTRATOS_SOURCE=local`.
+4. Cole `system_message.txt` na celula do Passo 4 (arquivo tambem esta na FONTE).
+5. Rode o Construtor. Se falhar 2 vezes, use o plano B (`agentes.codigo_de_referencia()`).
+6. Descomente o Caos (Passo 10) e rode Bronze → Silver → Gold de novo.
+7. Rode o harness com `com_caos=True`.
+8. Preencha `ESQUADRAO`, cole as respostas da ficha, gere a entrega JSON.
+
+Forcar fonte dos contratos: `CONTRATOS_SOURCE=drive|github|local`.
 
 ## Rodar local
 

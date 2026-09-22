@@ -1,0 +1,14 @@
+fonte: tarifas
+padrao_arquivo: "tarifas*.parquet"
+formato: parquet
+chave: [tarifa_id]
+schema_drift: quarentena
+duplicatas: manter_primeira
+colunas:
+  tarifa_id:       {tipo: string, obrigatorio: true}
+  tipo:            {tipo: string, obrigatorio: true, dominio: [saque, ted, manutencao, pix]}
+  valor:           {tipo: double, obrigatorio: true, minimo: 0}
+  vigencia_inicio: {tipo: date, obrigatorio: true, formatos: ["%Y-%m-%d"]}
+  vigencia_fim:    {tipo: date, formatos: ["%Y-%m-%d"]}
+regras_conjunto:
+  - {nome: sem_sobreposicao_vigencia, particao: tipo, inicio: vigencia_inicio, fim: vigencia_fim}

@@ -1,0 +1,203 @@
+cliente_id,nome,cpf,segmento,cidade,cadastro_em
+C0001,Cliente 1,78657930307,varejo,São Paulo,2024-10-08
+C0002,Cliente 2,36295062830,varejo,Curitiba,2024-04-14
+C0003,Cliente 3,82660053979,private,São Paulo,2025-08-27
+C0004,Cliente 4,55303511073,varejo,São Paulo,2024-04-05
+C0005,Cliente 5,33476073840,varejo,São Paulo,2025-07-28
+C0006,Cliente 6,31350029858,private,Belo Horizonte,2024-08-13
+C0007,Marina Duarte,58233453803,private,Recife,2024-01-07
+C0008,Cliente 8,91476320209,varejo,Belo Horizonte,2024-12-14
+C0009,Cliente 9,39836208259,varejo,Curitiba,2024-12-10
+C0010,Cliente 10,20974745197,varejo,Belo Horizonte,2024-04-09
+C0011,Cliente 11,48545117108,black,Recife,2024-02-14
+C0012,Cliente 12,88354354040,black,São Paulo,2025-01-22
+C0013,Cliente 13,18461106610,private,Recife,2025-10-05
+C0014,Cliente 14,76413052619,black,Curitiba,2024-03-12
+C0015,Cliente 15,14920355807,private,Curitiba,2024-10-23
+C0016,Cliente 16,18567598060,varejo,São Paulo,2025-01-24
+C0017,Cliente 17,39847188610,black,Recife,2024-06-15
+C0018,Cliente 18,49747878615,black,Curitiba,2025-11-17
+C0019,Cliente 19,38666524960,private,São Paulo,2025-09-15
+C0020,Cliente 20,78180274403,varejo,Curitiba,2024-06-16
+C0021,Cliente 21,11111111111,black,Recife,2025-10-17
+C0022,Cliente 22,11111111111,private,Curitiba,2024-11-28
+C0023,Cliente 23,92497041946,varejo,Curitiba,2024-02-02
+C0024,Cliente 24,96441134705,black,Belo Horizonte,2024-10-01
+C0025,Cliente 25,17106947261,varejo,Recife,2024-08-05
+C0026,Cliente 26,80377190900,black,Belo Horizonte,2025-10-20
+C0027,Cliente 27,59268842688,varejo,Recife,2024-05-22
+C0028,Cliente 28,36481427045,private,Recife,2025-08-21
+C0029,Cliente 29,56002731342,private,Belo Horizonte,2025-01-05
+C0030,Cliente 30,33549387067,varejo,Belo Horizonte,2024-04-03
+C0031,Cliente 31,91151491454,varejo,São Paulo,2024-06-05
+C0032,Cliente 32,77371505794,varejo,Belo Horizonte,2025-09-02
+C0033,Cliente 33,16821235619,black,Belo Horizonte,2025-09-02
+C0034,Cliente 34,60256473641,private,Recife,2025-07-20
+C0035,Cliente 35,11232765287,private,São Paulo,2025-11-29
+C0036,Cliente 36,67656750193,black,Recife,2024-04-24
+C0037,Cliente 37,41514336278,black,Curitiba,2025-04-09
+C0038,Cliente 38,10348463022,private,Recife,2025-05-27
+C0039,Cliente 39,91815068302,varejo,São Paulo,2025-10-02
+C0040,Cliente 40,42045265005,private,Curitiba,2024-06-05
+C0041,Cliente 41,50148693946,vip,São Paulo,2025-09-05
+C0042,Cliente 42,44805991852,black,São Paulo,2024-04-24
+C0043,Cliente 43,48974762919,black,Curitiba,2024-02-29
+C0044,Cliente 44,35863389885,private,São Paulo,2024-03-28
+C0045,Cliente 45,88587979574,black,São Paulo,2025-06-29
+C0046,Cliente 46,92230846108,varejo,Curitiba,2025-11-06
+C0047,Cliente 47,61033056758,private,Curitiba,2024-09-28
+C0048,Cliente 48,66658540861,private,Belo Horizonte,2024-08-04
+C0049,Cliente 49,67906476603,private,Curitiba,2024-11-15
+C0050,Cliente 50,52841471896,private,Recife,2025-03-24
+C0051,Cliente 51,65574282925,black,São Paulo,2024-09-10
+C0052,Cliente 52,34126693181,varejo,Recife,2024-01-22
+C0053,Cliente 53,73169167294,private,Curitiba,2025-08-25
+C0054,Cliente 54,33645662162,varejo,São Paulo,2025-10-08
+C0055,Cliente 55,16321522406,varejo,São Paulo,2024-02-02
+C0056,Cliente 56,45479489500,varejo,Curitiba,2024-10-12
+C0057,Cliente 57,81830941712,black,Curitiba,2025-07-06
+C0058,Cliente 58,24206876398,private,Belo Horizonte,2024-09-05
+C0059,Cliente 59,94247869566,black,Belo Horizonte,2024-07-13
+C0060,Cliente 60,20128155701,varejo,Belo Horizonte,2024-12-28
+C0061,Cliente 61,55481408414,black,Belo Horizonte,2024-02-25
+C0062,Cliente 62,82301967298,private,São Paulo,2024-03-03
+C0063,Cliente 63,53231131030,private,Recife,2024-04-21
+C0064,Cliente 64,36699270508,varejo,Curitiba,2025-07-03
+C0065,Cliente 65,58169513510,varejo,Belo Horizonte,2024-07-06
+C0066,Cliente 66,39908557432,black,Curitiba,2024-03-18
+C0067,Cliente 67,57580801361,private,São Paulo,2024-02-21
+C0068,Cliente 68,80023524677,private,São Paulo,2024-04-05
+C0069,Cliente 69,90913479616,varejo,Curitiba,2025-02-20
+C0070,Cliente 70,62145318941,black,Curitiba,2025-02-14
+C0071,Cliente 71,16295928463,varejo,Belo Horizonte,2024-01-03
+C0072,Cliente 72,51921216980,black,Belo Horizonte,2024-10-19
+C0073,Cliente 73,55420082675,private,Belo Horizonte,2024-06-07
+C0074,Cliente 74,30390128350,black,Curitiba,2024-02-29
+C0075,Cliente 75,72189009685,private,São Paulo,2024-11-17
+C0076,Cliente 76,16138074653,varejo,Belo Horizonte,2025-05-29
+C0077,Cliente 77,67029235037,varejo,São Paulo,2025-06-04
+C0078,Cliente 78,18601902863,varejo,São Paulo,2025-09-01
+C0079,Cliente 79,17297242055,private,Curitiba,2025-02-17
+C0080,Cliente 80,22872726667,private,Curitiba,2025-08-15
+C0081,Cliente 81,73836008513,varejo,São Paulo,2025-03-05
+C0082,Cliente 82,80584906013,private,Recife,2024-09-24
+C0083,Cliente 83,31932164618,private,Recife,2024-09-01
+C0084,Cliente 84,38520141234,black,Curitiba,2025-11-18
+C0085,Cliente 85,79310119454,black,Belo Horizonte,2024-11-19
+C0086,Cliente 86,90730834867,varejo,São Paulo,2025-04-14
+C0087,Cliente 87,76696466754,private,São Paulo,2024-03-16
+C0088,Cliente 88,67728054619,varejo,Recife,2024-05-15
+C0089,Cliente 89,47474538229,varejo,Curitiba,2025-01-13
+C0090,Cliente 90,40600288439,varejo,Belo Horizonte,2025-07-10
+C0091,Cliente 91,85542024068,black,São Paulo,2025-11-14
+C0092,Cliente 92,97735888660,private,Recife,2025-11-10
+C0093,Cliente 93,21122515898,varejo,Recife,2024-04-28
+C0094,Cliente 94,21492900222,private,Curitiba,2024-10-05
+C0095,Cliente 95,40253349419,private,Curitiba,2024-12-17
+C0096,Cliente 96,31861094698,private,Recife,2025-06-01
+C0097,Cliente 97,62455708080,black,São Paulo,2024-04-04
+C0098,Cliente 98,78105773600,black,Recife,2024-02-15
+C0099,Cliente 99,10380715503,black,Curitiba,2025-10-14
+C0100,Cliente 100,38127232718,varejo,Belo Horizonte,2025-07-18
+C0101,Cliente 101,85770465590,black,São Paulo,2024-04-24
+C0102,Cliente 102,18079247269,private,Curitiba,2025-07-12
+C0103,Cliente 103,13868491970,black,Curitiba,2025-03-16
+C0104,Cliente 104,23684358401,varejo,Recife,2025-01-08
+C0105,Cliente 105,95482981550,varejo,Recife,2024-08-03
+C0106,Cliente 106,83236353317,varejo,São Paulo,2024-12-28
+C0107,Cliente 107,93764343907,private,Belo Horizonte,2025-09-27
+C0108,Cliente 108,90474546268,varejo,Curitiba,2024-06-15
+C0109,Cliente 109,95887215470,varejo,Belo Horizonte,2024-01-26
+C0110,Cliente 110,29258704495,private,Recife,2025-02-25
+C0111,Cliente 111,96139341620,private,Curitiba,2024-09-30
+C0112,Cliente 112,27093738079,private,São Paulo,2025-01-26
+C0113,Cliente 113,14158022622,black,Curitiba,2024-07-23
+C0114,Cliente 114,97680318832,black,Recife,2024-11-08
+C0115,Cliente 115,98104422979,varejo,Curitiba,2024-01-25
+C0116,Cliente 116,80870523821,varejo,Belo Horizonte,2024-12-02
+C0117,Cliente 117,39914775489,varejo,Recife,2024-12-25
+C0118,Cliente 118,78878577324,private,Belo Horizonte,2025-11-26
+C0119,Cliente 119,67575725750,black,São Paulo,2024-04-28
+C0120,Cliente 120,38047768336,varejo,Recife,2024-02-09
+C0121,Cliente 121,21639635190,private,Belo Horizonte,2024-12-19
+C0122,Cliente 122,88226930278,black,Belo Horizonte,2025-09-12
+C0123,Cliente 123,64913633171,varejo,Belo Horizonte,2025-08-13
+C0124,Cliente 124,30409553140,black,São Paulo,2025-03-22
+C0125,Cliente 125,10181599244,private,Curitiba,2025-01-07
+C0126,Cliente 126,56310205641,varejo,Recife,2025-09-30
+C0127,Cliente 127,43706435381,private,São Paulo,2024-11-03
+C0128,Cliente 128,64451864755,black,Belo Horizonte,2024-11-30
+C0129,Cliente 129,53207412513,private,Recife,2025-07-21
+C0130,Cliente 130,23667423713,varejo,Belo Horizonte,2025-11-11
+C0131,Cliente 131,50710414307,private,Curitiba,2025-09-22
+C0132,Cliente 132,71107211832,black,Belo Horizonte,2025-07-15
+C0133,Cliente 133,99520558896,varejo,Recife,2024-10-20
+C0134,Cliente 134,32568193620,black,Recife,2025-04-21
+C0135,Cliente 135,57436412183,black,Curitiba,2025-06-07
+C0136,Cliente 136,60807979252,private,Curitiba,2025-11-05
+C0137,Cliente 137,19104851447,black,Recife,2024-04-05
+C0138,Cliente 138,97877549768,varejo,Recife,2024-08-18
+C0139,Cliente 139,96604031780,varejo,Curitiba,2024-01-26
+C0140,Cliente 140,14962160400,varejo,Belo Horizonte,2025-09-17
+C0141,Cliente 141,92515914667,varejo,Belo Horizonte,2025-02-28
+C0142,Cliente 142,77620543163,private,Curitiba,2025-01-28
+C0143,Cliente 143,63083344562,black,Curitiba,2024-05-31
+C0144,Cliente 144,80443692289,private,São Paulo,2024-04-19
+C0145,Cliente 145,93582255050,black,Curitiba,2024-06-29
+C0146,Cliente 146,96340638295,private,Belo Horizonte,2024-02-21
+C0147,Cliente 147,69850991810,varejo,São Paulo,2025-04-12
+C0148,Cliente 148,24317176823,black,Recife,2025-03-29
+C0149,Cliente 149,75783042080,private,Belo Horizonte,2025-07-15
+C0150,Cliente 150,57879608907,varejo,Belo Horizonte,2025-04-05
+C0151,Cliente 151,37830480796,varejo,Recife,2025-06-17
+C0152,Cliente 152,62033208621,private,Curitiba,2024-10-08
+C0153,Cliente 153,57230960525,varejo,Recife,2024-08-28
+C0154,Cliente 154,39175187833,black,Recife,2025-07-07
+C0155,Cliente 155,18651960298,varejo,Curitiba,2024-08-24
+C0156,Cliente 156,51128101220,private,Curitiba,2024-08-07
+C0157,Cliente 157,16896520477,black,Belo Horizonte,2024-12-04
+C0158,Cliente 158,68262427882,black,Belo Horizonte,2024-03-04
+C0159,Cliente 159,32208673590,black,Belo Horizonte,2025-08-21
+C0160,Cliente 160,84681212318,varejo,Belo Horizonte,2025-05-03
+C0161,Cliente 161,10633086584,black,Recife,2025-02-03
+C0162,Cliente 162,99735682818,black,Curitiba,2025-05-14
+C0163,Cliente 163,33560219159,black,Belo Horizonte,2025-05-12
+C0164,Cliente 164,13116516677,black,Recife,2025-11-15
+C0165,Cliente 165,82922304400,black,Curitiba,2025-04-23
+C0166,Cliente 166,23703929677,private,São Paulo,2025-02-07
+C0167,Cliente 167,73554003042,private,São Paulo,2024-03-26
+C0168,Cliente 168,79014718322,black,Curitiba,2025-04-17
+C0169,Cliente 169,29513005658,varejo,Recife,2025-01-23
+C0170,Cliente 170,45149225010,varejo,Belo Horizonte,2024-11-30
+C0171,Cliente 171,46238845546,black,Recife,2025-03-07
+C0172,Cliente 172,37087449184,varejo,Belo Horizonte,2024-01-20
+C0173,Cliente 173,90425867455,private,São Paulo,2024-12-24
+C0174,Cliente 174,34075671380,private,São Paulo,2025-10-29
+C0175,Cliente 175,14322684491,varejo,Curitiba,2024-07-23
+C0176,Cliente 176,12188287738,private,Curitiba,2024-09-01
+C0177,Cliente 177,23552874143,black,São Paulo,2025-07-31
+C0178,Cliente 178,33403764680,black,Recife,2025-01-12
+C0179,Cliente 179,28016222145,private,São Paulo,2024-06-16
+C0180,Cliente 180,43397549787,varejo,São Paulo,2024-11-15
+C0181,Cliente 181,71825702462,private,Belo Horizonte,2025-02-10
+C0182,Cliente 182,86774119255,varejo,São Paulo,2025-08-29
+C0183,Cliente 183,84154158260,private,Curitiba,2024-04-14
+C0184,Cliente 184,84860528409,black,São Paulo,2025-08-02
+C0185,Cliente 185,94034830590,varejo,Recife,2025-06-29
+C0186,Cliente 186,55996738635,private,Recife,2024-03-11
+C0187,Cliente 187,64327126101,private,Recife,2024-01-13
+C0188,Cliente 188,55103463962,black,São Paulo,2025-03-19
+C0189,Cliente 189,48889644320,private,Belo Horizonte,2024-06-05
+C0190,Cliente 190,56760076214,varejo,Recife,2025-09-22
+C0191,Cliente 191,96779730025,private,Belo Horizonte,2025-04-21
+C0192,Cliente 192,56769454785,private,Recife,2024-11-26
+C0193,Cliente 193,36359842726,varejo,Recife,2025-04-06
+C0194,Cliente 194,36184637070,black,Belo Horizonte,2024-12-10
+C0195,Cliente 195,13081638437,black,Recife,2024-07-05
+C0196,Cliente 196,62350275914,varejo,Recife,2024-09-21
+C0197,Cliente 197,46543604921,black,Recife,2025-07-23
+C0198,Cliente 198,11089967446,private,Curitiba,2024-03-28
+C0199,Cliente 199,35915408460,private,Belo Horizonte,2025-05-15
+C0200,Cliente 200,69611591330,varejo,Belo Horizonte,2025-10-23
+C0031, Cliente 31  ,91151491454,varejo,São Paulo ,2024-06-05
+C0032, Cliente 32  ,77371505794,varejo,Belo Horizonte ,2025-09-02

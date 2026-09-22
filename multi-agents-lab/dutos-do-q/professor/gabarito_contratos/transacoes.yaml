@@ -1,0 +1,17 @@
+fonte: transacoes
+padrao_arquivo: "transacoes*"
+formato: auto                        # csv ou parquet pelo sufixo
+encodings: [utf-8]
+chave: [transacao_id]
+schema_drift: quarentena
+correcoes: [strip_strings]
+duplicatas: manter_primeira          # reenvio idêntico não duplica (MERGE por chave)
+colunas:
+  transacao_id: {tipo: string, obrigatorio: true, regex: "^T\\d{6}$"}
+  cliente_id:   {tipo: string, obrigatorio: true, fk: {tabela: clientes, coluna: cliente_id}}
+  tipo:         {tipo: string, obrigatorio: true, dominio: [deposito, saque, pix, cdb_aplicacao, compra_cartao]}
+  valor:        {tipo: double, obrigatorio: true}
+  data:         {tipo: date, obrigatorio: true, formatos: ["%Y-%m-%d", "%d/%m/%Y"]}   # decisão: aceitar dd/mm/aaaa como correção
+regras:
+  - {nome: deposito_positivo, expr: "tipo != 'deposito' or valor > 0"}
+  - {nome: debito_negativo,   expr: "tipo not in ['saque','pix','cdb_aplicacao','compra_cartao'] or valor < 0"}

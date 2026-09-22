@@ -1,0 +1,202 @@
+[
+ {
+  "arquivo": "docs/prod-tabela-tarifas__v1.md",
+  "doc_id": "prod-tabela-tarifas",
+  "area": "produtos",
+  "tipo": "tabela",
+  "data": "2025-01-15",
+  "versao": 1
+ },
+ {
+  "arquivo": "docs/prod-tabela-tarifas__v2.md",
+  "doc_id": "prod-tabela-tarifas",
+  "area": "produtos",
+  "tipo": "tabela",
+  "data": "2026-01-10",
+  "versao": 2
+ },
+ {
+  "arquivo": "docs/ti-faq-app__v1.md",
+  "doc_id": "ti-faq-app",
+  "area": "ti",
+  "tipo": "faq",
+  "data": "2025-06-01",
+  "versao": 1
+ },
+ {
+  "arquivo": "docs/prod-cdb-quantum__v1.md",
+  "doc_id": "prod-cdb-quantum",
+  "area": "produtos",
+  "tipo": "manual",
+  "data": "2025-11-20",
+  "versao": 1
+ },
+ {
+  "arquivo": "docs/ata-comite-produtos-2026-03__v1.md",
+  "doc_id": "ata-comite-produtos-2026-03",
+  "area": "diretoria",
+  "tipo": "ata",
+  "data": "2026-03-18",
+  "versao": 1
+ },
+ {
+  "arquivo": "docs/prod-qi-invest-fundos__v1.md",
+  "doc_id": "prod-qi-invest-fundos",
+  "area": "produtos",
+  "tipo": "manual",
+  "data": "2025-09-30",
+  "versao": 1
+ },
+ {
+  "arquivo": "docs/com-lancamento-qi-cripto__v1.md",
+  "doc_id": "com-lancamento-qi-cripto",
+  "area": "produtos",
+  "tipo": "comunicado",
+  "data": "2026-05-06",
+  "versao": 1
+ },
+ {
+  "arquivo": "docs/cred-score-quantum__v1.md",
+  "doc_id": "cred-score-quantum",
+  "area": "credito",
+  "tipo": "politica",
+  "data": "2025-08-12",
+  "versao": 1
+ },
+ {
+  "arquivo": "docs/prod-credito-pessoal__v1.md",
+  "doc_id": "prod-credito-pessoal",
+  "area": "produtos",
+  "tipo": "manual",
+  "data": "2025-08-20",
+  "versao": 1
+ },
+ {
+  "arquivo": "docs/rh-politica-home-office__v1.md",
+  "doc_id": "rh-politica-home-office",
+  "area": "rh",
+  "tipo": "politica",
+  "data": "2024-03-10",
+  "versao": 1
+ },
+ {
+  "arquivo": "docs/rh-politica-home-office__v2.md",
+  "doc_id": "rh-politica-home-office",
+  "area": "rh",
+  "tipo": "politica",
+  "data": "2026-02-02",
+  "versao": 2
+ },
+ {
+  "arquivo": "docs/prod-pix__v1.md",
+  "doc_id": "prod-pix",
+  "area": "produtos",
+  "tipo": "manual",
+  "data": "2025-03-01",
+  "versao": 1
+ },
+ {
+  "arquivo": "docs/prod-pix__v2.md",
+  "doc_id": "prod-pix",
+  "area": "produtos",
+  "tipo": "manual",
+  "data": "2025-10-15",
+  "versao": 2
+ },
+ {
+  "arquivo": "docs/atend-ouvidoria__v1.md",
+  "doc_id": "atend-ouvidoria",
+  "area": "atendimento",
+  "tipo": "procedimento",
+  "data": "2022-05-01",
+  "versao": 1
+ },
+ {
+  "arquivo": "docs/atend-ouvidoria__v2.md",
+  "doc_id": "atend-ouvidoria",
+  "area": "atendimento",
+  "tipo": "procedimento",
+  "data": "2025-02-10",
+  "versao": 2
+ },
+ {
+  "arquivo": "docs/prod-conta-digital__v1.md",
+  "doc_id": "prod-conta-digital",
+  "area": "produtos",
+  "tipo": "manual",
+  "data": "2025-04-05",
+  "versao": 1
+ },
+ {
+  "arquivo": "docs/prod-seguros__v1.md",
+  "doc_id": "prod-seguros",
+  "area": "produtos",
+  "tipo": "manual",
+  "data": "2025-07-01",
+  "versao": 1
+ },
+ {
+  "arquivo": "docs/prod-cartao-quantum-black__v1.md",
+  "doc_id": "prod-cartao-quantum-black",
+  "area": "produtos",
+  "tipo": "manual",
+  "data": "2025-07-22",
+  "versao": 1
+ },
+ {
+  "arquivo": "docs/comp-politica-acessos__v1.md",
+  "doc_id": "comp-politica-acessos",
+  "area": "compliance",
+  "tipo": "politica",
+  "data": "2026-01-20",
+  "versao": 1
+ },
+ {
+  "arquivo": "docs/comp-retencao-dados__v1.md",
+  "doc_id": "comp-retencao-dados",
+  "area": "compliance",
+  "tipo": "politica",
+  "data": "2026-01-25",
+  "versao": 1
+ },
+ {
+  "arquivo": "docs/comp-lgpd-portal__v1.md",
+  "doc_id": "comp-lgpd-portal",
+  "area": "compliance",
+  "tipo": "procedimento",
+  "data": "2025-05-05",
+  "versao": 1
+ },
+ {
+  "arquivo": "docs/cred-comite-alcadas__v1.md",
+  "doc_id": "cred-comite-alcadas",
+  "area": "credito",
+  "tipo": "politica",
+  "data": "2025-09-01",
+  "versao": 1
+ },
+ {
+  "arquivo": "docs/mkt-blog-cdb__v1.md",
+  "doc_id": "mkt-blog-cdb",
+  "area": "marketing",
+  "tipo": "marketing",
+  "data": "2026-02-14",
+  "versao": 1
+ },
+ {
+  "arquivo": "docs/rasc-pix-2024__v1.md",
+  "doc_id": "rasc-pix-2024",
+  "area": "produtos",
+  "tipo": "rascunho",
+  "data": "2024-06-01",
+  "versao": 1
+ },
+ {
+  "arquivo": "docs/faq-antigo-tarifas-2023__v1.md",
+  "doc_id": "faq-antigo-tarifas-2023",
+  "area": "atendimento",
+  "tipo": "faq-antigo",
+  "data": "2023-03-01",
+  "versao": 1
+ }
+]

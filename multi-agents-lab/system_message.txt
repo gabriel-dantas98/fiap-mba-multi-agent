@@ -1,0 +1,18 @@
+Processem as quatro fontes nesta ordem: clientes, depois tarifas, depois transacoes, depois documentos.
+
+clientes vem primeiro porque transacoes tem chave estrangeira para cliente_id: se transacoes for
+processada antes de clientes, toda transação vira órfã na validação de FK e a Silver de transações
+sai praticamente vazia — foi exatamente esse bug que o enunciado descreve (2.017 de 2.243 linhas
+rejeitadas numa versão anterior do kit). tarifas não depende de nenhuma outra fonte, então processem
+ela logo depois de clientes, sem deixar a fonte sem dependência atrasar a que tem uma dependência real
+(transacoes). documentos é totalmente independente das outras três — não tem FK e ninguém depende
+dela — e por isso fecha o pipeline, imediatamente antes de fundacao.finalizar_documentos.
+
+Quando a leitura de um arquivo falhar por inteiro (encoding não aceito, schema drift, front-matter
+ausente — qualquer exceção capturada no except), tratem o arquivo inteiro como quarentena: nunca
+deixem a exceção subir e nunca descartem o arquivo em silêncio. Gravem a quarentena do arquivo com o
+motivo sendo o texto da exceção (str(e)), marquem o arquivo como processado com status "quarentena" e
+zero linhas nas duas contagens (porque a leitura falhou antes de existir qualquer linha para contar),
+e só depois somem 1 em drift e 1 em rows_rejected nas métricas do lote (m) — representando o arquivo
+inteiro como uma rejeição, não uma linha. É isso que faz um arquivo corrompido aparecer no relatório
+como quarentena mensurável, em vez de sumir do inbox sem deixar rastro.

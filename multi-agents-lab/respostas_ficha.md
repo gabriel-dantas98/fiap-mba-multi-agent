@@ -22,14 +22,15 @@ regras:
 
 ## D2. O que faltava na instrução
 
-A system message precisou de duas receitas com número, não slogan:
+A system message deixou de ser prosa e virou PE por lacuna (o Construtor 1.5B completa três buracos, não o módulo inteiro):
 
-1. **Ordem:** `clientes → tarifas → transacoes → documentos`, com o motivo da FK (`transacoes.cliente_id` → `clientes`). Sem isso, o Construtor de 1,5B devolve ordem alfabética e o teste de fumaça acusa milhares de órfãos.
-2. **Arquivo inteiro inválido:** no `except`, gravar quarentena com `str(e)`, marcar processado com status `quarentena` e contagens zero, depois `drift += 1` e `rows_rejected += 1`  -  sem usar `len(ok)`/`len(q)` que não existem no bloco de exceção.
+1. `___ORDEM_DAS_FONTES___` → `sorted(...)` canônico com clientes=0 antes de transacoes.
+2. `___REFERENCIAS_PARA_FK___` → dict `{"clientes": ...}` só se `fonte == "transacoes"`, senão `{}`.
+3. `___O_QUE_FAZER_COM_O_ARQUIVO_INVALIDO___` → quatro linhas no except, sem `ok`/`q`/`df`, `marcar_processado(..., 0, 1)`.
 
-No Colab o Construtor frequentemente erra `refs` como dict `{"clientes": conjunto}` só em `transacoes`; o plano B (`codigo_de_referencia`) preserva a missão.
+Cada bloco tem PREENCHA EXATAMENTE + PROIBIDO (ordem alfabética, `refs =`, `len(ok)` no except). Sem isso o teste de fumaça acusa órfãos ou NameError.
 
-**Não delegamos ao agente:** o contrato de negócio (domínios, sinal, `tipos_nao_autoritativos`, `maximo: hoje`). O modelo completa lacunas de código; não decide o que a Quantum considera verdade.
+**Não delegamos ao agente:** o contrato de negócio (domínios, sinal, `tipos_nao_autoritativos`, `maximo: hoje`). O modelo completa código; não decide o que a Quantum considera verdade.
 
 ---
 

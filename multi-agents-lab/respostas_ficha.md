@@ -1,48 +1,44 @@
 # Ficha de decisao · Bloco 1
 
-## 1. Lacuna que mais mudou o harness
+## D1. A lacuna mais cara
 
-Lacuna 8 em `transacoes.yaml` (regras de sinal).
+**Lacuna 8  -  regras de sinal em `transacoes.yaml`.**
 
-Preenchemos:
-- `deposito_positivo`: `tipo != 'deposito' or valor > 0`
-- `saida_negativa`: `tipo not in ['saque','pix','cdb_aplicacao','compra_cartao'] or valor < 0`
+Preenchimento:
 
-Evidencia no lote. T990003 e T990004 sao deposito com valor negativo. No resto do arquivo, deposito
-e sempre positivo e saidas de caixa sao sempre negativas. Sem a regra, essas linhas entram na Silver
-e o saldo do cliente fecha errado em silencio.
+```yaml
+regras:
+  - {nome: deposito_positivo, expr: "tipo != 'deposito' or valor > 0"}
+  - {nome: saida_negativa,    expr: "tipo not in ['saque','pix','cdb_aplicacao','compra_cartao'] or valor < 0"}
+```
 
-O que a regra rejeita que talvez fosse legitimo. Um estorno de deposito lancado com o mesmo `tipo`
-e valor negativo. No corpus de 2026 isso nao existe. Em producao precisaria de um tipo proprio
-(`estorno_deposito`), senao cai na quarentena.
+**Evidência:** no `transacoes.csv` inicial (2.011 linhas), depósitos legítimos são sempre positivos e saídas (`saque`, `pix`, `cdb_aplicacao`, `compra_cartao`) sempre negativas. As únicas violações plantadas são T990003 (`deposito`, -300,00) e T990004 (`deposito`, -10,00). Sem a regra, o harness de integridade ainda passa por contagem  -  mas o saldo da Marina (e de qualquer cliente afetado) fecha errado sem alerta.
 
-Menção honrosa. Lacuna 9 (`maximo: hoje`) e o que barra o veneno do Caos
-(`com-tarifa-promocional.md` com data 2027-01-01). Sem ela o harness toma -20 no Caos mesmo com o
-resto perfeito.
+**Falso positivo:** estorno operacional lançado como `tipo=deposito` com valor negativo. No corpus de 2026 não existe; em produção exigiria `estorno_deposito` no domínio.
 
-## 2. System message e o que nao se delega
+**Menção:** Lacuna 9 (`maximo: hoje`) é a que barra o veneno do Caos (`com-tarifa-promocional.md`, data 2027-01-01). Sem ela, o bônus Caos vira -20 mesmo com o resto perfeito.
 
-A system message precisou dizer duas coisas com numero, nao slogan.
-1. Ordem clientes → tarifas → transacoes → documentos, com o motivo da FK.
-2. Arquivo que quebra na leitura vai inteiro pra quarentena com `str(e)`, status quarentena, zeros
-   nas contagens, +1 drift e +1 rows_rejected.
+---
 
-Sem a frase da FK, o Construtor de 1,5B devolve ordem alfabetica ou qualquer ordem "plausivel" e o
-teste de fumaca acusa milhares de orfaos. Sem a receita do except, ele tenta `len(ok)` dentro do
-except e o guardrail estatico reprova.
+## D2. O que faltava na instrução
 
-O que nao delegamos ao agente. O contrato de negocio (dominio, sinal, tipos nao autoritativos,
-`maximo: hoje`). O modelo completa lacunas de codigo. Ele nao decide o que a Quantum considera
-verdade. Isso e trabalho de arquiteto com evidência no dado.
+A system message precisou de duas receitas com número, não slogan:
 
-## 3. Linha de quarentena controversa
+1. **Ordem:** `clientes → tarifas → transacoes → documentos`, com o motivo da FK (`transacoes.cliente_id` → `clientes`). Sem isso, o Construtor de 1,5B devolve ordem alfabética e o teste de fumaça acusa milhares de órfãos.
+2. **Arquivo inteiro inválido:** no `except`, gravar quarentena com `str(e)`, marcar processado com status `quarentena` e contagens zero, depois `drift += 1` e `rows_rejected += 1`  -  sem usar `len(ok)`/`len(q)` que não existem no bloco de exceção.
 
-`TF005` em tarifas, motivo `sem_sobreposicao_vigencia: sobrepoe TF001`.
+No Colab o Construtor frequentemente erra `refs` como dict `{"clientes": conjunto}` só em `transacoes`; o plano B (`codigo_de_referencia`) preserva a missão.
 
-TF001 (saque R$7,00, 2025-01-15 a 2026-01-09) e TF005 (saque R$6,50, 2025-06-01 a 2025-08-01)
-sobrepoem. O contrato rejeita TF005. O dado nao diz qual linha e a verdade. Pode ser promocao
-legitima sem fechar a vigencia anterior.
+**Não delegamos ao agente:** o contrato de negócio (domínios, sinal, `tipos_nao_autoritativos`, `maximo: hoje`). O modelo completa lacunas de código; não decide o que a Quantum considera verdade.
 
-Se mudassemos o contrato para "ultima vigencia vence" e fechar TF001 automaticamente, a promocao
-passaria, mas um typo curto em TF005 tambem viraria verdade sem revisao. Preferimos rejeitar e deixar
-visivel na quarentena. Dado ausente revisado e melhor que resposta errada silenciosa do Q.
+---
+
+## D3. A linha da quarentena que discordamos
+
+**TF005** (fonte `tarifas`), motivo `sem_sobreposicao_vigencia: sobrepõe TF001`.
+
+TF001: saque R$7,00, 2025-01-15 a 2026-01-09. TF005: saque R$6,50, 2025-06-01 a 2025-08-01  -  período inteiro dentro de TF001. O contrato rejeita TF005.
+
+**Discordância:** o dado não diz qual linha está errada. TF005 pode ser promoção legítima; nesse caso TF001 deveria ter sido partida em duas vigências. A quarentena expõe o conflito mas não resolve qual tarifa vale em julho/2025.
+
+**Mudança possível:** auto-fechar vigência da tarifa mais antiga na data de início da nova. **Custo:** typos curtos viram verdade sem revisão humana. Preferimos rejeitar e revisar: tarifa errada silenciosa no índice do Q é pior que dado ausente na quarentena.

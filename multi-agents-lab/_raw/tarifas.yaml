@@ -1,0 +1,24 @@
+fonte: tarifas
+padrao_arquivo: "tarifas*.parquet"
+formato: parquet
+chave: [tarifa_id]
+schema_drift: quarentena
+duplicatas: manter_primeira
+
+colunas:
+  tarifa_id:       {tipo: string, obrigatorio: true}
+  tipo:            {tipo: string, obrigatorio: true, dominio: [saque, ted, manutencao, pix]}
+  valor:           {tipo: double, obrigatorio: true, minimo: 0}
+  vigencia_inicio: {tipo: date, obrigatorio: true, formatos: ["%Y-%m-%d"]}
+  vigencia_fim:    {tipo: date, formatos: ["%Y-%m-%d"]}
+
+# --- LACUNA 11 -------------------------------------------------------------------
+# Esta é a única regra do kit que não olha uma linha isolada, e sim o CONJUNTO.
+# O arquivo tem cinco tarifas. Duas delas dizem que o saque custava valores
+# diferentes no mesmo período (veja TF001 e TF005). Nenhuma das duas está errada
+# sozinha: a inconsistência só aparece quando você compara as duas.
+# Quando o Q perguntar "quanto custava o saque em julho de 2025", uma tabela com
+# vigências sobrepostas devolve duas respostas.
+# Formato: uma lista com uma regra de conjunto.
+#   {nome: sem_sobreposicao_vigencia, particao: <coluna que agrupa>, inicio: <coluna>, fim: <coluna>}
+regras_conjunto: TODO

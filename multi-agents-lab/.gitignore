@@ -1,0 +1,17 @@
+_validacao/
+_validacao_harness/
+lakehouse*/
+trabalho/
+resultados/
+__pycache__/
+*.py[cod]
+.cache/
+.pytest_cache/
+.huggingface/
+models/
+sentence-transformers/
+solucao_referencia/
+dutos-do-q/lakehouse*/
+dutos-do-q/trabalho/
+dutos-do-q/resultados/
+dutos-do-q/_validacao/

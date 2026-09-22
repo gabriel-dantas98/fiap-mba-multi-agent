@@ -1,0 +1,105 @@
+[
+ {
+  "evento": 1,
+  "nome": "comunicado novo",
+  "op": "insert",
+  "tabela": "comunicados",
+  "linha": {
+   "doc_id": "com-rendimento-cripto",
+   "titulo": "Comunicado — rendimento do Quantum Cripto FIM",
+   "area": "produtos",
+   "tipo": "comunicado",
+   "data": "2026-06-10",
+   "versao": 1,
+   "conteudo": "O fundo Quantum Cripto FIM encerrou o primeiro mês com rendimento de 4,2%."
+  }
+ },
+ {
+  "evento": 2,
+  "nome": "edição de texto (re-embed obrigatório)",
+  "op": "update",
+  "tabela": "comunicados",
+  "chave": {
+   "doc_id": "com-rendimento-cripto"
+  },
+  "set": {
+   "conteudo": "O fundo Quantum Cripto FIM encerrou o primeiro mês com rendimento de 4,7%, após revisão da cota.",
+   "versao": 2
+  }
+ },
+ {
+  "evento": 3,
+  "nome": "edição só de metadado (re-embed desnecessário)",
+  "op": "update",
+  "tabela": "comunicados",
+  "chave": {
+   "doc_id": "com-rendimento-cripto"
+  },
+  "set": {
+   "area": "investimentos"
+  }
+ },
+ {
+  "evento": 4,
+  "nome": "mudança de tarifa (invalidar cache)",
+  "op": "update",
+  "tabela": "tarifas",
+  "chave": {
+   "tipo": "saque"
+  },
+  "set": {
+   "valor": 8.0,
+   "vigencia_inicio": "2026-06-15"
+  }
+ },
+ {
+  "evento": 5,
+  "nome": "comunicado revogado (tombstone)",
+  "op": "delete",
+  "tabela": "comunicados",
+  "chave": {
+   "doc_id": "com-lancamento-qi-cripto"
+  }
+ },
+ {
+  "evento": 6,
+  "nome": "pedido LGPD da Marina",
+  "op": "insert",
+  "tabela": "lgpd_eliminacoes",
+  "linha": {
+   "pedido_id": "LGPD-0001",
+   "cliente_id": "C0007",
+   "solicitado_em": "2026-06-16"
+  }
+ },
+ {
+  "evento": 7,
+  "nome": "reenvio idêntico (at-least-once)",
+  "op": "reenvio_identico",
+  "tabela": "comunicados",
+  "chave": {
+   "doc_id": "com-rendimento-cripto"
+  }
+ },
+ {
+  "evento": 8,
+  "nome": "tabela regravada (overwrite com mesmo conteúdo)",
+  "op": "regravacao_total",
+  "tabela": "comunicados"
+ },
+ {
+  "evento": 9,
+  "nome": "corrida de freshness",
+  "op": "insert",
+  "tabela": "comunicados",
+  "linha": {
+   "doc_id": "com-corrida-freshness",
+   "titulo": "Comunicado — horário estendido de atendimento",
+   "area": "atendimento",
+   "tipo": "comunicado",
+   "data": "2026-06-20",
+   "versao": 1,
+   "conteudo": "A partir de 20/06/2026 o atendimento telefônico da Quantum funciona até as 23h40, código de campanha ZX-7731."
+  }
+ }
+]

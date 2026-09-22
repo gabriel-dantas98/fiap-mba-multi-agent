@@ -1,0 +1,46 @@
+fonte: transacoes
+padrao_arquivo: "transacoes*"
+formato: auto                        # csv ou parquet pelo sufixo
+encodings: [utf-8]
+schema_drift: quarentena
+correcoes: [strip_strings]
+
+# --- LACUNA 5 ------------------------------------------------------------------
+# Decisão: transacao_id. É o identificador único e estável de cada transação
+# (regex ^T\d{6}$ já garante o formato). O MERGE compara por essa chave: reenviar
+# o mesmo arquivo (transacoes_reenvio_duplicado.parquet no Caos) bate na mesma
+# chave e não duplica nada — é essa chave que torna o duto idempotente.
+chave: [transacao_id]
+
+duplicatas: manter_primeira
+
+colunas:
+  transacao_id: {tipo: string, obrigatorio: true, regex: "^T\\d{6}$"}
+
+  # --- LACUNA 6 ----------------------------------------------------------------
+  # T990005 (cliente C9999) e T990006 (cliente C8888) referenciam clientes que
+  # não existem no cadastro. Sem essa FK a Silver de transações aceitaria
+  # movimentação de clientes fantasmas. A referência aponta para a fonte clientes,
+  # coluna cliente_id (mesmo nome usado por fundacao.referencia_clientes).
+  cliente_id:   {tipo: string, obrigatorio: true, fk: {tabela: clientes, coluna: cliente_id}}
+
+  tipo:         {tipo: string, obrigatorio: true, dominio: [deposito, saque, pix, cdb_aplicacao, compra_cartao]}
+  valor:        {tipo: double, obrigatorio: true}
+
+  # --- LACUNA 7 ----------------------------------------------------------------
+  # O lote inicial vem em aaaa-mm-dd. O arquivo do Caos (transacoes_datas_br.csv)
+  # vem em dd/mm/aaaa. Aceitamos os dois formatos, nessa ordem (o primeiro que
+  # casar vence, então aaaa-mm-dd continua sendo tentado primeiro). Não acrescento
+  # mais formatos que isso: T990001 (30/02) e T990002 (mês 13) já são datas
+  # inválidas em QUALQUER formato razoável e continuam caindo em erro de parsing,
+  # que é o comportamento certo.
+  data:         {tipo: date, obrigatorio: true, formatos: ["%Y-%m-%d", "%d/%m/%Y"]}
+
+# --- LACUNA 8 --------------------------------------------------------------------
+# T990003 e T990004 são "deposito" com valor negativo. Olhando o arquivo inteiro,
+# depósito é sempre positivo e as saídas de caixa (saque, pix, cdb_aplicacao,
+# compra_cartao) são sempre negativas — é assim que o saldo do cliente soma certo.
+# Duas regras, uma por direção do dinheiro.
+regras:
+  - {nome: deposito_positivo, expr: "tipo != 'deposito' or valor > 0"}
+  - {nome: saida_negativa,    expr: "tipo not in ['saque','pix','cdb_aplicacao','compra_cartao'] or valor < 0"}

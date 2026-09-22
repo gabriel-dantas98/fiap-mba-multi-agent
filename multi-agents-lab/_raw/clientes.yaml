@@ -1,0 +1,40 @@
+fonte: clientes
+padrao_arquivo: "clientes*.csv"
+formato: csv
+chave: [cliente_id]
+schema_drift: quarentena             # coluna obrigatória ausente → arquivo inteiro em quarentena
+correcoes: [strip_strings]           # aplicadas ANTES das regras
+
+# --- LACUNA 1 ------------------------------------------------------------------
+# Qual codificação de caracteres o duto aceita? Só utf-8, ou também latin-1?
+# Um arquivo em latin-1 lido como utf-8 levanta erro e o arquivo INTEIRO vai para a quarentena.
+# Aceitar latin-1 é registrar uma correção; recusar é tratar o arquivo como inválido.
+# Formato: uma lista, ex.: [utf-8] ou [utf-8, latin-1]
+encodings: [utf-8]
+
+# --- LACUNA 2 ------------------------------------------------------------------
+# O que fazer quando a MESMA chave aparece duas vezes no arquivo?
+#   manter_primeira → descarta as repetidas e registra a correção na quarentena
+#   quarentena      → manda todas as cópias para a quarentena, inclusive a primeira
+#   (deixar TODO)   → as duas cópias entram na Silver
+# Olhe C0031 e C0032 no clientes.csv antes de decidir.
+duplicatas: manter_primeira
+
+colunas:
+  cliente_id: {tipo: string, obrigatorio: true, regex: "^C\\d{4}$"}
+  nome:       {tipo: string, obrigatorio: true}
+  
+  # --- LACUNA 3 ----------------------------------------------------------------
+  # Dois CPFs no arquivo não fecham no dígito verificador (veja C0021 e C0022).
+  # O motor de contrato tem um validador pronto para isso. Qual é o nome dele?
+  # Formato: validador: <nome>
+  cpf:        {tipo: string, obrigatorio: true, validador: cpf_ok}
+
+  # --- LACUNA 4 ----------------------------------------------------------------
+  # Quais valores de segmento a Quantum reconhece? Um cliente do arquivo tem um
+  # segmento que não existe no negócio (veja C0041). Liste os válidos.
+  # Formato: dominio: [a, b, c]
+  segmento:   {tipo: string, obrigatorio: true, dominio: [varejo, private, black]}
+
+  cidade:     {tipo: string}
+  cadastro_em: {tipo: date, formatos: ["%Y-%m-%d"]}

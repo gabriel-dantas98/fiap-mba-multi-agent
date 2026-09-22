@@ -4,6 +4,8 @@ Monorepo open-source para projetos do MBA FIAP em [AI Engineering & Multi-Agents
 
 Cada grupo/pessoa contribui com apps Python (e/ou frontends estáticos) em `apps/<grupo>/<projeto>/`. Uma homepage central lista todos os projetos e os monta em paths dedicados via FastAPI sub-app mounts.
 
+Labs de disciplina (ex. Os Dutos do Q) ficam em pastas irmãs como `multi-agents-lab/`, fora de `apps/`.
+
 ## Stack
 
 - Python 3.13 + FastAPI

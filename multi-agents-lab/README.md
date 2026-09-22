@@ -24,13 +24,17 @@ retrieval e resistencia ao pacote Caos. Ele nao le o codigo.
 
 ```
 multi-agents-lab/
-  contratos/           YAML preenchidos (fonte da verdade do esquadrao)
-  system_message.txt   ordem das fontes + tratamento de arquivo quebrado
-  respostas_ficha.md   tres perguntas da entrega
-  run_m1_harness.py    Missao 1 + Caos, assert 100/20
-  dutos-do-q.zip       kit do professor
-  dutos-do-q/          kit descompactado (libs em kit/)
-  _raw/                snapshot do Colab e YAML originais do Drive
+  contratos/                 YAML preenchidos (fonte da verdade do esquadrao)
+  system_message.txt         PE por lacuna do Construtor
+  respostas_ficha.md         tres perguntas da entrega
+  run_m1_harness.py          Missao 1 + Caos, assert 100/20
+  run_notebook_e2e.py        papermill do notebook local (mock|hf)
+  01_bloco1_batch_LOCAL.ipynb  notebook adaptado p/ path local (sem Drive)
+  01_bloco1_batch_SOLUCAO.ipynb referencia de celulas (sem outputs)
+  entregas/                  notebooks EXECUTADO_* com outputs versionados
+  dutos-do-q.zip             kit do professor
+  dutos-do-q/                kit descompactado (libs em kit/)
+  _raw/                      snapshot do Colab e YAML originais do Drive
 ```
 
 ## As 11 lacunas (preenchimento que passa)
@@ -55,15 +59,21 @@ Armadilhas do YAML que estava no Drive. `validador: cpf_ok` nao aciona o motor.
 
 ## Rodar no Colab
 
-1. Upload de `dutos-do-q.zip` (ja esta na pasta FONTE do Drive) ou preencha `KIT_URL`.
-2. Copie os 4 YAML de `contratos/` para `dutos-do-q/contratos/` no painel de arquivos.
-3. Cole `system_message.txt` na celula do Passo 4.
-4. Rode o Construtor. Se falhar 2 vezes, use o plano B (`agentes.codigo_de_referencia()`).
-5. Descomente o Caos (Passo 10) e rode Bronze → Silver → Gold de novo.
-6. Rode o harness com `com_caos=True`.
-7. Preencha `ESQUADRAO`, cole as respostas da ficha, gere a entrega JSON.
+1. Abra `01_bloco1_batch_SOLUCAO.ipynb` (FONTE) ou o notebook do professor.
+2. Upload de `dutos-do-q.zip` (ja esta na FONTE) ou preencha `KIT_URL`.
+3. **Passo 1b** — `gdown` dos 4 YAML da FONTE (`anyoneWithLink`; sem auth). Fallback:
+   GitHub raw (`CONTRATOS_GIT_REF`) ou `CONTRATOS_SOURCE=local`.
+4. Cole `system_message.txt` na celula do Passo 4 (arquivo tambem esta na FONTE).
+5. Rode o Construtor. Se falhar 2 vezes, use o plano B (`agentes.codigo_de_referencia()`).
+6. Descomente o Caos (Passo 10) e rode Bronze → Silver → Gold de novo.
+7. Rode o harness com `com_caos=True`.
+8. Preencha `ESQUADRAO`, cole as respostas da ficha, gere a entrega JSON.
+
+Forcar fonte dos contratos: `CONTRATOS_SOURCE=drive|github|local`.
 
 ## Rodar local
+
+Harness sozinho (contratos + plano B do Construtor):
 
 ```bash
 cd multi-agents-lab
@@ -72,6 +82,19 @@ python run_m1_harness.py
 ```
 
 Esperado. `score=100.0 bonus_caos=20.0 total=120.0 medalha=OURO`.
+
+Notebook E2E com outputs no `.ipynb` (papermill + kernel `fiap-mba`):
+
+```bash
+# mock: Construtor devolve codigo de referencia (sem baixar LLM)
+LLM_BACKEND=mock python run_notebook_e2e.py
+
+# hf: Qwen2.5-Coder-1.5B local (~3GB cache HF; precisa de disco)
+LLM_BACKEND=hf python run_notebook_e2e.py
+```
+
+Saida. `entregas/01_bloco1_batch_EXECUTADO_<backend>.ipynb` — celula do harness com
+`MISSÃO 1 · DUTO BATCH — 100.0 pontos — OURO` e `Caos: +20 → total 120.0`.
 
 ## Principios usados nesta entrega
 

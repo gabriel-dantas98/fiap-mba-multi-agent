@@ -1,0 +1,100 @@
+{
+ "esquadrao": "esquadrao_00",
+ "bloco": 1,
+ "gerado_em": "2026-09-22 01:28:48",
+ "scores": {
+  "missao_1": {
+   "score": 100.0,
+   "medalha": "OURO",
+   "total_com_caos": 120.0,
+   "bonus_caos": 20.0,
+   "checks": [
+    {
+     "nome": "idempotência (2ª execução)",
+     "ok": true,
+     "pontos": 25,
+     "max": 25,
+     "detalhe": "contagens iguais, embeddings na 2ª execução = 0"
+    },
+    {
+     "nome": "integridade (contagens)",
+     "ok": true,
+     "pontos": 20,
+     "max": 20,
+     "detalhe": "{'clientes': (197, 197), 'transacoes': (2003, 2003), 'tarifas': (4, 4)}, doc_ids vigentes = 21 (esperado 21)"
+    },
+    {
+     "nome": "qualidade (quarentena com motivo)",
+     "ok": true,
+     "pontos": 25.0,
+     "max": 25,
+     "detalhe": "12/12 em quarentena, 0 inválidos vazaram para a Silver"
+    },
+    {
+     "nome": "retrieval (top-3 vigente)",
+     "ok": true,
+     "pontos": 10,
+     "max": 10,
+     "detalhe": "+prod-tabela-tarifas +prod-cdb-quantum +com-lancamento-qi-cripto +cred-score-quantum +prod-credito-pessoal +rh-politica-home-office +prod-pix +prod-seguros +prod-conta-digital +ate"
+    },
+    {
+     "nome": "índice limpo (só fonte autoritativa)",
+     "ok": true,
+     "pontos": 10,
+     "max": 10,
+     "detalhe": "ruído no índice: nenhum; chunks de versão antiga ainda vigentes: 0"
+    },
+    {
+     "nome": "SQL sobre a Silver",
+     "ok": true,
+     "pontos": 10.0,
+     "max": 10,
+     "detalhe": "+saldo da Marina +clientes válidos +tarifa de saque vigente em 02/2026 +transações da Marina"
+    },
+    {
+     "nome": "CAOS: veneno bloqueado",
+     "ok": true,
+     "pontos": 8,
+     "max": 8,
+     "detalhe": "o comunicado falso não chegou ao índice"
+    },
+    {
+     "nome": "CAOS: drift em quarentena com motivo",
+     "ok": true,
+     "pontos": 4,
+     "max": 4,
+     "detalhe": ""
+    },
+    {
+     "nome": "CAOS: documento válido novo ingerido",
+     "ok": true,
+     "pontos": 4,
+     "max": 4,
+     "detalhe": ""
+    },
+    {
+     "nome": "CAOS: encoding e datas corrigidos, reenvio sem duplicar",
+     "ok": true,
+     "pontos": 4,
+     "max": 4,
+     "detalhe": "clientes=207 (esperado 207), transações=2013 (esperado 2013)"
+    }
+   ]
+  }
+ },
+ "lacunas_do_contrato_ainda_abertas": [],
+ "contratos": {
+  "clientes": "fonte: clientes\npadrao_arquivo: \"clientes*.csv\"\nformato: csv\nchave: [cliente_id]\nschema_drift: quarentena             # coluna obrigatória ausente → arquivo inteiro em quarentena\ncorrecoes: [strip_strings]           # aplicadas ANTES das regras\n\n# --- LACUNA 1 ------------------------------------------------------------------\n# Decisão: aceitar utf-8 e latin-1. O pacote do Caos traz clientes_novos_latin1.csv\n# com 10 clientes novos legítimos (C0201-C0210, nomes com acento tipo \"Ação\").\n# Só utf-8 rejeitaria o arquivo INTEIRO por erro de decodificação e perderíamos\n# 10 clientes reais. O custo de aceitar latin-1 é só uma linha registrada como\n# correção (encoding:latin-1), nada de dado é alterado.\nencodings: [utf-8, latin-1]\n\n# --- LACUNA 2 ------------------------------------------------------------------\n# Decisão: manter_primeira. C0031 e C0032 aparecem duas vezes no arquivo, com\n# espaços extras em volta do nome/cidade (removidos pelo strip_strings antes da\n# comparação de chave) — é a MESMA pessoa duplicada na exportação, não uma fraude.\n# quarentena aqui perderia dois clientes legítimos por completo; manter_primeira\n# descarta só a cópia redundante e registra a correção.\nduplicatas: manter_primeira\n\ncolunas:\n  cliente_id: {tipo: string, obrigatorio: true, regex: \"^C\\\\d{4}$\"}\n  nome:       {tipo: string, obrigatorio: true}\n\n  # --- LACUNA 3 ----------------------------------------------------------------\n  # C0021 e C0022 têm o mesmo CPF \"11111111111\" — todos os dígitos iguais, o\n  # clássico CPF de teste/placeholder, que falha o dígito verificador. O motor\n  # já tem cpf_ok() pronto (kit/contrato.py), acionado por validador: cpf.\n  cpf:        {tipo: string, obrigatorio: true, validador: cpf}\n\n  # --- LACUNA 4 ----------------------------------------------------------------\n  # Os segmentos que aparecem de verdade no arquivo (fora do C0041) são varejo,\n  # private e black. C0041 vem com segmento \"vip\", que não existe no negócio da\n  # Quantum — provavelmente entrada manual errada. Fica fora do domínio.\n  segmento:   {tipo: string, obrigatorio: true, dominio: [varejo, black, private]}\n\n  cidade:     {tipo: string}\n  cadastro_em: {tipo: date, formatos: [\"%Y-%m-%d\"]}\n",
+  "documentos": "fonte: documentos\npadrao_arquivo: \"docs/*.md\"\nformato: markdown_frontmatter\nschema_drift: quarentena             # front-matter sem campo obrigatório\ncorrecoes: [strip_strings]\nduplicatas: manter_primeira\n\n# A chave é [doc_id, versao], e não só doc_id, de propósito: as duas versões convivem\n# na tabela (o histórico fica) e quem decide qual é a atual é a vigência, não o MERGE.\n# Com chave [doc_id] a v1 seria sobrescrita e você perderia o que a política dizia antes.\nchave: [doc_id, versao]\n\ncolunas:\n  doc_id: {tipo: string, obrigatorio: true, regex: \"^[a-z0-9-]+$\"}\n  titulo: {tipo: string, obrigatorio: true}\n  area:   {tipo: string, obrigatorio: true}\n  tipo:   {tipo: string, obrigatorio: true, dominio: [tabela, manual, politica, procedimento, ata, comunicado, faq, marketing, rascunho, faq-antigo]}\n\n  # --- LACUNA 9 ---------------------------------------------------------------\n  # dados/caos/com-tarifa-promocional.md tem data: 2027-01-01 — no futuro em\n  # relação a qualquer data real de execução da aula. Todos os 25 documentos\n  # legítimos (incluindo o comunicado legítimo do Caos, 2026-06-01) têm data no\n  # passado. \"maximo: hoje\" é um limite especial que o motor já entende\n  # (contrato.py: `r.get(\"maximo\") == \"hoje\" and sv > hoje`) e manda a linha\n  # para a quarentena por \"data futura\".\n  data:   {tipo: date, obrigatorio: true, formatos: [\"%Y-%m-%d\"], maximo: hoje}\n\n  versao: {tipo: int, obrigatorio: true, minimo: 1}\n  conteudo: {tipo: string, obrigatorio: true}\n\n# --- LACUNA 10 -------------------------------------------------------------------\n# Três documentos do corpus são plausíveis e errados: mkt-blog-cdb (marketing,\n# um post de blog), rasc-pix-2024 (rascunho, política não aprovada) e\n# faq-antigo-tarifas-2023 (faq-antigo, com a tarifa de 2023 já desatualizada —\n# é exatamente esse documento que, na história do enunciado, fez o Q responder\n# R$4,90 para uma tarifa que já era R$7,50). Eles continuam na Silver como\n# histórico, só saem do índice (gold) como fonte de verdade.\ntipos_nao_autoritativos: [marketing, rascunho, faq-antigo]\n",
+  "tarifas": "fonte: tarifas\npadrao_arquivo: \"tarifas*.parquet\"\nformato: parquet\nchave: [tarifa_id]\nschema_drift: quarentena\nduplicatas: manter_primeira\n\ncolunas:\n  tarifa_id:       {tipo: string, obrigatorio: true}\n  tipo:            {tipo: string, obrigatorio: true, dominio: [saque, ted, manutencao, pix]}\n  valor:           {tipo: double, obrigatorio: true, minimo: 0}\n  vigencia_inicio: {tipo: date, obrigatorio: true, formatos: [\"%Y-%m-%d\"]}\n  vigencia_fim:    {tipo: date, formatos: [\"%Y-%m-%d\"]}\n\n# --- LACUNA 11 -------------------------------------------------------------------\n# TF001 (saque, 2025-01-15 a 2026-01-09, R$7,00) e TF005 (saque, 2025-06-01 a\n# 2025-08-01, R$6,50) se sobrepõem inteiramente: TF005 está cravado dentro do\n# período de TF001, mesmo tipo \"saque\". Particiono por tipo (cada tipo de tarifa\n# tem sua própria linha do tempo de vigência) e comparo inicio/fim dentro de\n# cada partição. Sem essa regra, \"quanto custava o saque em julho de 2025\" tem\n# duas respostas corretas ao mesmo tempo.\nregras_conjunto:\n  - {nome: sem_sobreposicao_vigencia, particao: tipo, inicio: vigencia_inicio, fim: vigencia_fim}\n",
+  "transacoes": "fonte: transacoes\npadrao_arquivo: \"transacoes*\"\nformato: auto                        # csv ou parquet pelo sufixo\nencodings: [utf-8]\nschema_drift: quarentena\ncorrecoes: [strip_strings]\n\n# --- LACUNA 5 ------------------------------------------------------------------\n# Decisão: transacao_id. É o identificador único e estável de cada transação\n# (regex ^T\\d{6}$ já garante o formato). O MERGE compara por essa chave: reenviar\n# o mesmo arquivo (transacoes_reenvio_duplicado.parquet no Caos) bate na mesma\n# chave e não duplica nada — é essa chave que torna o duto idempotente.\nchave: [transacao_id]\n\nduplicatas: manter_primeira\n\ncolunas:\n  transacao_id: {tipo: string, obrigatorio: true, regex: \"^T\\\\d{6}$\"}\n\n  # --- LACUNA 6 ----------------------------------------------------------------\n  # T990005 (cliente C9999) e T990006 (cliente C8888) referenciam clientes que\n  # não existem no cadastro. Sem essa FK a Silver de transações aceitaria\n  # movimentação de clientes fantasmas. A referência aponta para a fonte clientes,\n  # coluna cliente_id (mesmo nome usado por fundacao.referencia_clientes).\n  cliente_id:   {tipo: string, obrigatorio: true, fk: {tabela: clientes, coluna: cliente_id}}\n\n  tipo:         {tipo: string, obrigatorio: true, dominio: [deposito, saque, pix, cdb_aplicacao, compra_cartao]}\n  valor:        {tipo: double, obrigatorio: true}\n\n  # --- LACUNA 7 ----------------------------------------------------------------\n  # O lote inicial vem em aaaa-mm-dd. O arquivo do Caos (transacoes_datas_br.csv)\n  # vem em dd/mm/aaaa. Aceitamos os dois formatos, nessa ordem (o primeiro que\n  # casar vence, então aaaa-mm-dd continua sendo tentado primeiro). Não acrescento\n  # mais formatos que isso: T990001 (30/02) e T990002 (mês 13) já são datas\n  # inválidas em QUALQUER formato razoável e continuam caindo em erro de parsing,\n  # que é o comportamento certo.\n  data:         {tipo: date, obrigatorio: true, formatos: [\"%Y-%m-%d\", \"%d/%m/%Y\"]}\n\n# --- LACUNA 8 --------------------------------------------------------------------\n# T990003 e T990004 são \"deposito\" com valor negativo. Olhando o arquivo inteiro,\n# depósito é sempre positivo e as saídas de caixa (saque, pix, cdb_aplicacao,\n# compra_cartao) são sempre negativas — é assim que o saldo do cliente soma certo.\n# Duas regras, uma por direção do dinheiro.\nregras:\n  - {nome: deposito_positivo, expr: \"tipo != 'deposito' or valor > 0\"}\n  - {nome: saida_negativa,    expr: \"tipo not in ['saque','pix','cdb_aplicacao','compra_cartao'] or valor < 0\"}\n"
+ },
+ "system_message": "\n# INSTRUÇÕES DO ESQUADRÃO · Agent 1 Construtor\n# Audiência: Qwen2.5-Coder-1.5B preenchendo TRÊS lacunas do esqueleto.\n# Responda só com o código de cada lacuna. Não invente funções, não altere o esqueleto.\n\n## Objetivo\nProduzir um pipeline Silver que (1) processa fontes na ordem certa por causa da FK,\n(2) passa refs só em transacoes, (3) manda arquivo quebrado inteiro para quarentena.\n\n## Lacuna ___ORDEM_DAS_FONTES___\nDECISÃO: clientes antes de transacoes. Sem isso, a FK rejeita quase todas as linhas.\n\nPREENCHA EXATAMENTE com (números 0..3, todos os quatro nomes):\nsorted(contratos, key=lambda f: {\"clientes\": 0, \"tarifas\": 1, \"transacoes\": 2, \"documentos\": 3}.get(f, 9))\n\nPROIBIDO:\n- ordem alfabética ou sorted(contratos) sem key\n- omitir qualquer das quatro fontes no dict\n- transacoes com número menor que clientes\n- lista literal [\"clientes\", ...] (use o sorted acima)\n\nPOR QUE tarifas=1 e documentos=3: tarifas não tem FK; documentos fecha o lote antes de finalizar_documentos.\n\n## Lacuna ___REFERENCIAS_PARA_FK___\nDECISÃO: refs é um dict. Só transacoes recebe clientes. Demais fontes recebem {}.\n\nPREENCHA EXATAMENTE com:\n{\"clientes\": (ref if ref is not None else fundacao.referencia_clientes(lake))} if fonte == \"transacoes\" else {}\n\nPROIBIDO:\n- refs = ... (não use atribuição; a lacuna JÁ é o lado direito de `refs =`)\n- passar refs para todas as fontes\n- fundacao.referencia_clientes(lake) solto sem dict\n- chave errada (tem que ser \"clientes\", igual ao fk do contrato)\n\n## Lacuna ___O_QUE_FAZER_COM_O_ARQUIVO_INVALIDO___\nDECISÃO: falhou a leitura = arquivo inteiro em quarentena. Nunca engula a exceção.\n\nCONTEXTO DO except: ok, q e df NÃO EXISTEM. Use só e, r, fonte, lake, m.\n\nPREENCHA EXATAMENTE com estas quatro linhas:\nfundacao.gravar_quarentena(lake, fonte, r[\"nome\"], None, str(e))\nfundacao.marcar_processado(lake, r[\"path\"], fonte, \"quarentena\", 0, 1)\nm[\"drift\"] += 1\nm[\"rows_rejected\"] += 1\n\nPROIBIDO:\n- len(ok), len(q), len(df) (NameError)\n- raise / return / pass / continue (some o arquivo do relatório)\n- marcar_processado com status \"ok\"\n- gravar_quarentena sem str(e)\n\nNOTA: o segundo zero do marcar_processado NÃO é zero: use 0 ok e 1 rejeitado (o arquivo conta como uma rejeição).\n\n## Checklist mental (antes de responder cada lacuna)\n1. A expressão/bloco cola no esqueleto sem `=` extra na frente?\n2. Todas as quatro fontes aparecem na ordem?\n3. refs vira dict {\"clientes\": set} só quando fonte == \"transacoes\"?\n4. No except, zero menção a ok/q/df?\n",
+ "regras_auditor": null,
+ "decisoes": {
+  "1. Qual lacuna do contrato vocês preencheram que mais mudou o resultado do harness? Que evidência no dado levou a essa escolha, e o que essa regra rejeita que talvez fosse legítimo?": "\nLacuna 8 (regras de sinal em transacoes). deposito_positivo + saida_negativa.\nEvidencia: T990003 e T990004 sao deposito com valor negativo; o resto do arquivo tem deposito\nsempre positivo e saidas sempre negativas. Sem a regra o saldo fecha errado em silencio.\nSacrificio: estorno de deposito com o mesmo tipo e valor negativo cairia na quarentena.\nMenção: Lacuna 9 (maximo: hoje) e o que barra o veneno do Caos (-20).\n",
+  "2. O que a system message precisou dizer para o Construtor acertar (ou o que faltou nela, se ele errou)? Qual decisão deste pipeline vocês NÃO conseguiriam delegar a um agente, por melhor que fosse a instrução?": "\nA system message precisou cravar ordem clientes→tarifas→transacoes→documentos (FK) e o\nreceituario do except (quarentena com str(e), status quarentena, zeros, +1 drift/+1 rejected).\nSem a FK o Construtor 1.5B ordena errado e o teste de fumaca acusa orfaos.\nNao delegamos o contrato de negocio (dominio, sinal, tipos nao autoritativos, maximo:hoje).\nIsso e decisao de arquiteto com evidencia no dado, nao lacuna de codigo.\n",
+  "3. Qual linha da quarentena foi tratada errado, na opinião do esquadrão? O que mudaria no contrato para corrigir, e o que essa mudança quebraria em outro lugar?": "\nTF005 em tarifas (sem_sobreposicao_vigencia sobrepoe TF001). O dado nao diz qual e verdade.\nPoderia ser promocao legitima. Mudar para 'ultima vigencia vence' aceitaria a promocao mas tambem\num typo curto. Preferimos rejeitar e revisar na quarentena: dado ausente revisado > resposta errada\ndo Q.\n"
+ },
+ "backend_llm": "hf"
+}

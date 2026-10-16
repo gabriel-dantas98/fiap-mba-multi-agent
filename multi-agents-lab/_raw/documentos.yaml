@@ -1,0 +1,37 @@
+fonte: documentos
+padrao_arquivo: "docs/*.md"
+formato: markdown_frontmatter
+schema_drift: quarentena             # front-matter sem campo obrigatório
+correcoes: [strip_strings]
+duplicatas: manter_primeira
+
+# A chave é [doc_id, versao], e não só doc_id, de propósito: as duas versões convivem
+# na tabela (o histórico fica) e quem decide qual é a atual é a vigência, não o MERGE.
+# Com chave [doc_id] a v1 seria sobrescrita e você perderia o que a política dizia antes.
+chave: [doc_id, versao]
+
+colunas:
+  doc_id: {tipo: string, obrigatorio: true, regex: "^[a-z0-9-]+$"}
+  titulo: {tipo: string, obrigatorio: true}
+  area:   {tipo: string, obrigatorio: true}
+  tipo:   {tipo: string, obrigatorio: true, dominio: [tabela, manual, politica, procedimento, ata, comunicado, faq, marketing, rascunho, faq-antigo]}
+
+  # --- LACUNA 9 ---------------------------------------------------------------
+  # Esta é a regra que decide se o agente mente para o cliente.
+  # No pacote que o professor solta no meio da prática vem um comunicado dizendo que
+  # a tarifa de saque passou a ser R$ 0,01. Ele é falso, e a única coisa que o
+  # denuncia sem ler o texto é um campo do front-matter com valor impossível.
+  # Abra dados/caos/com-tarifa-promocional.md e compare com os documentos legítimos.
+  # Formato: acrescente ao dicionário desta coluna o limite que barra o impossível.
+  data:   {tipo: date, obrigatorio: true, formatos: ["%Y-%m-%d"], maximo: hoje}
+
+  versao: {tipo: int, obrigatorio: true, minimo: 1}
+  conteudo: {tipo: string, obrigatorio: true}
+
+# --- LACUNA 10 -------------------------------------------------------------------
+# Quais TIPOS de documento não podem ser citados pelo agente como fonte de verdade?
+# O corpus tem três documentos que dizem coisas plausíveis e erradas: um post de
+# blog, um rascunho não aprovado e um FAQ arquivado de 2023 com a tarifa antiga.
+# Eles continuam na tabela (é histórico), mas saem do índice do agente.
+# Formato: uma lista de valores da coluna tipo.
+tipos_nao_autoritativos: TODO

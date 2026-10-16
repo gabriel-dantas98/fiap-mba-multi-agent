@@ -1,0 +1,48 @@
+fonte: transacoes
+padrao_arquivo: "transacoes*"
+formato: auto                        # csv ou parquet pelo sufixo
+encodings: [utf-8]
+schema_drift: quarentena
+correcoes: [strip_strings]
+
+# --- LACUNA 5 ------------------------------------------------------------------
+# Qual é a chave de idempotência desta fonte? É por ela que o MERGE decide se uma
+# linha que chegou de novo é a MESMA linha ou uma linha nova.
+# Errar aqui é o que faz o reenvio do mesmo arquivo duplicar tudo.
+# Formato: uma lista de colunas, ex.: [coluna_a] ou [coluna_a, coluna_b]
+chave: transacao_id
+
+duplicatas: manter_primeira
+
+colunas:
+  transacao_id: {tipo: string, obrigatorio: true, regex: "^T\\d{6}$"}
+  
+  # --- LACUNA 6 ----------------------------------------------------------------
+  # Duas transações do arquivo apontam para clientes que não existem no cadastro
+  # (veja T990005 e T990006). O contrato pode exigir que este campo exista em outra
+  # fonte antes de aceitar a linha. Preencha a referência.
+  # Formato: fk: {tabela: <fonte>, coluna: <coluna>}
+  cliente_id:   {tipo: string, obrigatorio: true, fk: {tabela: clientes, coluna: cliente_id}}
+
+  tipo:         {tipo: string, obrigatorio: true, dominio: [deposito, saque, pix, cdb_aplicacao, compra_cartao]}
+  valor:        {tipo: double, obrigatorio: true}
+
+  # --- LACUNA 7 ----------------------------------------------------------------
+  # O lote inicial vem todo em aaaa-mm-dd. O pacote que o professor solta no meio
+  # da prática traz um arquivo em dd/mm/aaaa. Aceitar o segundo formato é registrar
+  # uma correção; não aceitar é mandar aquelas linhas para a quarentena.
+  # Cuidado: aceitar formatos demais também aceita datas que não existem.
+  # Formato: uma lista de formatos strftime, ex.: ["%Y-%m-%d"]
+  data:         {tipo: date, obrigatorio: true, formatos: ["%Y-%m-%d", "%d/%m/%Y"]}
+
+# --- LACUNA 8 --------------------------------------------------------------------
+# Regras de linha: expressões que precisam ser verdadeiras para a linha ser aceita.
+# Quatro transações do arquivo violam o sinal do valor (veja T990003 e T990004, e
+# pense no que um saque com valor positivo significaria no saldo do cliente).
+# Formato de cada regra: {nome: <nome>, expr: "<expressão Python sobre as colunas>"}
+# Exemplo de forma: {nome: exemplo, expr: "tipo != 'x' or valor > 0"}
+regras: 
+  - {nome: sinal_valor, expr: "(tipo == 'deposito' and valor > 0) or (tipo == 'saque' and valor < 0) or (tipo == 'pix' and valor != 0) or (tipo == 'cdb_aplicacao' and valor > 0) or (tipo == 'compra_cartao' and valor < 0)"}
+  - {nome: cliente_existe, expr: "cliente_id in clientes.cliente_id"}
+  - {nome: tipo_valido, expr: "tipo in ['deposito', 'saque', 'pix', 'cdb_aplicacao', 'compra_cartao']"}
+  - {nome: valor_positivo, expr: "valor > 0"}

@@ -1,0 +1,23 @@
+fonte: tarifas
+padrao_arquivo: "tarifas*.parquet"
+formato: parquet
+chave: [tarifa_id]
+schema_drift: quarentena
+duplicatas: manter_primeira
+
+colunas:
+  tarifa_id:       {tipo: string, obrigatorio: true}
+  tipo:            {tipo: string, obrigatorio: true, dominio: [saque, ted, manutencao, pix]}
+  valor:           {tipo: double, obrigatorio: true, minimo: 0}
+  vigencia_inicio: {tipo: date, obrigatorio: true, formatos: ["%Y-%m-%d"]}
+  vigencia_fim:    {tipo: date, formatos: ["%Y-%m-%d"]}
+
+# --- LACUNA 11 -------------------------------------------------------------------
+# TF001 (saque, 2025-01-15 a 2026-01-09, R$7,00) e TF005 (saque, 2025-06-01 a
+# 2025-08-01, R$6,50) se sobrepõem inteiramente: TF005 está cravado dentro do
+# período de TF001, mesmo tipo "saque". Particiono por tipo (cada tipo de tarifa
+# tem sua própria linha do tempo de vigência) e comparo inicio/fim dentro de
+# cada partição. Sem essa regra, "quanto custava o saque em julho de 2025" tem
+# duas respostas corretas ao mesmo tempo.
+regras_conjunto:
+  - {nome: sem_sobreposicao_vigencia, particao: tipo, inicio: vigencia_inicio, fim: vigencia_fim}

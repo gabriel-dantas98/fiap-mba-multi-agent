@@ -1,0 +1,26 @@
+[
+ {
+  "cliente_id": "C0007",
+  "texto": "Marina disse que prefere não receber ofertas de cartão de crédito.",
+  "tipo": "preferencia",
+  "data": "2026-05-02"
+ },
+ {
+  "cliente_id": "C0007",
+  "texto": "Marina mencionou que está juntando dinheiro para uma viagem em dezembro.",
+  "tipo": "contexto",
+  "data": "2026-05-20"
+ },
+ {
+  "cliente_id": "C0008",
+  "texto": "Cliente 8 pediu para ser avisado quando o CDB reprecificar.",
+  "tipo": "pedido",
+  "data": "2026-04-01"
+ },
+ {
+  "cliente_id": "C0015",
+  "texto": "Cliente 15 disse que usa Pix quase todo dia à noite.",
+  "tipo": "contexto",
+  "data": "2026-03-11"
+ }
+]

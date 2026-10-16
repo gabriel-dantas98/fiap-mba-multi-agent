@@ -1,0 +1,41 @@
+fonte: clientes
+padrao_arquivo: "clientes*.csv"
+formato: csv
+chave: [cliente_id]
+schema_drift: quarentena             # coluna obrigatória ausente → arquivo inteiro em quarentena
+correcoes: [strip_strings]           # aplicadas ANTES das regras
+
+# --- LACUNA 1 ------------------------------------------------------------------
+# Decisão: aceitar utf-8 e latin-1. O pacote do Caos traz clientes_novos_latin1.csv
+# com 10 clientes novos legítimos (C0201-C0210, nomes com acento tipo "Ação").
+# Só utf-8 rejeitaria o arquivo INTEIRO por erro de decodificação e perderíamos
+# 10 clientes reais. O custo de aceitar latin-1 é só uma linha registrada como
+# correção (encoding:latin-1), nada de dado é alterado.
+encodings: [utf-8, latin-1]
+
+# --- LACUNA 2 ------------------------------------------------------------------
+# Decisão: manter_primeira. C0031 e C0032 aparecem duas vezes no arquivo, com
+# espaços extras em volta do nome/cidade (removidos pelo strip_strings antes da
+# comparação de chave) — é a MESMA pessoa duplicada na exportação, não uma fraude.
+# quarentena aqui perderia dois clientes legítimos por completo; manter_primeira
+# descarta só a cópia redundante e registra a correção.
+duplicatas: manter_primeira
+
+colunas:
+  cliente_id: {tipo: string, obrigatorio: true, regex: "^C\\d{4}$"}
+  nome:       {tipo: string, obrigatorio: true}
+
+  # --- LACUNA 3 ----------------------------------------------------------------
+  # C0021 e C0022 têm o mesmo CPF "11111111111" — todos os dígitos iguais, o
+  # clássico CPF de teste/placeholder, que falha o dígito verificador. O motor
+  # já tem cpf_ok() pronto (kit/contrato.py), acionado por validador: cpf.
+  cpf:        {tipo: string, obrigatorio: true, validador: cpf}
+
+  # --- LACUNA 4 ----------------------------------------------------------------
+  # Os segmentos que aparecem de verdade no arquivo (fora do C0041) são varejo,
+  # private e black. C0041 vem com segmento "vip", que não existe no negócio da
+  # Quantum — provavelmente entrada manual errada. Fica fora do domínio.
+  segmento:   {tipo: string, obrigatorio: true, dominio: [varejo, black, private]}
+
+  cidade:     {tipo: string}
+  cadastro_em: {tipo: date, formatos: ["%Y-%m-%d"]}

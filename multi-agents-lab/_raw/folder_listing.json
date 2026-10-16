@@ -1,0 +1,37 @@
+Using keyring backend: keyring
+{
+  "files": [
+    {
+      "id": "19akHATUI711piOvtWMuuIfnGEtdGzBq0",
+      "mimeType": "application/octet-stream",
+      "modifiedTime": "2026-09-19T01:44:16.000Z",
+      "name": "documentos.yaml",
+      "size": "2054",
+      "webViewLink": "https://drive.google.com/file/d/19akHATUI711piOvtWMuuIfnGEtdGzBq0/view?usp=drivesdk"
+    },
+    {
+      "id": "1gY4mCJGDU8DkNTQ_TM6JNAGpx6FRZyyZ",
+      "mimeType": "application/octet-stream",
+      "modifiedTime": "2026-09-19T01:33:30.000Z",
+      "name": "clientes.yaml",
+      "size": "2038",
+      "webViewLink": "https://drive.google.com/file/d/1gY4mCJGDU8DkNTQ_TM6JNAGpx6FRZyyZ/view?usp=drivesdk"
+    },
+    {
+      "id": "1ayDnn7Ycwfsu67cHrKlDP7bjxQndQHGi",
+      "mimeType": "application/octet-stream",
+      "modifiedTime": "2026-09-19T01:01:00.000Z",
+      "name": "transacoes.yaml",
+      "size": "2800",
+      "webViewLink": "https://drive.google.com/file/d/1ayDnn7Ycwfsu67cHrKlDP7bjxQndQHGi/view?usp=drivesdk"
+    },
+    {
+      "id": "1Ur58dlXkU9FoTpAFdX_qWt7x4AMKuYL8",
+      "mimeType": "application/octet-stream",
+      "modifiedTime": "2026-09-19T00:23:32.000Z",
+      "name": "tarifas.yaml",
+      "size": "1190",
+      "webViewLink": "https://drive.google.com/file/d/1Ur58dlXkU9FoTpAFdX_qWt7x4AMKuYL8/view?usp=drivesdk"
+    }
+  ]
+}

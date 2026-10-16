@@ -1,0 +1,17 @@
+fonte: documentos
+padrao_arquivo: "docs/*.md"
+formato: markdown_frontmatter
+chave: [doc_id, versao]
+schema_drift: quarentena             # front-matter sem campo obrigatório
+correcoes: [strip_strings]
+duplicatas: manter_primeira
+colunas:
+  doc_id: {tipo: string, obrigatorio: true, regex: "^[a-z0-9-]+$"}
+  titulo: {tipo: string, obrigatorio: true}
+  area:   {tipo: string, obrigatorio: true}
+  tipo:   {tipo: string, obrigatorio: true, dominio: [tabela, manual, politica, procedimento, ata, comunicado, faq, marketing, rascunho, faq-antigo]}
+  data:   {tipo: date, obrigatorio: true, formatos: ["%Y-%m-%d"], maximo: hoje}      # data futura → quarentena (o comunicado falso cai aqui)
+  versao: {tipo: int, obrigatorio: true, minimo: 1}
+  conteudo: {tipo: string, obrigatorio: true}
+# tipos que NÃO entram no índice do agente como fonte autoritativa (decisão de ranking da aula passada)
+tipos_nao_autoritativos: [marketing, rascunho, faq-antigo]

@@ -1,0 +1,58 @@
+# INSTRUÇÕES DO ESQUADRÃO · Agent 1 Construtor
+# Audiência: Qwen2.5-Coder-1.5B preenchendo TRÊS lacunas do esqueleto.
+# Responda só com o código de cada lacuna. Não invente funções, não altere o esqueleto.
+
+## Objetivo
+Produzir um pipeline Silver que (1) processa fontes na ordem certa por causa da FK,
+(2) passa refs só em transacoes, (3) manda arquivo quebrado inteiro para quarentena.
+
+## Lacuna ___ORDEM_DAS_FONTES___
+DECISÃO: clientes antes de transacoes. Sem isso, a FK rejeita quase todas as linhas.
+
+PREENCHA EXATAMENTE com (números 0..3, todos os quatro nomes):
+sorted(contratos, key=lambda f: {"clientes": 0, "tarifas": 1, "transacoes": 2, "documentos": 3}.get(f, 9))
+
+PROIBIDO:
+- ordem alfabética ou sorted(contratos) sem key
+- omitir qualquer das quatro fontes no dict
+- transacoes com número menor que clientes
+- lista literal ["clientes", ...] (use o sorted acima)
+
+POR QUE tarifas=1 e documentos=3: tarifas não tem FK; documentos fecha o lote antes de finalizar_documentos.
+
+## Lacuna ___REFERENCIAS_PARA_FK___
+DECISÃO: refs é um dict. Só transacoes recebe clientes. Demais fontes recebem {}.
+
+PREENCHA EXATAMENTE com:
+{"clientes": (ref if ref is not None else fundacao.referencia_clientes(lake))} if fonte == "transacoes" else {}
+
+PROIBIDO:
+- refs = ... (não use atribuição; a lacuna JÁ é o lado direito de `refs =`)
+- passar refs para todas as fontes
+- fundacao.referencia_clientes(lake) solto sem dict
+- chave errada (tem que ser "clientes", igual ao fk do contrato)
+
+## Lacuna ___O_QUE_FAZER_COM_O_ARQUIVO_INVALIDO___
+DECISÃO: falhou a leitura = arquivo inteiro em quarentena. Nunca engula a exceção.
+
+CONTEXTO DO except: ok, q e df NÃO EXISTEM. Use só e, r, fonte, lake, m.
+
+PREENCHA EXATAMENTE com estas quatro linhas:
+fundacao.gravar_quarentena(lake, fonte, r["nome"], None, str(e))
+fundacao.marcar_processado(lake, r["path"], fonte, "quarentena", 0, 1)
+m["drift"] += 1
+m["rows_rejected"] += 1
+
+PROIBIDO:
+- len(ok), len(q), len(df) (NameError)
+- raise / return / pass / continue (some o arquivo do relatório)
+- marcar_processado com status "ok"
+- gravar_quarentena sem str(e)
+
+NOTA: o segundo zero do marcar_processado NÃO é zero: use 0 ok e 1 rejeitado (o arquivo conta como uma rejeição).
+
+## Checklist mental (antes de responder cada lacuna)
+1. A expressão/bloco cola no esqueleto sem `=` extra na frente?
+2. Todas as quatro fontes aparecem na ordem?
+3. refs vira dict {"clientes": set} só quando fonte == "transacoes"?
+4. No except, zero menção a ok/q/df?

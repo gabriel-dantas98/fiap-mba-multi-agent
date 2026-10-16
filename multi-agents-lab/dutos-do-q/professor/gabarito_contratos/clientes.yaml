@@ -1,0 +1,15 @@
+fonte: clientes
+padrao_arquivo: "clientes*.csv"
+formato: csv
+encodings: [utf-8, latin-1]          # decisão: aceitar latin-1 como correção (ou só utf-8 = quarentena)
+chave: [cliente_id]
+schema_drift: quarentena             # coluna obrigatória ausente → arquivo inteiro em quarentena
+correcoes: [strip_strings]           # aplicadas ANTES das regras
+duplicatas: manter_primeira          # após correção; alternativa: quarentena
+colunas:
+  cliente_id: {tipo: string, obrigatorio: true, regex: "^C\\d{4}$"}
+  nome:       {tipo: string, obrigatorio: true}
+  cpf:        {tipo: string, obrigatorio: true, validador: cpf}
+  segmento:   {tipo: string, obrigatorio: true, dominio: [varejo, black, private]}
+  cidade:     {tipo: string}
+  cadastro_em: {tipo: date, formatos: ["%Y-%m-%d"]}

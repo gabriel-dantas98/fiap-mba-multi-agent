@@ -1,0 +1,38 @@
+fonte: documentos
+padrao_arquivo: "docs/*.md"
+formato: markdown_frontmatter
+schema_drift: quarentena             # front-matter sem campo obrigatório
+correcoes: [strip_strings]
+duplicatas: manter_primeira
+
+# A chave é [doc_id, versao], e não só doc_id, de propósito: as duas versões convivem
+# na tabela (o histórico fica) e quem decide qual é a atual é a vigência, não o MERGE.
+# Com chave [doc_id] a v1 seria sobrescrita e você perderia o que a política dizia antes.
+chave: [doc_id, versao]
+
+colunas:
+  doc_id: {tipo: string, obrigatorio: true, regex: "^[a-z0-9-]+$"}
+  titulo: {tipo: string, obrigatorio: true}
+  area:   {tipo: string, obrigatorio: true}
+  tipo:   {tipo: string, obrigatorio: true, dominio: [tabela, manual, politica, procedimento, ata, comunicado, faq, marketing, rascunho, faq-antigo]}
+
+  # --- LACUNA 9 ---------------------------------------------------------------
+  # dados/caos/com-tarifa-promocional.md tem data: 2027-01-01 — no futuro em
+  # relação a qualquer data real de execução da aula. Todos os 25 documentos
+  # legítimos (incluindo o comunicado legítimo do Caos, 2026-06-01) têm data no
+  # passado. "maximo: hoje" é um limite especial que o motor já entende
+  # (contrato.py: `r.get("maximo") == "hoje" and sv > hoje`) e manda a linha
+  # para a quarentena por "data futura".
+  data:   {tipo: date, obrigatorio: true, formatos: ["%Y-%m-%d"], maximo: hoje}
+
+  versao: {tipo: int, obrigatorio: true, minimo: 1}
+  conteudo: {tipo: string, obrigatorio: true}
+
+# --- LACUNA 10 -------------------------------------------------------------------
+# Três documentos do corpus são plausíveis e errados: mkt-blog-cdb (marketing,
+# um post de blog), rasc-pix-2024 (rascunho, política não aprovada) e
+# faq-antigo-tarifas-2023 (faq-antigo, com a tarifa de 2023 já desatualizada —
+# é exatamente esse documento que, na história do enunciado, fez o Q responder
+# R$4,90 para uma tarifa que já era R$7,50). Eles continuam na Silver como
+# histórico, só saem do índice (gold) como fonte de verdade.
+tipos_nao_autoritativos: [marketing, rascunho, faq-antigo]

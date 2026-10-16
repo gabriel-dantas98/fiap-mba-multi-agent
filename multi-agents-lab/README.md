@@ -61,8 +61,10 @@ Armadilhas do YAML que estava no Drive. `validador: cpf_ok` nao aciona o motor.
 
 1. Abra `01_bloco1_batch_SOLUCAO.ipynb` (FONTE) ou o notebook do professor.
 2. Upload de `dutos-do-q.zip` (ja esta na FONTE) ou preencha `KIT_URL`.
-3. **Passo 1b** — `gdown` dos 4 YAML da FONTE (`anyoneWithLink`; sem auth). Fallback:
-   GitHub raw (`CONTRATOS_GIT_REF`) ou `CONTRATOS_SOURCE=local`.
+3. **Passo 1b** — `gdown` dos 4 YAML da FONTE (`anyoneWithLink`; sem auth). Ordem:
+   Drive → GitHub raw → pasta `contratos/` do repo **já preenchida** (nunca o esqueleto
+   `TODO` do zip do kit). A célula falha se sobrar lacuna. Fallback forçado:
+   `CONTRATOS_SOURCE=drive|github|local`.
 4. Cole `system_message.txt` na celula do Passo 4 (arquivo tambem esta na FONTE).
 5. Rode o Construtor. Se falhar 2 vezes, use o plano B (`agentes.codigo_de_referencia()`).
 6. Descomente o Caos (Passo 10) e rode Bronze → Silver → Gold de novo.

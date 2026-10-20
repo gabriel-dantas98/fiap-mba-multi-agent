@@ -15,11 +15,11 @@ flowchart LR
         G["🔒 Porteiro<br/>src/main.py<br/>rota /mcp + Bearer token"]:::seguranca
         F["SDK MCP (FastMCP)<br/>Streamable HTTP<br/>JSON-RPC + validação"]:::sdk
 
-        subgraph Q["src/servidor.py · o que o servidor expõe"]
+        subgraph Q["src/servidor.py registra · o que o servidor expõe"]
             direction TB
-            T["🛠 4 tools<br/>listar_produtos_por_categoria<br/>obter_produto<br/>buscar_produto_por_nome<br/>obter_avaliacao_produto"]:::nosso
-            R["📄 2 resources<br/>catalogo://produtos<br/>produto://{id}"]:::nosso
-            P["💬 2 prompts<br/>recomendar_produto<br/>analisar_produto"]:::nosso
+            T["🛠 src/tools.py · 4 tools<br/>listar_produtos_por_categoria<br/>obter_produto<br/>buscar_produto_por_nome<br/>obter_avaliacao_produto"]:::nosso
+            R["📄 src/resources.py · 2 resources<br/>catalogo://produtos<br/>produto://{id}"]:::nosso
+            P["💬 src/prompts.py · 2 prompts<br/>recomendar_produto<br/>analisar_produto"]:::nosso
         end
 
         K["src/catalogo.py<br/>33 produtos agregados<br/>(carregados no deploy)"]:::nosso

@@ -34,16 +34,18 @@ done
 
 ## O que o servidor expõe
 
-| Tipo | Nome | Item do desafio |
-|---|---|---|
-| tool | `listar_produtos_por_categoria(categoria)` | 1. listar produtos por categoria |
-| tool | `obter_produto(produto_id)` | 2. dados do produto pelo ID |
-| tool | `buscar_produto_por_nome(nome)` | 3. busca pelo nome |
-| tool | `obter_avaliacao_produto(produto)` | 4. nota de avaliação (aceita ID ou nome) |
-| resource | `catalogo://produtos` | catálogo completo (JSON) |
-| resource template | `produto://{produto_id}` | detalhe do produto |
-| prompt | `recomendar_produto(necessidade, orcamento?, categoria?)` | recomendação |
-| prompt | `analisar_produto(produto_id)` | análise de custo-benefício |
+| Tipo | Nome | Arquivo | Item do desafio |
+|---|---|---|---|
+| tool | `listar_produtos_por_categoria(categoria)` | `src/tools.py` | 1. listar produtos por categoria |
+| tool | `obter_produto(produto_id)` | `src/tools.py` | 2. dados do produto pelo ID |
+| tool | `buscar_produto_por_nome(nome)` | `src/tools.py` | 3. busca pelo nome |
+| tool | `obter_avaliacao_produto(produto)` | `src/tools.py` | 4. nota de avaliação (aceita ID ou nome) |
+| resource | `catalogo://produtos` | `src/resources.py` | catálogo completo (JSON) |
+| resource template | `produto://{produto_id}` | `src/resources.py` | detalhe do produto |
+| prompt | `recomendar_produto(necessidade, orcamento?, categoria?)` | `src/prompts.py` | recomendação |
+| prompt | `analisar_produto(produto_id)` | `src/prompts.py` | análise de custo-benefício |
+
+Cada arquivo tem um `registrar(mcp)`; o `src/servidor.py` cria o FastMCP e chama os três.
 
 Buscas ignoram acento e maiúsculas (`GAME` acha `game`, `pelucia` acha `Pelúcia`). Entradas
 inválidas voltam como erro de tool (`isError: true`) com a lista de opções válidas.
@@ -79,9 +81,13 @@ célula a célula e confere os agregados contra a planilha.
 src/quantum-commerce-chamados.xlsx  fonte única dos dados
 src/planilha.py           leitor de .xlsx com a biblioteca padrão
 src/catalogo.py           carga + agregação da planilha e consultas, Python puro
-src/servidor.py           tools, resources e prompts (FastMCP)
+src/servidor.py           cria o FastMCP (transporte, segurança) e registra as capacidades
+src/tools.py              as 4 tools
+src/resources.py          os 2 resources (catálogo + template por ID)
+src/prompts.py            os 2 prompts
 src/main.py               entrypoint do Worker + checagem do Bearer token
 src/local.py              mesmo servidor via stdio/HTTP local
+scripts/inspector.sh      MCP Inspector já apontado para cloudflare, local ou stdio
 tests/                    unitários, consistência com a planilha e E2E em produção
 diagramas/                arquitetura em 3 níveis (Mermaid .mmd + PNG)
 evidencias/               saídas de teste, prints do Inspector, Claude Code e Cursor
@@ -95,13 +101,26 @@ Pré-requisitos: `uv` >= 0.12.3 (exigido pelo `pywrangler`) e Node (para `npx`).
 uv sync
 uv run pytest -q                                  # 20 testes (E2E é pulado sem MCP_URL)
 
-# Local via stdio, sem auth
-npx @modelcontextprotocol/inspector uv run python src/local.py
-
 # Worker local (porta 8787), com auth
 echo "MCP_TOKEN=$(openssl rand -hex 24)" > .dev.vars
 uv run pywrangler dev
 ```
+
+## MCP Inspector (reproduzível)
+
+`scripts/inspector.sh` sobe o Inspector (versão fixada, 2.11.0) já com o servidor, a URL e o
+header de auth configurados. É só clicar em conectar.
+
+```bash
+scripts/inspector.sh cloudflare     # produção; lê o token de .token
+scripts/inspector.sh local          # Worker do `pywrangler dev`; lê o token de .dev.vars
+scripts/inspector.sh stdio          # servidor Python direto (src/local.py), sem auth
+
+scripts/inspector.sh cloudflare check   # sem UI: lista tools/resources/prompts e chama uma tool
+```
+
+O alvo `local` exige o `uv run pywrangler dev` rodando em outro terminal. O token vai como
+argumento do processo do Inspector, então só use em máquina própria.
 
 ## Deploy na Cloudflare
 
@@ -111,8 +130,6 @@ uv run pywrangler deploy
 openssl rand -hex 24 | tee .token | npx wrangler secret put MCP_TOKEN
 ```
 
-No Inspector (v2): Add Servers → streamable-http com a URL de produção; em Settings →
-Custom Headers, `Authorization: Bearer <conteúdo de .token>`.
 
 ## Testes e evidências
 
@@ -142,6 +159,7 @@ Config usada pelos clientes (Claude Code em `--mcp-config`, Cursor em `.cursor/m
 | `11-prompt-recomendar-produto.png` | prompt `recomendar_produto` com argumentos |
 | `12-claude-code-oneshot.md` | `claude -p` usando as 4 tools + prompt como slash command |
 | `13-cursor-oneshot.md` | `cursor-agent -p` usando as tools |
+| `14-inspector-script-cloudflare.png` | `scripts/inspector.sh cloudflare` abre já conectado em produção |
 
 ## Segurança (o mínimo que dá pra defender)
 

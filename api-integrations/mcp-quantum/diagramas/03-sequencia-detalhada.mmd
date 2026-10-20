@@ -8,7 +8,7 @@ sequenceDiagram
     participant E as Cloudflare Edge<br/>(isolate Python/Pyodide)
     participant M as src/main.py<br/>Default.fetch()
     participant S as SDK mcp 1.x<br/>FastMCP · Streamable HTTP
-    participant T as src/servidor.py<br/>@mcp.tool()
+    participant T as src/tools.py<br/>(registrada em servidor.py)
     participant K as src/catalogo.py
     participant P as src/planilha.py<br/>+ quantum-commerce-chamados.xlsx
 

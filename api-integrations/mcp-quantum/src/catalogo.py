@@ -96,6 +96,14 @@ def obter(produto_id: str) -> dict | None:
     return _POR_ID.get(produto_id.strip().upper())
 
 
+def exigir(produto_id: str) -> dict:
+    """Como obter(), mas levanta ValueError (vira isError no MCP) se não existir."""
+    produto = obter(produto_id)
+    if produto is None:
+        raise ValueError(f"Produto '{produto_id}' não encontrado.")
+    return produto
+
+
 def buscar_por_nome(termo: str, limite: int = 10) -> list[dict]:
     palavras = _normalizar(termo).split()
     if not palavras:

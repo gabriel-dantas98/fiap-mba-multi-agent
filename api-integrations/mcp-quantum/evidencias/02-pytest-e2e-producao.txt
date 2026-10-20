@@ -1,4 +1,4 @@
-# MCP_URL=https://mcp-quantum.gabsdevops.workers.dev/mcp MCP_TOKEN=*** uv run pytest tests/test_e2e.py -v  (2026-10-20 20:07 -03)
+# MCP_URL=https://mcp-quantum.gabsdevops.workers.dev/mcp MCP_TOKEN=*** uv run pytest tests/test_e2e.py -v  (2026-10-20 20:39 -03)
 ============================= test session starts ==============================
 platform darwin -- Python 3.12.13, pytest-9.1.1, pluggy-1.7.0 -- .venv/bin/python
 rootdir: /Users/gdantas/git/gdantas/fiap-mba-multi-agent/api-integrations/mcp-quantum
@@ -19,4 +19,4 @@ tests/test_e2e.py::test_tool_com_erro_volta_iserror PASSED               [ 81%]
 tests/test_e2e.py::test_resources PASSED                                 [ 90%]
 tests/test_e2e.py::test_prompt PASSED                                    [100%]
 
-============================== 11 passed in 8.01s ==============================
+============================= 11 passed in 10.90s ==============================

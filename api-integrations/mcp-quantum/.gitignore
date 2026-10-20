@@ -6,3 +6,4 @@ dist/
 .dev.vars
 .token
 pylock.toml
+.pytest_cache/

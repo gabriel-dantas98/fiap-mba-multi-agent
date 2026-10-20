@@ -11,7 +11,8 @@ Produção: `https://mcp-quantum.gabsdevops.workers.dev/mcp`
 
 ![Fluxo de uma chamada MCP](diagramas/fluxo-chamada.png)
 
-Fonte editável: `diagramas/fluxo-chamada.html` (exportado com Chrome headless, 2x).
+Fonte: `diagramas/fluxo-chamada.mmd` (Mermaid `sequenceDiagram`). Para regerar o PNG:
+`npx @mermaid-js/mermaid-cli -i diagramas/fluxo-chamada.mmd -o diagramas/fluxo-chamada.png -w 1800 -s 2 -b white`.
 
 ## O que o servidor expõe
 
@@ -31,10 +32,13 @@ inválidas voltam como erro de tool (`isError: true`) com a lista de opções v�
 
 ## Dados
 
-A fonte é `dados/quantum-commerce-chamados.xlsx`: **200 reclamações** de clientes de um
-marketplace, com os dados do produto repetidos em cada linha. O `scripts/gerar_dados.py`
-corrige a acentuação (a planilha veio com UTF-8 lido como Latin-1, `PreÃ§o`), salva uma
-cópia limpa em `dados/quantum-commerce-chamados.csv` e agrega por `id_produto`:
+A única fonte é a planilha `src/quantum-commerce-chamados.xlsx`, sem etapa de geração:
+**200 reclamações** de clientes de um marketplace, com os dados do produto repetidos em
+cada linha. O Worker empacota o `.xlsx` (regra `Data` no `wrangler.jsonc`) e o
+`src/catalogo.py` lê a planilha no import, com `src/planilha.py` (só `zipfile` + XML da
+biblioteca padrão, sem `openpyxl`, para não pesar no bundle). Na leitura, a acentuação é
+corrigida (a planilha veio com UTF-8 lido como Latin-1, `PreÃ§o`) e os dados são
+agregados por `id_produto`:
 
 | Campo | Na planilha | No catálogo |
 |---|---|---|
@@ -45,19 +49,23 @@ cópia limpa em `dados/quantum-commerce-chamados.csv` e agrega por `id_produto`:
 | `classe` | tipo da reclamação | `reclamacoes_por_classe` |
 
 Resultado: **33 produtos** em 5 categorias (`brinquedo`, `game`, `livro`, `maquiagem`,
-`outros`). O `tests/test_dados.py` confere os agregados contra a planilha.
+`outros`). Como o import roda no deploy, o catálogo entra no snapshot de memória e nenhum
+request paga o parse. Para trocar os dados, substitua o `.xlsx` e rode `pywrangler deploy`.
+
+O `tests/test_dados.py` compara o leitor próprio com o `openpyxl` (dependência só de dev)
+célula a célula e confere os agregados contra a planilha.
 
 ## Estrutura
 
 ```
-dados/                    planilha original + CSV com acentos corrigidos
-scripts/gerar_dados.py    XLSX/CSV -> src/dados.py (o Worker não lê arquivo do disco)
-src/catalogo.py           consultas, Python puro
+src/quantum-commerce-chamados.xlsx  fonte única dos dados
+src/planilha.py           leitor de .xlsx com a biblioteca padrão
+src/catalogo.py           carga + agregação da planilha e consultas, Python puro
 src/servidor.py           tools, resources e prompts (FastMCP)
 src/main.py               entrypoint do Worker + checagem do Bearer token
 src/local.py              mesmo servidor via stdio/HTTP local
 tests/                    unitários, consistência com a planilha e E2E em produção
-diagramas/                fluxo da chamada (HTML + PNG)
+diagramas/                fluxo da chamada (Mermaid .mmd + PNG)
 evidencias/               saídas de teste, prints do Inspector, Claude Code e Cursor
 ```
 
@@ -67,10 +75,7 @@ Pré-requisitos: `uv` >= 0.12.3 (exigido pelo `pywrangler`) e Node (para `npx`).
 
 ```bash
 uv sync
-uv run pytest -q                                  # 19 testes (E2E é pulado sem MCP_URL)
-
-# Regerar o catálogo a partir da planilha
-uv run python scripts/gerar_dados.py dados/quantum-commerce-chamados.xlsx
+uv run pytest -q                                  # 20 testes (E2E é pulado sem MCP_URL)
 
 # Local via stdio, sem auth
 npx @modelcontextprotocol/inspector uv run python src/local.py
@@ -109,7 +114,7 @@ Config usada pelos clientes (Claude Code em `--mcp-config`, Cursor em `.cursor/m
 
 | Arquivo | O que prova |
 |---|---|
-| `01-pytest-unitario.txt` | 19 testes: 4 tools, resources, prompts, erros e agregados x planilha |
+| `01-pytest-unitario.txt` | 20 testes: 4 tools, resources, prompts, erros, leitor x openpyxl e agregados x planilha |
 | `02-pytest-e2e-producao.txt` | 11 testes com `ClientSession` do SDK contra a URL publicada (401, 404, tools, resources, prompt) |
 | `03-inspector-sem-token-401.png` | sem header de auth o Inspector não conecta |
 | `04-inspector-conectado.png` | conectado em produção, MCP 2025-11-25 |
@@ -126,7 +131,7 @@ Config usada pelos clientes (Claude Code em `--mcp-config`, Cursor em `.cursor/m
   `hmac.compare_digest` antes de chegar no MCP. Sem token: `401` com `WWW-Authenticate`.
 - **Só `/mcp` existe**; qualquer outra rota responde `404`.
 - **Proteção contra DNS rebinding** do SDK ligada, com allowlist de `Host`/`Origin`.
-- **Somente leitura**: nenhuma tool altera estado; o catálogo é embutido no bundle.
+- **Somente leitura**: nenhuma tool altera estado; a planilha vai empacotada no bundle.
 - Fora do escopo: OAuth por usuário, rate limiting e rotação automática do token.
 
 ## Por que essa combinação de versões
@@ -137,9 +142,9 @@ Testei com deploy real antes de fechar (plano free: 3 MB de bundle, CPU limitada
 |---|---|
 | `fastmcp` standalone | 9,5 MB gzip (puxa `cryptography`, `beartype`, `authlib`) — não cabe |
 | `mcp` 2.x | importa `cryptography` no topo do módulo — não cabe |
-| `mcp` 1.x + override `pyjwt` sem `[crypto]` | **2,8 MB gzip** — cabe |
+| `mcp` 1.x + override `pyjwt` sem `[crypto]` | **2,8 MB gzip** — cabe (2,88 MB com a planilha) |
 | import dentro do `fetch` | 2010 ms de CPU no cold start → erro `1102` |
-| import no topo (snapshot de memória do deploy) | 68–750 ms de CPU, `outcome: ok` |
+| import no topo (snapshot de memória do deploy) | 13–37 ms de CPU com isolate quente, ~650 ms no cold start, `outcome: ok` |
 
 O consumo de CPU passa dos 10 ms nominais do free e a Cloudflare tem tolerado; sob
 carga pode aparecer `1102`. Para uso real, o plano pago (US$ 5/mês) resolve.

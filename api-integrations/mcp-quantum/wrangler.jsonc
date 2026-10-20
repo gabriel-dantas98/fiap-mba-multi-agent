@@ -4,5 +4,7 @@
   "main": "src/main.py",
   "compatibility_date": "2026-10-01",
   "compatibility_flags": ["python_workers"],
+  // Empacota a planilha junto com o código; o Python Worker a enxerga como arquivo.
+  "rules": [{ "type": "Data", "globs": ["**/*.xlsx"], "fallthrough": false }],
   "observability": { "enabled": true }
 }

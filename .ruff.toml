@@ -1,7 +1,7 @@
 target-version = "py313"
 line-length = 100
 # Material de aula (kit do professor + notebooks executados) fica fora do lint.
-extend-exclude = ["multi-agents-lab", "arquitetura-dados", "api-integrations/mcp-quantum/src/dados.py"]
+extend-exclude = ["multi-agents-lab", "arquitetura-dados"]
 
 [lint]
 select = ["E", "F", "I", "UP", "B", "SIM", "RUF"]

@@ -1,0 +1,18 @@
+[project]
+name = "mcp-quantum"
+version = "0.1.0"
+description = "Servidor MCP do desafio Quantum (catálogo de produtos) em Cloudflare Python Workers"
+requires-python = ">=3.12"
+# mcp 1.x: o 2.x importa `cryptography` no topo e o bundle passa de 3 MB (limite do plano free).
+dependencies = ["mcp>=1.20,<2"]
+
+[dependency-groups]
+dev = ["workers-py", "workers-runtime-sdk", "pytest>=8", "pytest-asyncio>=0.24"]
+
+[tool.uv]
+# Tira o extra `pyjwt[crypto]` (só usado no auth OAuth do SDK) para caber no free.
+override-dependencies = ["pyjwt>=2.10.1"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+asyncio_mode = "auto"

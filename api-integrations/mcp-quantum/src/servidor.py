@@ -18,8 +18,8 @@ HOSTS_PERMITIDOS = [
 mcp = FastMCP(
     "quantum-catalogo",
     instructions=(
-        "Catálogo de produtos da loja Quantum. Use as tools para listar por categoria, "
-        "buscar por nome, detalhar um produto pelo ID e consultar a nota de avaliação."
+        "Catálogo de produtos do marketplace Quantum Commerce. Use as tools para listar por "
+        "categoria, buscar por nome, detalhar um produto pelo ID e consultar a nota de avaliação."
     ),
     stateless_http=True,
     json_response=True,
@@ -44,7 +44,7 @@ def _exigir(produto_id: str) -> dict:
 
 @mcp.tool()
 def listar_produtos_por_categoria(categoria: str) -> dict:
-    """Lista os produtos de uma categoria (ex.: 'Informática', 'Celulares').
+    """Lista os produtos de uma categoria (ex.: 'game', 'livro', 'maquiagem').
 
     A comparação ignora acentos e maiúsculas. Se a categoria não existir,
     retorna a lista de categorias válidas.
@@ -64,7 +64,10 @@ def listar_produtos_por_categoria(categoria: str) -> dict:
 
 @mcp.tool()
 def obter_produto(produto_id: str) -> dict:
-    """Dado o ID de um produto (ex.: 'P001'), retorna nome, categoria, valor e demais dados."""
+    """Dado o ID de um produto (ex.: 'P001'), retorna nome, categoria, valor e demais dados.
+
+    `preco` é a média das ofertas dos vendedores; `preco_min`/`preco_max` dão a faixa.
+    """
     return _exigir(produto_id)
 
 
@@ -77,7 +80,10 @@ def buscar_produto_por_nome(nome: str) -> dict:
 
 @mcp.tool()
 def obter_avaliacao_produto(produto: str) -> dict:
-    """Retorna a nota de avaliação (review) de um produto, informado por ID ou nome."""
+    """Retorna a nota de avaliação (review) de um produto, informado por ID ou nome.
+
+    Traz a média, a faixa e o total de avaliações, mais as reclamações por classe.
+    """
     encontrado = catalogo.obter(produto)
     if encontrado is None:
         achados = catalogo.buscar_por_nome(produto, limite=2)
@@ -96,7 +102,7 @@ def obter_avaliacao_produto(produto: str) -> dict:
 @mcp.resource(
     "catalogo://produtos",
     name="catalogo_completo",
-    description="Catálogo completo da Quantum em JSON.",
+    description="Catálogo completo da Quantum Commerce em JSON.",
     mime_type="application/json",
 )
 def catalogo_completo() -> str:
@@ -129,10 +135,10 @@ def recomendar_produto(necessidade: str, orcamento: str = "", categoria: str = "
         filtros.append(f"orçamento máximo: R$ {orcamento}")
     extra = f" ({'; '.join(filtros)})" if filtros else ""
     return (
-        f"Sou cliente da loja Quantum e preciso de: {necessidade}{extra}.\n"
+        f"Sou cliente do marketplace Quantum Commerce e preciso de: {necessidade}{extra}.\n"
         "Use as tools listar_produtos_por_categoria, buscar_produto_por_nome e "
         "obter_avaliacao_produto para montar até 3 recomendações. Para cada uma, "
-        "traga ID, nome, preço e nota, e explique em uma frase por que ela atende. "
+        "traga ID, nome, preço médio e nota média, e explique em uma frase por que ela atende. "
         "Não invente produtos que não estejam no catálogo."
     )
 
@@ -141,8 +147,8 @@ def recomendar_produto(necessidade: str, orcamento: str = "", categoria: str = "
 def analisar_produto(produto_id: str) -> str:
     """Pede uma análise de custo-benefício de um produto frente à categoria dele."""
     return (
-        f"Analise o produto {produto_id} da loja Quantum. Use obter_produto para os dados, "
+        f"Analise o produto {produto_id} do marketplace Quantum Commerce. Use obter_produto para os dados, "
         "obter_avaliacao_produto para a nota e listar_produtos_por_categoria para comparar "
         "com os concorrentes da mesma categoria. Responda com: pontos fortes, pontos de "
-        "atenção, posição de preço e nota na categoria, e um veredito de custo-benefício."
+        "atenção (inclua as reclamações por classe), posição de preço e nota na categoria, e um veredito de custo-benefício."
     )

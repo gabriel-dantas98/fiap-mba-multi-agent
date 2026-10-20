@@ -49,7 +49,7 @@
 <header>
   <h1>MCP Quantum: o caminho de uma chamada
     <small>Do cliente MCP até a linha de código que responde · Cloudflare Python Worker + FastMCP (mcp 1.x)</small></h1>
-  <div class="pergunta">Exemplo: <b>"qual a nota do console?"</b> → <code>tools/call obter_avaliacao_produto</code></div>
+  <div class="pergunta">Exemplo: <b>"qual a nota do headset?"</b> → <code>tools/call obter_avaliacao_produto</code></div>
 </header>
 
 <div class="grid">
@@ -64,11 +64,11 @@ Accept: application/json, text/event-stream
 
 {<span class="s">"jsonrpc"</span>:<span class="s">"2.0"</span>, <span class="s">"id"</span>:1, <span class="s">"method"</span>:<span class="s">"tools/call"</span>,
  <span class="s">"params"</span>:{<span class="s">"name"</span>:<span class="s">"obter_avaliacao_produto"</span>,
-           <span class="s">"arguments"</span>:{<span class="s">"produto"</span>:<span class="s">"console"</span>}}}</pre>
+           <span class="s">"arguments"</span>:{<span class="s">"produto"</span>:<span class="s">"headset"</span>}}}</pre>
   </div>
   <div class="lado"><div class="build"><b>Antes de tudo: build e deploy</b>
-    <ol><li><code>dados/produtos.csv</code></li>
-      <li><code>scripts/gerar_dados.py</code> → <code>src/dados.py</code></li>
+    <ol><li><code>dados/quantum-commerce-chamados.xlsx</code> (200 chamados)</li>
+      <li><code>scripts/gerar_dados.py</code> agrega 33 produtos → <code>src/dados.py</code></li>
       <li><code>pywrangler deploy</code>: bundle de 2,8 MB e snapshot de memória com os imports prontos</li>
       <li><code>wrangler secret put MCP_TOKEN</code></li></ol></div></div>
 
@@ -111,7 +111,7 @@ mcp._session_manager = <span class="k">None</span>          <span class="c"># st
       <p>Confere Host/Origin, lê o JSON-RPC, acha a tool pelo nome e valida os argumentos contra o schema gerado das type hints.</p></div>
 <pre>TransportSecurity: Host <span class="k">in</span> [<span class="s">"mcp-quantum.gabsdevops.workers.dev"</span>, ...]
 method <span class="s">"tools/call"</span>  →  ToolManager.call_tool(<span class="s">"obter_avaliacao_produto"</span>)
-arguments {<span class="s">"produto"</span>: <span class="s">"console"</span>}  ✓  schema {produto: string}</pre>
+arguments {<span class="s">"produto"</span>: <span class="s">"headset"</span>}  ✓  schema {produto: string}</pre>
   </div>
   <div class="lado"><div class="erro">Host fora da allowlist (DNS rebinding) → <b>421</b></div>
     <div class="erro">argumento inválido / tool inexistente → <b>isError: true</b></div></div>
@@ -125,9 +125,9 @@ arguments {<span class="s">"produto"</span>: <span class="s">"console"</span>}  
       <p>A tool não sabe nada de HTTP: recebe um <code>str</code>, consulta o catálogo em memória e devolve um <code>dict</code>.</p></div>
 <pre><span class="n">@mcp.tool</span>()                              <span class="c"># src/servidor.py</span>
 <span class="k">def</span> <span class="f">obter_avaliacao_produto</span>(produto: str) -> dict:
-    encontrado = catalogo.obter(produto)    <span class="c"># 'console' não é ID → None</span>
+    encontrado = catalogo.obter(produto)    <span class="c"># 'headset' não é ID → None</span>
     <span class="k">if</span> encontrado <span class="k">is None</span>:
-        [encontrado] = catalogo.buscar_por_nome(produto)  <span class="c"># → P023</span>
+        [encontrado] = catalogo.buscar_por_nome(produto)  <span class="c"># → P010</span>
     <span class="k">return</span> catalogo.avaliacao(encontrado)  <span class="c"># lê src/dados.py</span></pre>
   </div>
   <div class="lado"><div class="erro">produto não encontrado ou nome ambíguo → <b>ValueError</b> vira <b>isError: true</b> com as opções válidas</div></div>
@@ -141,11 +141,11 @@ arguments {<span class="s">"produto"</span>: <span class="s">"console"</span>}  
       <p>O cliente entrega o resultado ao LLM, que responde em linguagem natural.</p></div>
 <pre>{<span class="s">"jsonrpc"</span>:<span class="s">"2.0"</span>, <span class="s">"id"</span>:1, <span class="s">"result"</span>:{
   <span class="s">"content"</span>:[{<span class="s">"type"</span>:<span class="s">"text"</span>, <span class="s">"text"</span>:
-    <span class="s">'{"id":"P023","nome":"Console Quantum Play",</span>
-<span class="s">      "nota":4.9,"num_avaliacoes":5210}'</span>}],
+    <span class="s">'{"id":"P010","nome":"Headset gamer HX-70",</span>
+<span class="s">      "nota_media":3.54,"num_avaliacoes":13,...}'</span>}],
   <span class="s">"isError"</span>:<span class="k">false</span>}}</pre>
   </div>
-  <div class="lado"><div class="ok"><b>"O Console Quantum Play (P023) tem nota 4,9 de 5, com 5.210 avaliações."</b></div></div>
+  <div class="lado"><div class="ok"><b>"O Headset gamer HX-70 (P010) tem nota média 3,54 de 5, em 13 avaliações (mín. 2,5, máx. 4,9)."</b></div></div>
 </div>
 
 <footer>

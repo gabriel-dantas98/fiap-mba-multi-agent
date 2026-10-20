@@ -37,9 +37,12 @@ def avaliacao(produto: dict) -> dict:
     return {
         "id": produto["id"],
         "nome": produto["nome"],
-        "nota": produto.get("nota"),
+        "nota_media": produto["nota"],
         "escala": "0 a 5",
-        "num_avaliacoes": produto.get("num_avaliacoes"),
+        "nota_min": produto["nota_min"],
+        "nota_max": produto["nota_max"],
+        "num_avaliacoes": produto["num_avaliacoes"],
+        "reclamacoes_por_classe": produto["reclamacoes_por_classe"],
     }
 
 

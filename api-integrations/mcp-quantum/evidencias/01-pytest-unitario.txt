@@ -1,0 +1,30 @@
+# uv run pytest -v  (2026-10-20 19:30 -03)
+============================= test session starts ==============================
+platform darwin -- Python 3.12.13, pytest-9.1.1, pluggy-1.7.0 -- .venv/bin/python
+rootdir: /Users/gdantas/git/gdantas/fiap-mba-multi-agent/api-integrations/mcp-quantum
+configfile: pyproject.toml
+plugins: asyncio-1.4.0, anyio-4.15.1
+asyncio: mode=Mode.AUTO, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collecting ... collected 19 items
+
+tests/test_servidor.py::test_registra_4_tools_2_resources_2_prompts PASSED [  5%]
+tests/test_servidor.py::test_listar_por_categoria[game-7] PASSED         [ 10%]
+tests/test_servidor.py::test_listar_por_categoria[GAME-7] PASSED         [ 15%]
+tests/test_servidor.py::test_listar_por_categoria[livro-6] PASSED        [ 21%]
+tests/test_servidor.py::test_listar_por_categoria[maquiagem-6] PASSED    [ 26%]
+tests/test_servidor.py::test_listar_por_categoria[brinquedo-7] PASSED    [ 31%]
+tests/test_servidor.py::test_listar_por_categoria[outros-7] PASSED       [ 36%]
+tests/test_servidor.py::test_categoria_inexistente_lista_validas PASSED  [ 42%]
+tests/test_servidor.py::test_obter_produto_por_id PASSED                 [ 47%]
+tests/test_servidor.py::test_obter_produto_inexistente PASSED            [ 52%]
+tests/test_servidor.py::test_buscar_por_nome_ignora_acento PASSED        [ 57%]
+tests/test_servidor.py::test_buscar_por_nome_varios_e_nenhum PASSED      [ 63%]
+tests/test_servidor.py::test_avaliacao_por_id_e_por_nome PASSED          [ 68%]
+tests/test_servidor.py::test_avaliacao_nome_ambiguo PASSED               [ 73%]
+tests/test_servidor.py::test_resources PASSED                            [ 78%]
+tests/test_servidor.py::test_prompts PASSED                              [ 84%]
+tests/test_dados.py::test_planilha_tem_200_chamados_e_33_produtos PASSED [ 89%]
+tests/test_dados.py::test_acentos_corrigidos PASSED                      [ 94%]
+tests/test_dados.py::test_agregados_batem_com_a_planilha PASSED          [100%]
+
+============================== 19 passed in 0.37s ==============================

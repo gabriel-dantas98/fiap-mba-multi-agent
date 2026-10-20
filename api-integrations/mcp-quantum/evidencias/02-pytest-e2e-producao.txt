@@ -1,0 +1,22 @@
+# MCP_URL=https://mcp-quantum.gabsdevops.workers.dev/mcp MCP_TOKEN=*** uv run pytest tests/test_e2e.py -v  (2026-10-20 19:30 -03)
+============================= test session starts ==============================
+platform darwin -- Python 3.12.13, pytest-9.1.1, pluggy-1.7.0 -- .venv/bin/python
+rootdir: /Users/gdantas/git/gdantas/fiap-mba-multi-agent/api-integrations/mcp-quantum
+configfile: pyproject.toml
+plugins: asyncio-1.4.0, anyio-4.15.1
+asyncio: mode=Mode.AUTO, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collecting ... collected 11 items
+
+tests/test_e2e.py::test_sem_token_valido_recebe_401[headers0-401] PASSED [  9%]
+tests/test_e2e.py::test_sem_token_valido_recebe_401[headers1-401] PASSED [ 18%]
+tests/test_e2e.py::test_rota_fora_de_mcp_recebe_404 PASSED               [ 27%]
+tests/test_e2e.py::test_lista_capacidades PASSED                         [ 36%]
+tests/test_e2e.py::test_tool_1_listar_por_categoria PASSED               [ 45%]
+tests/test_e2e.py::test_tool_2_obter_produto PASSED                      [ 54%]
+tests/test_e2e.py::test_tool_3_buscar_por_nome PASSED                    [ 63%]
+tests/test_e2e.py::test_tool_4_avaliacao PASSED                          [ 72%]
+tests/test_e2e.py::test_tool_com_erro_volta_iserror PASSED               [ 81%]
+tests/test_e2e.py::test_resources PASSED                                 [ 90%]
+tests/test_e2e.py::test_prompt PASSED                                    [100%]
+
+============================== 11 passed in 4.26s ==============================

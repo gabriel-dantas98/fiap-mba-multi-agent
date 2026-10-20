@@ -7,12 +7,30 @@ stdio.
 
 Produção: `https://mcp-quantum.gabsdevops.workers.dev/mcp`
 
-## Como uma chamada percorre o sistema
+## Arquitetura em três níveis
 
-![Fluxo de uma chamada MCP](diagramas/fluxo-chamada.png)
+Do mais geral para o mais detalhado. Fontes em Mermaid (`diagramas/*.mmd`), com o PNG ao lado.
 
-Fonte: `diagramas/fluxo-chamada.mmd` (Mermaid `sequenceDiagram`). Para regerar o PNG:
-`npx @mermaid-js/mermaid-cli -i diagramas/fluxo-chamada.mmd -o diagramas/fluxo-chamada.png -w 1800 -s 2 -b white`.
+**Nível 1 · Visão geral.** Quem conversa com quem, sem detalhe técnico.
+
+![Nível 1](diagramas/01-visao-geral.png)
+
+**Nível 2 · Componentes.** O que existe dentro do Worker e o que o servidor expõe.
+
+![Nível 2](diagramas/02-componentes.png)
+
+**Nível 3 · Sequência detalhada.** Uma chamada real passo a passo, do deploy à resposta,
+com os desvios de erro (404, 401, 421, `isError`).
+
+![Nível 3](diagramas/03-sequencia-detalhada.png)
+
+Para regerar os PNGs:
+
+```bash
+for f in diagramas/*.mmd; do
+  npx @mermaid-js/mermaid-cli -i "$f" -o "${f%.mmd}.png" -w 1800 -s 2 -b white
+done
+```
 
 ## O que o servidor expõe
 
@@ -65,7 +83,7 @@ src/servidor.py           tools, resources e prompts (FastMCP)
 src/main.py               entrypoint do Worker + checagem do Bearer token
 src/local.py              mesmo servidor via stdio/HTTP local
 tests/                    unitários, consistência com a planilha e E2E em produção
-diagramas/                fluxo da chamada (Mermaid .mmd + PNG)
+diagramas/                arquitetura em 3 níveis (Mermaid .mmd + PNG)
 evidencias/               saídas de teste, prints do Inspector, Claude Code e Cursor
 ```
 

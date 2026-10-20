@@ -1,0 +1,19 @@
+---
+title: "Nível 1 · Visão geral: quem conversa com quem"
+---
+flowchart LR
+    classDef pessoa fill:#E8F0FE,stroke:#1A73E8,color:#0B3D91
+    classDef cliente fill:#E8F0FE,stroke:#1A73E8,color:#0B3D91
+    classDef servidor fill:#FFF4E5,stroke:#F38020,color:#7A3E00
+    classDef dados fill:#EEF7EE,stroke:#2E7D32,color:#1B4D1E
+
+    U(["👤 Pessoa<br/>faz uma pergunta"]):::pessoa
+    C["🤖 Agente com LLM<br/>Claude Code · Cursor · MCP Inspector"]:::cliente
+    S["☁️ Servidor MCP Quantum<br/>Cloudflare Worker"]:::servidor
+    D[("📊 Planilha de chamados<br/>quantum-commerce-chamados.xlsx")]:::dados
+
+    U -- "qual a nota do headset?" --> C
+    C -- "protocolo MCP<br/>HTTPS + token" --> S
+    S -- "lê os produtos" --> D
+    S -. "nota 3,54 · 13 avaliações" .-> C
+    C -. "resposta em linguagem natural" .-> U

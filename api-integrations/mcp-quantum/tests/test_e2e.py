@@ -44,6 +44,14 @@ def test_sem_token_valido_recebe_401(headers, status):
     assert r.headers["www-authenticate"].startswith("Bearer")
 
 
+def test_homepage_publica_sem_token():
+    r = httpx.get(URL.rsplit("/mcp", 1)[0] + "/")
+    assert r.status_code == 200
+    assert r.headers["content-type"].startswith("text/html")
+    assert "default-src 'none'" in r.headers["content-security-policy"]
+    assert f'<code id="endpoint">{URL}</code>' in r.text
+
+
 def test_rota_fora_de_mcp_recebe_404():
     assert httpx.get(URL.rsplit("/mcp", 1)[0] + "/admin").status_code == 404
 

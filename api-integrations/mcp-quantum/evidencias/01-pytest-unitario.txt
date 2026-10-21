@@ -1,31 +1,34 @@
-# uv run pytest -v  (2026-10-20 20:39 -03)
+# uv run pytest -v  (2026-10-20 21:02 -03)
 ============================= test session starts ==============================
 platform darwin -- Python 3.12.13, pytest-9.1.1, pluggy-1.7.0 -- .venv/bin/python
 rootdir: /Users/gdantas/git/gdantas/fiap-mba-multi-agent/api-integrations/mcp-quantum
 configfile: pyproject.toml
 plugins: asyncio-1.4.0, anyio-4.15.1
 asyncio: mode=Mode.AUTO, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
-collecting ... collected 20 items
+collecting ... collected 23 items
 
-tests/test_servidor.py::test_registra_4_tools_2_resources_2_prompts PASSED [  5%]
-tests/test_servidor.py::test_listar_por_categoria[game-7] PASSED         [ 10%]
-tests/test_servidor.py::test_listar_por_categoria[GAME-7] PASSED         [ 15%]
-tests/test_servidor.py::test_listar_por_categoria[livro-6] PASSED        [ 20%]
-tests/test_servidor.py::test_listar_por_categoria[maquiagem-6] PASSED    [ 25%]
-tests/test_servidor.py::test_listar_por_categoria[brinquedo-7] PASSED    [ 30%]
-tests/test_servidor.py::test_listar_por_categoria[outros-7] PASSED       [ 35%]
-tests/test_servidor.py::test_categoria_inexistente_lista_validas PASSED  [ 40%]
-tests/test_servidor.py::test_obter_produto_por_id PASSED                 [ 45%]
-tests/test_servidor.py::test_obter_produto_inexistente PASSED            [ 50%]
-tests/test_servidor.py::test_buscar_por_nome_ignora_acento PASSED        [ 55%]
-tests/test_servidor.py::test_buscar_por_nome_varios_e_nenhum PASSED      [ 60%]
-tests/test_servidor.py::test_avaliacao_por_id_e_por_nome PASSED          [ 65%]
-tests/test_servidor.py::test_avaliacao_nome_ambiguo PASSED               [ 70%]
-tests/test_servidor.py::test_resources PASSED                            [ 75%]
-tests/test_servidor.py::test_prompts PASSED                              [ 80%]
-tests/test_dados.py::test_planilha_tem_200_chamados_e_33_produtos PASSED [ 85%]
-tests/test_dados.py::test_leitor_stdlib_bate_com_openpyxl PASSED         [ 90%]
-tests/test_dados.py::test_acentos_corrigidos PASSED                      [ 95%]
-tests/test_dados.py::test_agregados_batem_com_a_planilha PASSED          [100%]
+tests/test_servidor.py::test_registra_4_tools_2_resources_2_prompts PASSED [  4%]
+tests/test_servidor.py::test_listar_por_categoria[game-7] PASSED         [  8%]
+tests/test_servidor.py::test_listar_por_categoria[GAME-7] PASSED         [ 13%]
+tests/test_servidor.py::test_listar_por_categoria[livro-6] PASSED        [ 17%]
+tests/test_servidor.py::test_listar_por_categoria[maquiagem-6] PASSED    [ 21%]
+tests/test_servidor.py::test_listar_por_categoria[brinquedo-7] PASSED    [ 26%]
+tests/test_servidor.py::test_listar_por_categoria[outros-7] PASSED       [ 30%]
+tests/test_servidor.py::test_categoria_inexistente_lista_validas PASSED  [ 34%]
+tests/test_servidor.py::test_obter_produto_por_id PASSED                 [ 39%]
+tests/test_servidor.py::test_obter_produto_inexistente PASSED            [ 43%]
+tests/test_servidor.py::test_buscar_por_nome_ignora_acento PASSED        [ 47%]
+tests/test_servidor.py::test_buscar_por_nome_varios_e_nenhum PASSED      [ 52%]
+tests/test_servidor.py::test_avaliacao_por_id_e_por_nome PASSED          [ 56%]
+tests/test_servidor.py::test_avaliacao_nome_ambiguo PASSED               [ 60%]
+tests/test_servidor.py::test_resources PASSED                            [ 65%]
+tests/test_servidor.py::test_prompts PASSED                              [ 69%]
+tests/test_dados.py::test_planilha_tem_200_chamados_e_33_produtos PASSED [ 73%]
+tests/test_dados.py::test_leitor_stdlib_bate_com_openpyxl PASSED         [ 78%]
+tests/test_dados.py::test_acentos_corrigidos PASSED                      [ 82%]
+tests/test_dados.py::test_agregados_batem_com_a_planilha PASSED          [ 86%]
+tests/test_homepage.py::test_pagina_usa_o_endpoint_e_lista_as_capacidades PASSED [ 91%]
+tests/test_homepage.py::test_pagina_tem_os_clientes_pedidos PASSED       [ 95%]
+tests/test_homepage.py::test_pagina_escapa_o_host PASSED                 [100%]
 
-============================== 20 passed in 0.22s ==============================
+============================== 23 passed in 0.34s ==============================

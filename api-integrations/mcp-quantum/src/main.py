@@ -6,9 +6,24 @@ start e estourava o limite do plano free (erro 1102).
 """
 
 import hmac
+from urllib.parse import urlsplit
 
 from servidor import mcp
 from workers import Response, WorkerEntrypoint, asgi
+
+import homepage
+
+# A homepage não carrega nada externo: CSP fechada, só o CSS/JS inline dela.
+HEADERS_HOMEPAGE = {
+    "content-type": "text/html; charset=utf-8",
+    "content-security-policy": (
+        "default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; "
+        "base-uri 'none'; form-action 'none'; frame-ancestors 'none'"
+    ),
+    "x-content-type-options": "nosniff",
+    "referrer-policy": "no-referrer",
+    "cache-control": "public, max-age=300",
+}
 
 
 def _autorizado(request, token: str) -> bool:
@@ -18,7 +33,11 @@ def _autorizado(request, token: str) -> bool:
 
 class Default(WorkerEntrypoint):
     async def fetch(self, request):
-        caminho = request.url.split("?", 1)[0].split("/", 3)[-1]
+        url = urlsplit(request.url)
+        caminho = url.path.strip("/")
+        if caminho == "" and request.method == "GET":
+            pagina = homepage.renderizar(f"{url.scheme}://{url.netloc}/mcp")
+            return Response(pagina, headers=HEADERS_HOMEPAGE)
         if caminho != "mcp":
             return Response("not found", status=404)
         if not _autorizado(request, getattr(self.env, "MCP_TOKEN", "")):

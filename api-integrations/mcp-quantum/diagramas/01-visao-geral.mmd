@@ -12,6 +12,10 @@ flowchart LR
     S["☁️ Servidor MCP Quantum<br/>Cloudflare Worker"]:::servidor
     D[("📊 Planilha de chamados<br/>quantum-commerce-chamados.xlsx")]:::dados
 
+    H["🌐 Homepage de instalação<br/>mcp-quantum.gabsdevops.workers.dev"]:::servidor
+
+    U -. "1 · instala o servidor no cliente" .-> H
+    H -. "deeplink / comando" .-> C
     U -- "qual a nota do headset?" --> C
     C -- "protocolo MCP<br/>HTTPS + token" --> S
     S -- "lê os produtos" --> D

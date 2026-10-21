@@ -13,6 +13,7 @@ flowchart LR
     subgraph W["Cloudflare Worker · mcp-quantum.gabsdevops.workers.dev/mcp"]
         direction LR
         G["🔒 Porteiro<br/>src/main.py<br/>rota /mcp + Bearer token"]:::seguranca
+        HP["🌐 src/homepage.py<br/>GET / · pública<br/>botões de instalação"]:::nosso
         F["SDK MCP (FastMCP)<br/>Streamable HTTP<br/>JSON-RPC + validação"]:::sdk
 
         subgraph Q["src/servidor.py registra · o que o servidor expõe"]
@@ -28,6 +29,7 @@ flowchart LR
     X[("quantum-commerce-chamados.xlsx<br/>200 chamados")]:::dados
 
     C -- "HTTPS + Bearer" --> G
+    G -- "GET / (sem token)" --> HP
     G -- "autorizado" --> F
     F --> T & R & P
     T & R --> K

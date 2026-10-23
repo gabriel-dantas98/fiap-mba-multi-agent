@@ -1,0 +1,9 @@
+.venv/
+.venv-workers/
+python_modules/
+dist/
+.wrangler/
+.dev.vars
+.token
+pylock.toml
+.pytest_cache/

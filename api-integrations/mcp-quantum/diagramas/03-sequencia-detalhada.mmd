@@ -1,0 +1,60 @@
+---
+title: "Nível 3 · Sequência detalhada: o caminho de uma chamada ('qual a nota do headset?')"
+---
+sequenceDiagram
+    autonumber
+    actor U as Pessoa
+    participant C as Cliente MCP<br/>(Inspector · Claude Code · Cursor)
+    participant E as Cloudflare Edge<br/>(isolate Python/Pyodide)
+    participant M as src/main.py<br/>Default.fetch()
+    participant S as SDK mcp 1.x<br/>FastMCP · Streamable HTTP
+    participant T as src/tools.py<br/>(registrada em servidor.py)
+    participant K as src/catalogo.py
+    participant P as src/planilha.py<br/>+ quantum-commerce-chamados.xlsx
+
+    rect rgb(245, 245, 245)
+    Note over E,P: DEPLOY (uma vez) · pywrangler deploy
+    E->>K: import catalogo (topo do módulo)
+    K->>P: ler_linhas(xlsx) · zipfile + XML, sem openpyxl
+    P-->>K: 200 chamados (acentos corrigidos)
+    K->>K: agregar() por id_produto → 33 produtos
+    Note over E,K: snapshot de memória: requests já nascem com o catálogo carregado
+    end
+
+    U->>C: "qual a nota do headset?"
+    C->>C: LLM escolhe a tool pela descrição
+    C->>E: POST /mcp · Authorization: Bearer ‹token›<br/>{"method":"tools/call","params":{"name":"obter_avaliacao_produto",<br/>"arguments":{"produto":"headset"}}}
+    E->>M: fetch(request)
+
+    alt GET / (homepage, sem token)
+        M-->>C: 200 · src/homepage.py (botões de instalação)
+    else outra rota
+        M-->>C: 404 not found
+    else token ausente ou errado (hmac.compare_digest)
+        M-->>C: 401 unauthorized + WWW-Authenticate: Bearer
+    end
+
+    M->>S: asgi.fetch(mcp.streamable_http_app())<br/>(session manager novo: stateless)
+    alt Host fora da allowlist (DNS rebinding)
+        S-->>C: 421 Invalid Host
+    end
+    S->>S: valida JSON-RPC e arguments<br/>contra o schema das type hints
+    S->>T: obter_avaliacao_produto(produto="headset")
+    T->>K: obter("headset")
+    K-->>T: None (não é um ID)
+    T->>K: buscar_por_nome("headset")
+    K-->>T: [P010 Headset gamer HX-70]
+    T->>K: avaliacao(P010)
+    K-->>T: nota_media 3.54 · 13 avaliações · reclamações por classe
+
+    alt produto inexistente ou nome ambíguo
+        T-->>S: ValueError
+        S-->>C: 200 · result.isError = true + opções válidas
+    else sucesso
+        T-->>S: dict
+        S-->>M: JSON-RPC result
+        M-->>E: 200 OK
+        E-->>C: {"result":{"content":[{"type":"text","text":"{\"id\":\"P010\",\"nota_media\":3.54,...}"}]}}
+    end
+
+    C->>U: "O Headset gamer HX-70 (P010) tem nota média 3,54 de 5, em 13 avaliações."

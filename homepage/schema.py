@@ -2,12 +2,11 @@
 
 from __future__ import annotations
 
-import re
 from enum import StrEnum
 
 from pydantic import BaseModel, Field, model_validator
 
-SLUG_RE = re.compile(r"^[a-z][a-z0-9-]*$")
+from homepage.slugs import SLUG_PATTERN, slug_to_package_dir
 
 
 class ProjectKind(StrEnum):
@@ -23,9 +22,9 @@ class ProjectChecks(BaseModel):
 
 class ProjectConfig(BaseModel):
     name: str
-    slug: str = Field(pattern=SLUG_RE.pattern)
+    slug: str = Field(pattern=SLUG_PATTERN)
     description: str
-    group: str = Field(pattern=SLUG_RE.pattern)
+    group: str = Field(pattern=SLUG_PATTERN)
     members: list[str] = Field(min_length=1)
     kind: ProjectKind
     mount_path: str
@@ -36,11 +35,11 @@ class ProjectConfig(BaseModel):
 
     @property
     def module_dir(self) -> str:
-        return self.slug.replace("-", "_")
+        return slug_to_package_dir(self.slug)
 
     @property
     def group_dir(self) -> str:
-        return self.group.replace("-", "_")
+        return slug_to_package_dir(self.group)
 
     @model_validator(mode="after")
     def _validate_kind_fields(self) -> ProjectConfig:

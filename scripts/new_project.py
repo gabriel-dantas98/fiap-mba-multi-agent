@@ -3,17 +3,13 @@
 from __future__ import annotations
 
 import argparse
-import re
 import sys
 from pathlib import Path
 from textwrap import dedent
 
-SLUG_RE = re.compile(r"^[a-z][a-z0-9-]*$")
+from homepage.slugs import assert_valid_slug, slug_to_package_dir
+
 VALID_KINDS = {"backend", "frontend", "fullstack"}
-
-
-def _module(name: str) -> str:
-    return name.replace("-", "_")
 
 
 def create_project(
@@ -25,24 +21,22 @@ def create_project(
     description: str,
     members: list[str],
 ) -> Path:
-    if not SLUG_RE.match(group):
-        raise ValueError(f"invalid group slug: {group!r}")
-    if not SLUG_RE.match(slug):
-        raise ValueError(f"invalid project slug: {slug!r}")
+    assert_valid_slug("group", group)
+    assert_valid_slug("project", slug)
     if kind not in VALID_KINDS:
         raise ValueError(f"invalid kind: {kind!r}")
 
-    base = apps_root / _module(group) / _module(slug)
+    base = apps_root / slug_to_package_dir(group) / slug_to_package_dir(slug)
     if base.exists():
         raise FileExistsError(base)
     base.mkdir(parents=True)
 
-    (apps_root / _module(group) / "__init__.py").touch()
+    (apps_root / slug_to_package_dir(group) / "__init__.py").touch()
     (base / "__init__.py").touch()
 
     members_yaml = "\n".join(f"  - {m}" for m in members)
     entry_line = (
-        f"entry: apps.{_module(group)}.{_module(slug)}.main:app"
+        f"entry: apps.{slug_to_package_dir(group)}.{slug_to_package_dir(slug)}.main:app"
         if kind in {"backend", "fullstack"}
         else ""
     )

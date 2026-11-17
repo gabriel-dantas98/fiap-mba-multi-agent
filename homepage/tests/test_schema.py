@@ -61,3 +61,10 @@ def test_kind_enum():
     assert ProjectKind("backend") is ProjectKind.BACKEND
     with pytest.raises(ValueError):
         ProjectKind("invalid")
+
+
+def test_slug_and_group_must_match_slug_pattern():
+    with pytest.raises(ValidationError, match="slug"):
+        ProjectConfig(**_base(slug="Bad-Slug"))
+    with pytest.raises(ValidationError, match="group"):
+        ProjectConfig(**_base(group="UPPER"))

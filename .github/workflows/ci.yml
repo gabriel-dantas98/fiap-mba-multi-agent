@@ -10,7 +10,8 @@ permissions:
   pull-requests: write
 
 jobs:
-  lint:
+  # Um checkout + uv sync por PR em vez de três jobs paralelos repetindo o mesmo setup.
+  monorepo:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
@@ -22,27 +23,10 @@ jobs:
         run: uv run ruff check --output-format=github .
       - name: ruff format
         run: uv run ruff format --check .
-
-  schema:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v7
-      - uses: astral-sh/setup-uv@v7
-        with:
-          enable-cache: true
-      - run: uv sync --frozen
       - name: validate manifests
         run: uv run python -c "from pathlib import Path; from homepage.loader import discover; discover(Path('apps'))"
-
-  homepage-tests:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v7
-      - uses: astral-sh/setup-uv@v7
-        with:
-          enable-cache: true
-      - run: uv sync --frozen
-      - run: uv run pytest homepage/tests/ -v
+      - name: homepage tests
+        run: uv run pytest homepage/tests/ -v
 
   affected-apps:
     runs-on: ubuntu-latest
